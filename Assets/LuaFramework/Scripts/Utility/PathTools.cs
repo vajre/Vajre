@@ -34,7 +34,7 @@ namespace LuaFramework
         }
 
         /// <summary>
-        /// 获取AB输出路径
+        /// 获取AB打包路径
         /// 算法:
         ///     1: 平台(PC/移动端)路径
         ///     2: 平台的名称
