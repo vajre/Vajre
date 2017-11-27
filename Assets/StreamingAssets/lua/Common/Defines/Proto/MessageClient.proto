@@ -1,0 +1,539 @@
+import "MessageCommon.proto";
+enum ClientNetMsgType
+{
+	//从120开始
+	//0.登陆模块
+	CS_RoleLogin		= 120;
+	SC_RoleLogin		= 121;
+	SC_BeLoginLeave		= 122;
+	SC_RoleUpdate		= 123;
+	//1.创建房卡房间
+	CS_CreateRoom		= 124;
+	SC_CreateRoom		= 125;
+	//2.进入房卡房间
+	CS_JoinRoom			= 126;
+	SC_JoinRoom			= 127;
+	SC_SignInfo			= 128;
+	CS_SignInfo			= 129;
+	//3.进入系统房间
+	CS_JoinSystemRoom	= 130;
+	SC_JoinSystemRoom   = 131;
+	//4.离开当前房间
+	CS_LeaveRoom		= 132;
+	SC_LeaveRoom		= 133;
+	//5.被踢出房间
+	SC_BeRemoveRoom		= 134;
+	//6.房间关闭
+	//7.玩家切换桌子
+	SC_RoleChangeRoom	= 135;
+	//8.Game服务器注册
+	//9.创建系统房间
+	//10.玩家数据变化
+	//11.玩家被顶掉了
+	//12.玩家房间操作
+	CS_RoleAccpet		= 136;	
+	CS_RoomOper			= 137;
+	SC_RoomRoleInfo		= 138;
+	SC_RoomInitInfo		= 139;
+	SC_RoomEndInfo		= 140;
+	SC_RoomStateInfo	= 141;
+	//13.金币改变
+	//14.续费
+	CS_RenewRoom		= 142;
+	SC_RenewRoom		= 143;
+	SC_RoomGameNumChg	= 144;
+	//15.剔除指定玩家 
+	CS_KickRole			= 145;
+	SC_KickRole			= 146;
+	SC_KickRoleAsk		= 147;
+	CS_KickRoleAsk		= 148;
+	SC_KickRoleAskOper	= 149;
+	//16.客户端信息 玩家登陆后需要发送到客户端的数据
+	SC_ClientInfo		= 150;
+	//17.聊天
+	CS_RoleChar			= 151;
+	SC_RoleChar			= 152;
+	//18.申请回放数据
+	CS_RoomInfo			= 153;
+	SC_RoomInfo			= 154;
+	//19.玩家绑定代理商ID
+	CS_BindID			= 155;
+	SC_BindID			= 156;
+	//21.解散房间
+	CS_CloseRoom		= 157;
+	SC_CloseRoom		= 158;
+	//22.投票
+	SC_VoteInfo			= 159;
+	SC_VoteOper			= 160;
+	CS_VoteOper			= 161;
+	SC_VoteResult		= 162;
+	//23.房间内魔法表情
+	CS_RoleCharm		= 163;
+	SC_RoleCharm		= 164;
+	//24.
+	CS_AccountLogin		= 165;
+	//25.语音
+	CS_SoundReg			= 166;
+	CS_SoundLeave		= 167;
+	CS_SendSound		= 168;
+	SC_SendSound		= 169;
+	//26.
+	CS_Pay				= 170;
+	SC_Pay				= 171;
+	SC_PayResult		= 172;
+	//27.
+	SC_MessageInfo		= 173;
+	//28
+	CS_LoadRoleInfo		= 174; //加载玩家其他的数据
+	SC_LoadRoleInfo		= 175; //返回玩家的其他数据
+	//29.
+	SC_RoleRoomErr		= 176; //玩家重新链接房间错误
+	//30.领取每天第一次游戏的奖励
+	CS_TodayFirReward	= 177;
+	SC_TodayFirReward	= 178;
+	//
+	CS_RoleZhuanPan		= 179;
+	SC_RoleZhuanPan		= 180;
+	CS_RoleEntityItem	= 181;
+	SC_RoleEntityItem	= 182;
+	CS_RewardRecord		= 183;
+	SC_RewardRecord		= 184;
+	//
+	CS_FXReward			= 185;
+	SC_FXReward			= 186;
+	//
+	CS_WeiXinFXReward	= 187;
+	SC_WeiXinFXReward   = 188;
+	//
+	CS_ShiMingID		= 189;
+	SC_ShiMingID		= 190;
+	//
+	CS_GiveYuanBao		= 191;
+	SC_GiveYuanBao		= 192;
+	SC_GiveYuanBaoResult= 193;
+	//
+	CS_Deposit			= 194;
+	//
+	SC_RoleVoteOper		= 195;
+};
+//登陆模块----------------------------------
+message CS_Cmd_RoleLogin
+{
+	required	LoginType		eType				= 1;	//登录类型
+	required	string			strToken			= 2;	//登录令牌	
+	required	string			strOpenID			= 3;	//登陆OpenID
+};
+message SC_Cmd_RoleLogin //玩家登录的结果
+{
+	required	RoleLoginResult	result				= 1;	//登录结果
+	optional	tagRoleInfo		roleInfo			= 2;	//玩家的具体数据 登录成功才有 
+	optional	int32			n32FreezeTime		= 3;	//账号冻结的结束时间 只有 result == RoleLoginResult_Freeze 才有
+	optional	bool			isRoom				= 4;	//登陆成功后携带的 是否在房间里面
+};
+message CS_Cmd_AccountLogin	
+{
+	required	string			strAccountName		= 1;
+	required	uint32			u32PasswordCrc		= 2;
+};
+message SC_Cmd_BeLoginLeave	
+{
+	required	BeLoginLeaveType	type			= 1;	//被踢出登陆的原因
+};
+message SC_Cmd_RoleUpdate
+{
+	required	tagRoleInfo			roleInfo		= 1;	//玩家数据变化了
+};
+//房间模块----------------------------------
+message CS_Cmd_CreateRoom
+{
+	required	tagRoomRuleInfo			ruleInfo	= 1;	//房间的规则信息 ->局数 人数限制
+};
+message SC_Cmd_CreateRoom
+{
+	required	CreateRoomResult		result			= 1;	//创建房间的结果
+	optional	uint32					u32RoomID		= 2;
+};
+message CS_Cmd_JoinRoom
+{
+	required	uint32				u32RoomID		= 1;	//房间ID
+};
+message SC_Cmd_JoinRoom
+{
+	required	uint32				u32RoomID		= 1;	//房间ID
+	required	JoinRoomResult		result			= 2;	//进入结果
+	optional	RoomType			eType			= 3;	//房间的类型
+};
+message SC_Cmd_SignInfo	
+{
+	required	tagRoomRuleInfo		ruleInfo		= 1;	//房间是AA制度的 玩家需要进行报名才可以进入
+	optional	uint32				u8GameNum		= 2;	//当前游戏的局数
+	optional	uint32				u8RoleNum		= 3;	//当前房间内玩家人数
+	optional	uint32				u32YuanBaoNum	= 4;	//需要花费的元宝数 为0表示不可以使用当前货币报名
+	optional	uint32				u32RoomCardNum	= 5;	//需要花费的钻石数 为0表示不可以使用当前货币报名
+};
+message CS_Cmd_SignInfo		
+{
+	required	uint32				u32RoomID		= 1;	//房间ID
+};
+message CS_Cmd_JoinSystemRoom
+{
+	required	uint32				u32OnlyID		= 1;	//房间类型
+};
+message SC_Cmd_JoinSystemRoom
+{
+	required	JoinRoomResult		result			= 1;	//结果
+	optional	uint32				u32RoomID		= 2;	//房间ID
+};
+message CS_Cmd_LeaveRoom
+{
+	
+};
+message SC_Cmd_LeaveRoom
+{
+	required	LeaveRoomResult		result			= 1;	//玩家离开房间的结果
+	optional	uint32				u32LockSec		= 3;	//锁定的秒数 当返回结果为离线保护的时候才有
+};
+message SC_Cmd_BeRemoveRoom
+{
+	required	BeRemoveRoomType	eType			= 1;	//玩家被踢出房间的结果
+};
+message SC_Cmd_RoleChangeRoom
+{
+	required	uint32				u32OldRoomID	= 1;	//玩家旧房间ID
+	required	uint32				u32NowRoomID	= 2;	//玩家新的房间ID
+};
+message CS_Cmd_RoleAccpet	
+{
+	required	bool				bAccpet			= 1;	//玩家准备或者取消准备
+};
+message CS_Cmd_RoomOper		
+{
+	required	tagRoomOperInfo		operInfo		= 1;	//玩家操作数据
+};
+message SC_Cmd_RoomRoleInfo	
+{
+	required	tagRoomRoleInfo		roleInfo		= 1;
+};
+message SC_Cmd_RoomInitInfo	
+{
+	required	tagRoomInitInfo		initInfo		= 1;
+};
+message SC_Cmd_RoomEndInfo	
+{
+	required	tagRoomEndInfo		endInfo			= 1;
+};
+message SC_Cmd_RoomStateInfo	
+{
+	required	tagRoomStateInfo	stateInfo		= 1;
+};
+message CS_Cmd_RenewRoom	
+{
+	required	uint32				u8GameNum		= 1;	//续费房间的游戏局数
+};			
+message SC_Cmd_RenewRoom
+{
+	required	RenewRoomResult		result			= 1;	//玩家续费房间的结果
+	optional	bool				bRoomCard		= 4;
+	optional	uint32				u32Price		= 5;
+};		
+message SC_Cmd_RoomGameNumChg	
+{
+	required	uint32				u32RoomID		= 1;	//房间ID
+	required	uint32				u8GameNum		= 2;	//房间局数
+	required	uint32				u32MasterID		= 3;	//房主的ID
+	required	bool				bRoomCard		= 4;
+};
+message CS_Cmd_KickRole			
+{
+	required	uint32				u32RoleID		= 1;	//剔除的玩家ID
+};	
+message SC_Cmd_KickRole				
+{
+	required	KickRoomRoleResult	result			= 1;	//剔除玩家的结果
+	optional	bool				bBJ				= 2;	//是否需要表决
+};	
+message SC_Cmd_KickRoleAsk			
+{
+	required	uint32				u32SrcRoleID	= 1;	//发起剔除的玩家
+	required	uint32				u32KickRoleID	= 2;	//被剔除的玩家
+	required	uint32				u32RoomID		= 3;	//房间ID
+};	
+message CS_Cmd_KickRoleAsk			
+{
+	required	bool				bKick			= 1;	//是否同意剔除
+};	
+message SC_Cmd_KickRoleAskOper		
+{
+	required	uint32				u32RoomID		= 1;	//玩家ID
+	required	uint32				u32OperRoleID	= 2;	//当前操作的玩家
+	required	bool				bKick			= 3;	//玩家是否同意剔除
+	optional	bool				bKickResult		= 4;	//最终的结果 只有最后一个操作的玩家才携带的数据 表示最终玩家是否被剔除了
+};
+
+//-----------------------------------
+message tagRoomPriceInfo
+{
+	required	RoomType			eType			= 1;	//房间类型
+	repeated	uint32				rolenumArr		= 2;	//玩家人数列表
+	repeated	uint32				gamenumArr		= 3;	//房间游戏局数列表
+	repeated	uint32				priceArr		= 4;	//房间价格列表
+	repeated	uint32				aapriceArr		= 5;	//AA房间价格列表
+}
+message tagPayAction_Double
+{
+	repeated	uint32					shopid			= 1;//商品ID
+	repeated	uint32					rate			= 2;//倍率
+};
+message tagPayAction_Present
+{
+	repeated	uint32					shopid			= 1;//商品ID
+	repeated	uint32					yuanbao			= 2;//送元宝
+	repeated	uint32					roomcard		= 3;//送房卡
+};
+message SC_Cmd_ClientInfo
+{
+	//客户端
+	//required	tagRoomCardInfo			roomcardInfo	= 1;	//房卡数据
+	//required	tagShopInfo				shopInfo		= 2;	//商店数据
+	//required	tagGameSystemRoomInfo	systemRoomInfo	= 3;	//系统房间数据
+
+	optional	tagPayAction_Double		double			= 1;	//双倍活动
+	optional	tagPayAction_Present	present			= 2;	//返利
+};
+enum CharType
+{
+	CharType_SystemChar		= 1;	//系统内置的话 
+	CharType_SystemIcon		= 2;	//系统内置的表情
+	CharType_RoleChar		= 3;	//玩家输入的话
+};
+message CS_Cmd_RoleChar	
+{
+	required	CharType			eType		= 1;
+	optional	string				strRoleChar = 2;
+	optional	uint32				u8Param		= 3;
+};
+message SC_Cmd_RoleChar	
+{
+	required	CharType			eType		= 1;
+	required	uint32				u32RoleID	= 2;
+	optional	string				strRoleChar = 3;
+	optional	uint32				u8Param		= 4;
+};
+message CS_Cmd_RoomInfo
+{
+	required	uint32				u32OnlyID	= 1;	//回放的唯一ID
+};
+message SC_Cmd_RoomInfo
+{
+	required	RoomInfoResult		result		= 1;	//申请结果
+	optional	tagRoomLogInfo		roomInfo	= 2;	//房间数据
+};
+message CS_Cmd_BindID
+{
+	required	uint32				u32BindID	= 1;	//
+};
+message SC_Cmd_BindID
+{
+	required	BindIDResult		result		= 1;	//
+};
+message CS_Cmd_CloseRoom	
+{
+	
+};
+message SC_Cmd_CloseRoom		
+{
+	required	CloseRoomResult		result		= 1;	
+};
+message SC_Cmd_VoteInfo	//提示玩家发起的投票开始了
+{
+	required	uint32				u32DestRoleID	= 1;
+	required	VoteType			eType			= 2;
+	required	uint32				u32VoteIndex	= 3;
+};
+message SC_Cmd_VoteOper
+{
+	required	uint32				u32VoteIndex	= 1;
+	required	uint32				u32SrcRoleID	= 2;
+	required	uint32				u32DestRoleID	= 3;
+	required	VoteType			eType			= 4;
+	optional	uint32				u32Param		= 5;
+	repeated	uint32				roleArr			= 6;	//参与投票的玩家列表
+	optional	uint32				u32TimeMS		= 7;	//倒计时
+};
+message CS_Cmd_VoteOper
+{
+	required	uint32				u32VoteIndex	= 1;
+	required	bool				bOper			= 2;
+};
+message SC_Cmd_RoleVoteOper
+{
+	required	uint32				u32VoteIndex	= 1;
+	required	uint32				u32OperRoleID	= 2;
+	required	bool				bOper			= 3;
+};
+message SC_Cmd_VoteResult
+{
+	required	uint32				u32SrcRoleID	= 1;
+	required	uint32				u32DestRoleID	= 2;
+	required	bool				bResult			= 3;
+	required	VoteType			eType			= 4;
+};
+message CS_Cmd_RoleCharm	
+{
+	required	uint32				u32Index		= 1;	//魔法表情序号
+	required	uint32				u32DestRoleID	= 2;	//序号
+};
+message SC_Cmd_RoleCharm	
+{
+	optional	RoleCharmResult		result			= 1;
+	optional	uint32				u32SrcRoleID	= 2;
+	optional	uint32				u32DestRoleID	= 3;
+	optional	uint32				u32Index		= 4;
+};
+message CS_Cmd_SoundReg		
+{
+	required	uint32				u32RoleID		= 1;
+	required	uint32				u32RoomID		= 2;
+};
+message CS_Cmd_SoundLeave	
+{
+	
+};
+enum SoundType
+{
+	SoundType_IOS		= 1;
+	SoundType_ANI		= 2;
+};
+message CS_Cmd_SendSound	
+{
+	required	SoundType			eType			= 1;
+	repeated	uint32				soundArr		= 2;
+};
+message SC_Cmd_SendSound	
+{
+	required	uint32				u32RoleID		= 1;
+	required	SoundType			eType			= 2;
+	repeated	uint32				soundArr		= 3;
+};
+message CS_Cmd_Pay	
+{
+	required	uint32				u32ShopID		= 1;	//商品ID
+	required	PayType				eType			= 2;	//充值平台类型
+	required	bool				bIOS			= 3;	//IOS平台 还是ANi平台
+	optional	string				strIOSInfo		= 4;	//如果是IOS充值 需要携带的数据
+};	
+message SC_Cmd_Pay	
+{
+	required	PayResult			result			= 1;	//充值结果
+	required	uint64				u64OrderID		= 2;	//唯一订单ID
+	required	uint32				u32ShopID		= 3;	//商品ID
+	required	PayType				eType			= 4;	//充值平台类型
+	required	string				strOrderID		= 5;	//唯一订单iD
+};
+message SC_Cmd_PayResult
+{
+	required	PayResult			result			= 1;	//充值结果
+	required	uint64				u64OrderID		= 2;	//唯一订单ID
+	required	uint32				u32ShopID		= 3;	//商品ID
+	required	PayType				eType			= 4;	//充值平台类型
+};	
+message SC_Cmd_MessageInfo
+{
+	required	string				strMessageInfo	= 1;	//消息内容
+	required	uint32				u32StepNum		= 2;	//消息循环次数
+	required	uint32				u32StepSec		= 3;	//循环间隔时间
+};
+message CS_Cmd_LoadRoleInfo		
+{
+	required	RoleInfoType		eType			= 1;	//请求加载的类型
+};	
+message SC_Cmd_LoadRoleInfo		
+{
+	required	tagRoleExInfo		roleInfo		= 2;	//玩家待加载的数据
+};
+message SC_Cmd_RoleRoomErr
+{
+
+};
+message CS_Cmd_TodayFirReward
+{
+
+};
+message SC_Cmd_TodayFirReward
+{
+required	TodayFirRewardResult	result			= 1;	//获取第一次游戏奖励
+};
+message CS_Cmd_RoleZhuanPan	
+{
+
+};
+message SC_Cmd_RoleZhuanPan	
+{
+	required	RoleZhuanPanResult	result			= 1;
+	//
+	optional	bool				isEntity		= 2;	//是否是实体物品 
+	optional	uint32				rewardId		= 3;
+};
+message CS_Cmd_RoleEntityItem	
+{
+	required	uint64				u64Phone		= 1;	//
+};
+message SC_Cmd_RoleEntityItem	
+{
+	required	RoleEntityItemResult	result		= 1;
+	optional	uint32					rewardId	= 2;
+};
+message CS_Cmd_RewardRecord
+{
+
+};
+message SC_Cmd_RewardRecord
+{
+	repeated	tagZhuanPanRewardInfo	recordArr	= 1;
+	required	uint32					freeNum		= 2;
+};
+
+message CS_Cmd_FXReward	
+{
+}
+message SC_Cmd_FXReward		
+{
+	optional	FXRewardResult			result		= 1;
+}
+
+message CS_Cmd_WeiXinFXReward
+{
+	
+};
+message SC_Cmd_WeiXinFXReward
+{
+	optional	WeiXinFXRewardResult	result		= 1;
+};
+
+message CS_Cmd_ShiMingID
+{
+	required	string					Identity	= 1;
+};
+message SC_Cmd_ShiMingID
+{
+	optional	ShiMingIDResult			result		= 1;	
+};
+message CS_Cmd_GiveYuanBao	
+{
+	repeated	uint32					GiveIDArr	= 1;
+	repeated	uint32					GiveNumArr	= 2;
+};
+message SC_Cmd_GiveYuanBao	
+{
+	required	uint32					u32SrcRoleID	= 1;
+	required	string					strScrRoleName  = 2;
+	required	uint32					u32GiveYuanBao	= 3;
+};
+message SC_Cmd_GiveYuanBaoResult
+{
+	required	GiveYuanBaoResult		result		= 1;
+};
+message CS_Cmd_Deposit
+{
+	required	bool					bDeposit	= 1;	//是否进入托管状态
+};

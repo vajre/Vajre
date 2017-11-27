@@ -1,0 +1,4475 @@
+enum VoteType //投票类型
+{
+	VoteType_Leave		= 1;	//某个玩家离开 其他玩家发起投票 判断是否可以离开
+	VoteType_Kick		= 2;	//某个玩家剔除一个玩家 其他玩家是否同意
+	VoteType_Close		= 3;	//关闭房间
+	VoteType_IPCheck	= 4;	//IP询问
+};
+enum PayType
+{
+	PayType_SFB		=  1;	//胜付宝充值
+	PayType_JY		=  2;
+	PayType_IOS		=  3;	//IOS充值
+};
+enum LoginType
+{
+	LoginType_QQ		= 1;
+	LoginType_WeiXin	= 2;
+	LoginType_Account	= 3;
+}
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//1.系统配置文件
+message tagDBServerConfig
+{
+	required	string	strIP			= 1;	//监听的IP
+	required	uint32	u16Port			= 2;	//监听的端口
+	required	uint32	u8ListenThreadNum=3;	//网络库线程数量
+	required	string	strSqlUrl		= 4;	//数据库的URL
+	required	uint32	u16SqlPort		= 5;	//数据库的端口
+	required	string	strSqlAccount	= 6;	//数据库账号
+	required	string	strSqlPassword	= 7;	//数据库密码
+	required	string	strSqlDBName	= 8;	//数据库名称
+	required	uint32	u8WorkThreadNum	= 9;	//工作线程
+	required	uint32	u8ProcTimeOut	= 10;	//存储过程超时毫秒数
+	required	bool	bLogDB			= 11;	//是否为Log数据库
+	required	uint32	u32TimeOut		= 12;	//网络库超时时间
+};
+message tagCenterServerConfig
+{
+	optional	string	strClientIP		= 1;	//客户端监听IP
+	optional	uint32	u16ClientPort	= 2;	//客户端监听端口
+	optional	uint32  u8ClientThreadNum=3;	//客户端网络库线程数量
+	required	string	strGameIP		= 4;	//服务器端监听IP
+	required	uint32	u16GamePort		= 5;	//服务器端监听端口
+	required	uint32	u8GameThreadNum	= 6;	//服务器网络库线程数量
+	required	string	strDBIP			= 7;	//数据库IP
+	required	uint32	u16DBPort		= 8;	//数据库端口
+	required	string	strLogDBIP		= 9;	//Log数据库IP
+	required	uint32	u16LogDBPort	= 10;	//Log数据库端口
+	required	uint32	u8WorkThreadNum = 11;	//工作线程
+	required	string	strHttpIP		= 12;	//Http地址
+	required	uint32	u16HttpPort		= 13;	//Http端口
+	required	string	strHttpsIP		= 14;	//Https的地址
+	required	uint32	u16HttpsPort	= 15;	//Https的端口
+	required	uint32	cacheDay		= 16;	//基本缓存 天数
+	required	uint32  cacheNum		= 17;	//基本缓存 人数
+	required	uint32  cacheExDay		= 18;	//完全缓存 天数
+	required	uint32	cacheExNum		= 19;   //完全缓存 人数
+	required	uint32	u8DBSaveMin		= 20;	//数据库每次保存的间隔
+	required	string	strQQAppID		= 21;	//QQ的APP 的 ID
+	required	uint32	u32BeginRoomID	= 22;	//开始房间的ID
+	required	uint32	u32EndRoomID	= 23;	//结束房间ID  这个范围内的ID是供玩家自己开房间使用的
+	required	bool	bTest			= 24;	//是否是测试模式 测试模式下 充值和登陆就是模拟的
+	required	uint32	u32SaveDBTime	= 25;	//保存数据库的时间
+	required	uint32	u32RoomLimitDay = 26;	//战绩保存的天数
+	required	uint32	u32RoomLimitNum	= 27;	//战绩的条数
+	optional	string	strGateIP		= 28;	//网关监听IP
+	optional	uint32	u16GatePort		= 29;	//网关监听端口
+	optional	uint32  u8GateThreadNum	= 30;	//网关网络库线程数量
+	required	uint32	u32SFBAppID		= 31;
+	required	string	strSFBKey		= 32;
+	required	uint32	u32SFBPartnerID	= 33;
+	required	uint32	u32CharmPrice	= 34;	//魔法表情的价格
+	required	uint32	u32InitYuanBao	= 35;
+	required	uint32	u32InitGold		= 36;
+	required	uint32	u32InitRoomCard	= 37;
+	required	uint32	u32ClientTimeOut= 38;
+	required	uint32  u32GateTimeOut  = 39;
+	required	uint32	u32DBTimeOut	= 40;
+	required	uint32	u32LogDBTimeOut	= 41;
+	required	uint32	u32GameTimeOut	= 42;
+	required    uint32  u32ZhuanPanLimitNum = 43;	//读取转盘数据的限制
+	required	uint32	u32InitMagicFace	= 44;	
+};
+message tagGameServerConfig
+{
+	required	string	strIP			= 1;	//连接的IP
+	required	uint32	u16Port			= 2;	//连接的端口
+	required	uint32	u8WorkNum		= 3;	//工作线程数量
+	repeated	uint32  roomArr			= 4;	//支持系统房间的ID列表
+	repeated	uint32	opennumArr		= 5;	//系统房间开启数量
+	required	uint32	u32TimeOut		= 6;
+	required	bool	bTest			= 7;
+};
+message tagSoundServerConfig
+{
+	required	string	strClientIP		= 1;	//客户端监听IP
+	required	uint32	u16ClientPort	= 2;	//客户端监听端口
+	required	uint32  u8ClientThreadNum=3;	//客户端网络库线程数量
+	required	uint32	u32TimeOut		= 4;	//
+};
+message tagGateServerConfig
+{
+	required	string	strClientIP		= 1;	//客户端监听IP
+	required	uint32	u16ClientPort	= 2;	//客户端监听端口
+	required	uint32  u8ClientThreadNum=3;	//客户端网络库线程数量
+	required	string	strConnIP		= 4;
+	required	uint32	u16ConnPort		= 5;
+	required	uint32	u32ClientTimeOut= 6;
+	required	uint32	u32CenterTimeOut= 7;
+};
+message tagGameSystemRoomItem
+{
+	required	uint32	 u32ID			= 1;	//唯一ID
+	required	uint32	 eType			= 2;	//房间类型
+	required	int32	 n32MinGold		= 3;	//最小限制金币
+	required	int32	 n32MaxGold		= 4;	//最大限制金币
+	required	uint32	 u32MaxRoleNum	= 5;	//最大玩家人数限制
+	required	uint32	 u32Rate		= 6;	//房间的倍率
+};
+message tagGameSystemRoomInfo
+{
+	repeated	tagGameSystemRoomItem	roomArr	= 1;//系统房间配置列表
+};
+message tagShopItem
+{
+	required	uint32	u32ItemID		= 1;	//物品ID
+	required	uint32	u32AddYuanBao	= 2;	//添加的元宝数量(钻石数)
+	required	uint32	u32AddRoomCard	= 3;	//添加房卡数
+	required	uint32	u32RMBNum		= 4;	//花费的RMB数(单位分)
+	required	string  strItemName		= 5;	//商品的名称
+};
+message tagShopInfo	//商城的配置文件
+{
+	repeated	tagShopItem	itemArr		= 1;	//商城物品的集合
+};
+message tagAgentInfo //代理商的数据
+{
+	repeated	uint32		agentArr	= 1;	//代理商的集合
+}; 
+message tagRoomCardItem //单个房卡房间价格
+{
+	required	uint32			eType					= 1;	//房间类型
+	required	uint32			u8RoleNum				= 2;	//人数
+	required	uint32			u8GameNum				= 3;	//局数
+	required	uint32			u32CreateRoomCard		= 4;	//创建房间房卡数
+	required	uint32			u32CreateYuanBao		= 5;	//创建房间元宝数
+	required	uint32			u32SignRoomCard			= 6;	//进入AA房间的花费房卡
+	required	uint32			u32SignYuanBao			= 7;	//进入AA房间的花费钻石
+};
+message tagRoomCardInfo //房卡房间的价格集合
+{
+	repeated	tagRoomCardItem	roomArr					= 1;	//房间的集合
+};
+//---------------------
+message tagMessageItem
+{
+	required	uint32							u32ID				= 1;
+	required	string							strMessageInfo		= 2;	//系统消息主体
+	required	int32							n32BeginTime		= 3;	//开始时间
+	required	uint32							u32StepTime			= 4;	//循环间隔
+	required	uint32							u32StepNum			= 5;	//循环次数 0表示无限循环
+	required	uint32							u32OnceStepNum		= 6;	//每次播放的时候 客户端循环次数
+	required	uint32							u32OnceStepSec		= 7;	//每次播过的时候 客户端间隔时间
+};
+message tagMessageInfo
+{
+	repeated	tagMessageItem					itemArr				= 1;
+};
+message tagPayOrderInfo
+{
+	required	uint64							u64OrderID			= 1;
+	required	uint32							u32RoleID			= 2;
+	required	PayType							eType				= 3;
+	required	uint32							u32ShopID			= 4;
+	required	int32							n32LogTime			= 5;
+	required	uint32							u32BindID			= 6;
+	required	int32							n32UserID			= 7;
+	required	int32							n32BigUid			= 8;
+};
+
+//----------------------------------------------幸运大转盘---------------------------------------------
+message tagZhuanPanItem
+{
+	required	uint32							u32ID				= 1;
+	required	string							strName				= 2;
+	required	bool							bEntity				= 3;
+	required	uint32							u32BeginAllYuanBao  = 4;
+	required	uint32							u32RoleYuanBao		= 5;
+	required	uint32							u32Rate				= 6;
+	required	uint32							u32WeekCount		= 7;	//为0表示 无限
+	required	bool							bIsLog				= 8;
+	required	uint32							u32AddYuanBaoNum	= 9;
+	required	uint32							u32AddRoomCardNum	= 10;
+	required	uint32							u32AddMagicFace		= 11;
+};
+message tagZhuanPanConfig
+{
+	required	uint32							u32DayFreeNum		= 1;
+	required	uint32							u32UsePrice			= 2;
+	required	uint32							u32RewardLogNum		= 3;
+	repeated	tagZhuanPanItem					itemArr				= 4;	//所有的奖项
+};
+message tagZhuanPanRewardInfo
+{
+	required	uint32							u32RoleID			= 1;
+	optional	string							strRoleName			= 2;
+	optional	string							strFaceURL			= 3;
+	required	uint32							u32RewardID			= 4;
+	optional	int32							n32LogTime			= 5;
+	optional	uint32							u32clientID			= 6;	//存数据库是不需要
+};
+message tagZhuanPanInfo //1.奖池数据  2.奖励数据
+{
+	required	uint32							u32AllYuanBao		= 1;	//奖池 数 
+	//json -> varchar-》 json
+	repeated	uint32							idArr				= 2;	//ID列表
+	repeated	uint32							rewardCountNum		= 3;	//奖励的数据
+	//
+	required	int32							n32LogTime			= 4;	//记录当前时间
+};
+message tagRoleEntityInfo									
+{
+	required	uint32							u32RoleID			= 1;
+	required    uint64							u64Phone			= 2;
+	required	uint32							u32RewardID			= 3;
+};
+
+//-----------------------------------------------------------------------------------------------------------------------
+enum RoleInfoType
+{
+	RoleInfoType_Login	= 1;	//登陆的时候的加载的数据
+	RoleInfoType_GameLog= 2;	//玩家战绩数据(战绩数据登陆的时候不发送 是客户端请求的时候发送的)
+	RoleInfoType_TLSSZ	= 3;	//个人信息-桐庐十三张
+	RoleInfoType_NN		= 4;	//个人信息-牛牛
+	RoleInfoType_JXSSZ	= 5;	//嘉兴十三张
+	RoleInfoType_JHSSZ	= 6;	//金华十三张
+	RoleInfoType_LHSSZ	= 7;	//临海十三张
+	RoleInfoType_XSSSZ	= 8;	//萧山十三张
+	RoleInfoType_YWSSZ	= 9;	//义乌十三张
+	RoleInfoType_JYSSZ	= 10;	//九幺十三张
+	RoleInfoType_NCMJ	= 11;	//南昌麻将
+	RoleInfoType_HZMJ	= 12;	//杭州麻将
+	RoleInfoType_AQMJ	= 13;	//安庆麻将
+	RoleInfoType_KMMJ	= 14;	//昆明麻将
+	RoleInfoType_XZMJ	= 15;	//血站麻将
+	RoleInfoType_XLMJ	= 16;	//血流麻将
+	RoleInfoType_DDZ	= 17;	//斗地主
+	RoleInfoType_NCMJS	= 18;	//新南昌麻将
+	RoleInfoType_SZMJ	= 19;	//松滋麻将
+	RoleInfoType_FYBZ	= 20;	//富阳八张
+	RoleInfoType_KETMJ	= 21;	//卡二条麻将
+	RoleInfoType_NXZMJ	= 22;	//新血战麻将
+	RoleInfoType_NXLMJ	= 23;	//新血流麻将
+	RoleInfoType_HSMJ	= 24;	//黄石麻将
+};
+enum RoomRoleState
+{
+	RoomRoleState_OL	= 1;	//在线
+	RoomRoleState_Leave	= 2;	//主动离开
+	RoomRoleState_Drop	= 3;	//被动掉线
+};
+message tagRoleRemoteInfo //玩家远程数据(供其他玩家查看的数据 如: 查询好友 ,好友基本信息 ,桌子上其他玩家的数据)
+{
+	optional	uint32				u32RoleID				= 1;	//玩家ID
+	optional	string				strRoleName				= 2;	//玩家名称
+	optional	string				strFaceURL				= 3;	//玩家URL地址
+	optional	bool				bOnline					= 4;	//是否在线
+	optional	uint32				u32IP					= 5;	//IP地址
+	optional	bool				bGender					= 6;	//性别
+};
+message tagRoleRoomInfo
+{
+	optional	uint32				u32RoleID				= 1;	//玩家ID
+	optional	string				strRoleName				= 2;	//玩家名称
+	optional	string				strFaceURL				= 3;	//玩家URL地址
+	optional	uint32				u32IP					= 4;	//IP地址
+	optional	bool				bGender					= 5;	//性别
+};
+enum RoomType //房间的类型
+{
+	RoomType_YHMJ		= 1;	//玉环麻将
+	RoomType_TLSSZ		= 2;	//桐庐十三张
+	RoomType_NN			= 3;	//牛牛
+	RoomType_YWSSZ		= 4;	//义乌十三张
+	RoomType_XSSSZ		= 5;	//萧山十三张
+	RoomType_LHSSZ		= 6;	//临海十三张
+	RoomType_JXSSZ		= 7;	//嘉兴十三张
+	RoomType_JHSSZ		= 8;	//金华十三张'0
+	RoomType_AQMJ		= 9;	//安庆麻将
+	RoomType_KMMJ		= 10;	//昆明麻将
+	RoomType_NCMJ		= 11;	//南昌麻将
+	RoomType_JYSSZ		= 12;	//九幺十三张
+	RoomType_XZMJ		= 13;	//血战到底麻将
+	RoomType_XLMJ		= 14;	//血流成河麻将
+	RoomType_HZMJ		= 15;	//杭州麻将
+	RoomType_DDZ		= 16;	//斗地主
+	RoomType_NCMJS		= 17;	//新南昌麻将
+	RoomType_SZMJ		= 18;	//松滋麻将
+	RoomType_FYBZ		= 19;	//富阳八张
+	RoomType_KETMJ		= 20;	//卡二条麻将
+	RoomType_NXZMJ		= 21;	//新血战麻将
+	RoomType_NXLMJ		= 22;   //新血流麻将
+	RoomType_HSMJ		= 23;	//黄石麻将
+};
+enum RoomStateType
+{
+	RoomStateType_Normal		= 1;	//普通房卡房间
+	RoomStateType_AARoom		= 2;	//AA房间
+	RoomStateType_System		= 3;	//系统房间
+	RoomStateType_Match			= 4;	//比赛房间
+};
+//------------------------------------------脚本房间基本数据----------------------------------------------------------------
+message tagScriptData	//脚本数据
+{
+	repeated	uint32		Param1	= 1;
+	repeated	uint32		Param2	= 2;
+	repeated	uint32		Param3  = 3;
+	repeated	uint32		Param4  = 4;
+};
+//---------------------------------------------------------------------------麻将的基本设定----------------------------------------------------------------
+enum MJValue
+{
+	MJValue_Error		= 0;	//错误标记牌
+	//1条-9条
+	MJValue_Tiao_1		= 1;
+	MJValue_Tiao_2		= 2;
+	MJValue_Tiao_3		= 3;
+	MJValue_Tiao_4		= 4;
+	MJValue_Tiao_5		= 5;
+	MJValue_Tiao_6		= 6;
+	MJValue_Tiao_7		= 7;
+	MJValue_Tiao_8		= 8;
+	MJValue_Tiao_9		= 9;
+	//1万-9万
+	MJValue_Wan_1		= 10;
+	MJValue_Wan_2		= 11;
+	MJValue_Wan_3		= 12;
+	MJValue_Wan_4		= 13;
+	MJValue_Wan_5		= 14;
+	MJValue_Wan_6		= 15;
+	MJValue_Wan_7		= 16;
+	MJValue_Wan_8		= 17;
+	MJValue_Wan_9		= 18;
+	//1同-9同
+	MJValue_Tong_1		= 19;
+	MJValue_Tong_2		= 20;
+	MJValue_Tong_3		= 21;
+	MJValue_Tong_4		= 22;
+	MJValue_Tong_5		= 23;
+	MJValue_Tong_6		= 24;
+	MJValue_Tong_7		= 25;
+	MJValue_Tong_8		= 26;
+	MJValue_Tong_9		= 27;
+	//风牌 : 东南西北
+	MJValue_Feng_Dong	= 28;
+	MJValue_Feng_Nan	= 29;
+	MJValue_Feng_Xi		= 30;
+	MJValue_Feng_Bei	= 31;
+	//箭牌 : 中发白
+	MJValue_Jian_Zhong	= 32;
+	MJValue_Jian_Fa		= 33;
+	MJValue_Jian_Bai	= 34;
+	//花牌: 春夏秋冬 梅兰竹菊
+	MJValue_Hua_Chun	= 35;
+	MJValue_Hua_Xia		= 36;
+	MJValue_Hua_Qiu		= 37;
+	MJValue_Hua_Dong	= 38;
+	MJValue_Hua_Mei		= 39;
+	MJValue_Hua_Lan		= 40;
+	MJValue_Hua_Zhu		= 41;
+	MJValue_Hua_Ju		= 42;
+	//
+	MJValue_Max			= 43;
+	//特殊牌型 不属于麻将数组 服务器标记使用 
+	MJValue_LZ			= 44; //万能牌
+	MJValue_All			= 45; //表示所有的牌 不是癞子
+	MJValue_DZ			= 46; //对子
+	MJValue_SZ			= 47; //顺子
+	MJValue_KZ			= 48; //刻子
+	MJValue_13L			= 49; //十三烂
+	MJValue_HP			= 50; //胡牌
+	MJValue_FYS			= 51; //风一色
+	MJValue_JYS			= 52; //将一色
+};
+enum HuPaiType
+{
+	HuPaiType_3N		= 1;	//普通胡牌
+	HuPaiType_7D		= 2;	//七对胡牌
+	HuPaiType_13L		= 4;	//13烂
+};
+//--------------------------------------------胡牌的信息统计-------------------------------------------
+message tagHuPaiInfo
+{
+	required	uint32			u32Rate				= 1;	//
+	required	HuPaiType		eType				= 2;	//胡牌检查类型
+	repeated	MJValue			itemArr				= 3;	//项 胡牌的项
+	repeated	uint32			stateArr			= 4;	//当前胡牌涉及的类型数组
+};
+message tagHuPaiItem //这个牌型的全部的胡牌信息
+{
+	required	MJValue			eValue				= 1;	//摸到的牌 摸到这张牌 就可以胡下面的牌
+	repeated	tagHuPaiInfo	hupaiArr			= 2;	//胡牌的牌型列表->可能产生多个 参数限制倍率最大的一个就可以了
+	required	tagHuPaiInfo	finialInfo			= 3;	//最终的胡牌信息
+};
+message tagHuPaiList //一个手牌可以胡的牌的全部信息 ->可以胡多个牌(但是不包括万能牌 万能牌上层代码特殊判断)
+{
+	repeated	tagHuPaiItem	itemArr				= 1;	//胡牌的列表 
+};
+message tagTingPaiItem //听牌的单个项
+{
+	required	MJValue			eValue				= 1;	//可以出的牌
+	required	tagHuPaiList	hupaiInfo			= 2;	//出了这张牌可以胡牌的列表
+};
+message tagTingPaiInfo //听牌的替换列表
+{
+	repeated	tagTingPaiItem	itemArr			= 1;	//替换的列表
+};
+//----------------------------------发送到客户端的胡牌信息--------------------------------
+message tagRoleHuPaiInfo
+{
+	repeated	MJValue				mjArr				= 1;	//胡牌的列表
+	repeated	uint32				rateArr				= 2;	//倍率
+};
+message tagRoleTiHuanInfo //替换列表信息 标记玩家 那些牌出出去 可以听那些牌 并且那些牌的番数
+{
+	repeated	MJValue				tihuanArr			= 1;	//可以出牌的列表
+	repeated	tagRoleHuPaiInfo	hupaiArr			= 2;	//胡牌的信息列表
+};
+//麻将基础操作 玩家的操作-----------------------------------------
+enum MJRoleOper //玩家的操作
+{
+	RoleOper_ChuPai		= 1;
+	RoleOper_LChiPai	= 2;
+	RoleOper_RChiPai	= 3;
+	RoleOper_MChiPai	= 4;
+	RoleOper_PengPai	= 5;
+	RoleOper_GangPai	= 6;
+	RoleOper_MoPai		= 7;
+	RoleOper_TingPai	= 8;
+	RoleOper_HuPai		= 9;
+	RoleOper_QiangGang	= 10;
+	RoleOper_KaiGang	= 11;	
+	RoleOper_JiaGang	= 12;
+	RoleOper_Guo		= 13;	//过 表示放弃当前操作 吃 碰 杠 开杠 加杠 听 胡 都可以通过过取消掉
+	RoleOper_GangMo		= 14;	//玩家杠后摸牌 因为是从牌尾巴补充牌的 所以需要和摸牌进行区分操作
+	RoleOper_Max		= 15;
+};
+message tagRoleChuPai //玩家出牌的消息 客户端发送给服务器端 携带出牌参数  服务器告诉客户端 携带下面的参数
+{
+	optional	uint32					u8SeatID		= 1;
+	required	MJValue					eValue			= 2;
+};
+message tagRoleLChiPai 
+{
+	optional	uint32					u8SeatID		= 1;
+	optional	uint32					u8SrcSeatID		= 2;
+	optional	MJValue					eValue			= 3;
+};
+message tagRoleRChiPai
+{
+	optional	uint32					u8SeatID		= 1;
+	optional	uint32					u8SrcSeatID		= 2;
+	optional	MJValue					eValue			= 3;
+};
+message tagRoleMChiPai
+{
+	optional	uint32					u8SeatID		= 1;
+	optional	uint32					u8SrcSeatID		= 2;
+	optional	MJValue					eValue			= 3;
+};
+message tagRolePengPai
+{
+	optional	uint32					u8SeatID		= 1;
+	optional	uint32					u8SrcSeatID		= 2;
+	optional	MJValue					eValue			= 3;
+};
+message tagRoleGangPai
+{
+	optional	uint32					u8SeatID		= 1;
+	optional	uint32					u8SrcSeatID		= 2;
+	optional	MJValue					eValue			= 3;
+};
+message tagRoleGuo
+{
+	optional	uint32					u8SeatID		= 1;
+};
+message tagRoleMoPai
+{
+	optional	uint32					u8SeatID		= 1;
+	optional	MJValue					eValue			= 2;	//客户端发送服务器 无需携带参数 如果是服务器告诉客户端 玩家摸牌 必须携带参数
+};
+message tagRoleTingPai
+{
+	optional	uint32					u8SeatID		= 1;
+	required	MJValue					eValue			= 2;
+};
+message tagRoleHuPai 
+{
+	//服务器发送给客户端的时候 全部的参数都会填充完毕
+	optional	uint32					u8SeatID		= 1;
+	optional	uint32					u8SrcSeatID		= 2;	//放炮的玩家ID
+	optional	MJValue					eValue			= 3;	//胡牌的麻将
+	optional	bool					bZM				= 4;	//是否是自摸
+	optional	bool					bGSKH			= 5;	//是否是杠上开花
+	optional	bool					bGSP			= 6;	//是否是杠上炮
+};
+message tagRoleQiangGang
+{
+	optional	uint32					u8SeatID		= 1;
+	optional	uint32					u8SrcSeatID		= 2;
+	optional	MJValue					eValue			= 3;
+};
+message tagRoleKaiGang
+{
+	optional	uint32					u8SeatID		= 1;
+	required	MJValue					eValue			= 2;
+};
+message tagRoleJiaGang
+{
+	optional	uint32					u8SeatID		= 1;
+	required	MJValue					eValue			= 2;
+};
+message tagRoleGangMoPai
+{
+	optional	uint32					u8SeatID		= 1;
+	required	MJValue					eValue			= 2;	//开杠 加杠后摸牌 
+};
+message tagMJBaseRoleOper
+{
+	required	MJRoleOper				roleOper		= 1;
+	optional	tagRoleChuPai			chupai			= 2;
+	optional	tagRoleLChiPai			lchipai			= 3;
+	optional	tagRoleRChiPai			rchipai			= 4;
+	optional	tagRoleMChiPai			mchipai			= 5;
+	optional	tagRolePengPai			pengpai			= 6;
+	optional	tagRoleGangPai			gangpai			= 7;
+	optional	tagRoleGuo				guo				= 8;
+	optional	tagRoleMoPai			mopai			= 9;
+	optional	tagRoleTingPai			tingpai			= 10;
+	optional	tagRoleHuPai			hupai			= 11;
+	optional	tagRoleQiangGang		qianggang		= 12;
+	optional	tagRoleKaiGang			kaigang			= 13;
+	optional	tagRoleJiaGang			jiagang			= 14;
+	optional	tagRoleGangMoPai		gangmo			= 15;
+};
+//麻将基础 房间操作数据--------------------------------------------------
+enum MJRoomOper //房间告诉客户端 的操作
+{
+	RoomOper_ChuPai		= 1;
+	RoomOper_LChiPai	= 2;
+	RoomOper_RChiPai	= 3;
+	RoomOper_MChiPai	= 4;
+	RoomOper_PengPai	= 5;
+	RoomOper_GangPai	= 6;
+	RoomOper_MoPai		= 7;
+	RoomOper_TingPai	= 8;
+	RoomOper_HuPai		= 9;
+	RoomOper_QiangGang	= 10;
+	RoomOper_KaiGang	= 11;
+	RoomOper_JiaGang	= 12;
+	RoomOper_Guo		= 13;
+	RoomOper_Max		= 14;
+};
+message tagRoomChuPai
+{
+	required	uint32				u8SeatID		= 1;
+	optional	tagRoleTiHuanInfo	tihuanInfo		= 2;	//出牌 时候 携带的替换列表
+	optional	uint32				u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomLChiPai
+{
+	required	uint32		u8SeatID		= 1;
+	required	MJValue		eValue			= 2;
+	optional	uint32		u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomRChiPai
+{
+	required	uint32		u8SeatID		= 1;
+	required	MJValue		eValue			= 2;
+	optional	uint32		u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomMChiPai
+{
+	required	uint32		u8SeatID		= 1;
+	required	MJValue		eValue			= 2;
+	optional	uint32		u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomPengPai
+{
+	required	uint32		u8SeatID		= 1;
+	required	MJValue		eValue			= 2;
+	optional	uint32		u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomGangPai
+{
+	required	uint32		u8SeatID		= 1;
+	required	MJValue		eValue			= 2;
+	optional	uint32		u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomMoPai
+{
+	required	uint32		u8SeatID		= 1;
+	optional	uint32		u32TimeOut		= 2;	//操作超时时间
+};
+message tagRoomTingPai
+{
+	required	uint32		u8SeatID		= 1;
+	required	tagRoleTiHuanInfo	info	= 2;	//听牌的信息列表
+	optional	uint32		u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomHuPai
+{
+	required	uint32		u8SeatID		= 1;
+	optional	MJValue		eValue			= 2;
+	optional	uint32		u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomQiangGang
+{
+	required	uint32		u8SeatID		= 1;
+	required	MJValue		eValue			= 2;
+	optional	uint32		u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomKaiGang
+{
+	required	uint32		u8SeatID		= 1;
+	repeated	MJValue		mjArr			= 2;
+	optional	uint32		u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomJiaGang
+{
+	required	uint32		u8SeatID		= 1;
+	repeated	MJValue		mjArr			= 2;
+	optional	uint32		u32TimeOut		= 3;	//操作超时时间
+};
+message tagRoomGuo
+{
+	required	uint32		u8SeatID		= 1;
+	optional	uint32		u32TimeOut		= 2;	//操作超时时间
+};
+message tagMJBaseRoomOper
+{
+	required	MJRoomOper			eRoomOper		= 1;
+	optional	tagRoomChuPai		chupai			= 2;
+	optional	tagRoomLChiPai		lchipai			= 3;
+	optional	tagRoomRChiPai		rchipai			= 4;
+	optional	tagRoomMChiPai		mchipai			= 5;
+	optional	tagRoomPengPai		pengpai			= 6;
+	optional	tagRoomGangPai		gangpai			= 7;
+	optional	tagRoomMoPai		mopai			= 8;
+	optional	tagRoomTingPai		tingpai			= 9;
+	optional	tagRoomHuPai		hupai			= 10;
+	optional	tagRoomQiangGang	qianggang		= 11;
+	optional	tagRoomKaiGang		kaigang			= 12;
+	optional	tagRoomJiaGang		jiagang			= 13;
+	optional	tagRoomGuo			guo				= 14;
+};
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------------规则数据----------------------------------------------------------------------
+message tagTLSSZRuleInfo	//桐庐13张规则
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	uint32				u8MaPai			= 2;	//马牌的数据
+	optional	bool				bYJPP			= 3;	//是否允许一键配牌
+	optional	bool				bCheckIP		= 4;	//是否检查IP相同的IP
+	optional	bool				bRP				= 5;	//是否可以丢牌
+	optional	bool				bSSZ			= 6;	//是否判断三顺子
+	optional	bool				bSTH			= 7;	//是否判断三同花
+	optional	bool				bLDB			= 8;	//六队半
+	optional	bool				bWDYK			= 9;	//五对一刻
+	optional	bool				bQBYDR			= 10;	//全黑一点红
+	optional	bool				bQRYDB			= 11;	//全红一点黑
+	optional	bool				bYTL			= 12;	//一条龙
+	optional	bool				bQB				= 13;	//全黑
+	optional	bool				bQR				= 14;	//全红
+	optional	bool				bZZQL			= 15;	//至尊清龙
+};
+enum NNZJType //牛牛庄家类型
+{
+	NNZJType_Index		= 1;	//顺序做庄
+	NNZJType_Rank		= 2;	//随机做庄
+	NNZJType_Non		= 3;	//无庄
+	NNZJType_Poker		= 4;	//看牌做庄
+	NNZJType_Win		= 5;	//赢家做庄
+};
+message tagNNRuleInfo	//牛牛房间的规则
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	bool				bWXN			= 2;	//是否允许五小牛 
+	optional	NNZJType			eType			= 3;	//庄家类型
+	optional	bool				bCheckIP		= 4;	//是否检查IP相同的IP
+	optional	uint32				u8MinRole		= 5;	//最少可以开牌的人数: <=u8RoleNum 为0表示不支持不满人开牌
+};
+message tagJXSSZRuleInfo	//嘉兴13张规则
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	uint32				u8MaPai			= 2;	//马牌的数据
+	optional	bool				bYJPP			= 3;	//是否允许一键配牌
+	optional	bool				bCheckIP		= 4;	//是否检查IP相同的IP
+	optional	bool				bDG				= 5;	//是否打枪
+	optional	bool				bCS				= 6;	//是否冲三
+	optional	bool				bHBL			= 7;	//是否红波浪
+	optional	bool				bRP				= 8;	//是否可以丢牌
+	optional	bool				bFH				= 9;	//是否可以反红
+	optional	bool				bLH				= 10;	//是否连红
+};
+message tagJHSSZRuleInfo	//金华13张规则
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	uint32				u8MaPai			= 2;	//马牌的数据
+	optional	bool				bYJPP			= 3;	//是否允许一键配牌
+	optional	bool				bCheckIP		= 4;	//是否检查IP相同的IP
+};
+message tagXSSSZRuleInfo	//萧山13张规则
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	uint32				u8MaPai			= 2;	//马牌的数据
+	optional	bool				bYJPP			= 3;	//是否允许一键配牌
+	optional	bool				bCheckIP		= 4;	//是否检查IP相同的IP
+	optional	bool				bFH				= 5;	//是否反红
+	optional	bool				bCS				= 6;	//是否冲三
+	optional	bool				bHBL			= 7;	//是否红波浪
+	optional	bool				bDG				= 8;	//是否打抢
+	optional	bool				bLH				= 9;	//是否连红
+};
+message tagYWSSZRuleInfo	//义乌13张规则
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	uint32				u8MaPai			= 2;	//马牌的数据
+	optional	bool				bYJPP			= 3;	//是否允许一键配牌
+	optional	bool				bCheckIP		= 4;	//是否检查IP相同的IP
+};
+message tagLHSSZRuleInfo	//临海13张规则
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	bool				bDG				= 2;	//是否可以打枪
+	optional	bool				bYJPP			= 3;	//是否允许一键配牌
+	optional	bool				bCheckIP		= 4;	//是否检查IP相同的IP
+};
+enum NCMJXJType
+{
+	NCMJXJType_KJSXFJ		= 1;	//开局上下翻精
+	NCMJXJType_TYSG			= 2;	//同一首歌
+	NCMJXJType_ZJSXFJ		= 3;	//终局上下翻精
+	NCMJXJType_WXJ			= 4;	//无下精
+	NCMJXJType_HTYX			= 5;	//回头一笑
+};
+message tagNCMJRuleInfo  //南昌麻将的规则
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	bool				bCheckIP		= 2;	//是否检查IP相同的IP
+	optional	bool				bDPSJF			= 3;	//是否点炮3加付
+	optional	bool				bBWJRate		= 4;	//霸王精的倍率是X2还是+10
+	optional	bool				bCJP			= 5;	//出牌里面的精牌是否计算
+	optional	NCMJXJType			eXJType			= 6;	//下精的类型
+};
+message tagAQMJRuleInfo  //麻将的规则
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	bool				bCheckIP		= 2;	//是否检查IP相同的IP
+};
+message tagJYSSZRuleInfo //九幺十三张
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	bool				bCheckIP		= 2;	//是否检查IP相同的IP
+	optional	bool				bDG				= 3;	//是否打枪
+	optional	bool				bHBL			= 4;	//是否红波浪
+	optional	bool				bLH				= 5;	//是否连红
+	repeated	uint32				mapaiArr		= 6;	//马牌的数据 数组 可以有多个马牌
+	optional	bool				bRP				= 7;	//是否丢牌
+	optional	bool				bSSZ			= 8;	//是否判断三顺子
+	optional	bool				bSTH			= 9;	//是否判断三同花
+	optional	bool				bLDB			= 10;	//六队半
+	optional	bool				bWDYK			= 11;	//五对一刻
+	optional	bool				bQBYDR			= 12;	//全黑一点红
+	optional	bool				bQRYDB			= 13;	//全红一点黑
+	optional	bool				bYTL			= 14;	//一条龙
+	optional	bool				bQB				= 15;	//全黑
+	optional	bool				bQR				= 16;	//全红
+	optional	bool				bZZQL			= 17;	//至尊清龙
+	optional	bool				bYJPP			= 18;	//是否允许一键配牌
+	optional	bool				bFH				= 19;	//是否允许反红
+	optional	bool				bCS				= 20;	//是否可以冲三
+	optional	bool				bLZ				= 21;	//是否携带大王
+};
+message tagKMMJRuleInfo	//昆明麻将的规则
+{
+	optional	uint32				u32Rate			= 1;	//房间的设定倍率
+	optional	bool				bCheckIP		= 2;	
+};
+message tagXZMJRuleInfo	//血战麻将的规则
+{
+	optional	uint32				u32Rate			= 1;
+	optional	bool				bCheckIP		= 2;
+};
+message tagXLMJRuleInfo	//血流麻将的规则
+{
+	optional	uint32				u32Rate			= 1;
+	optional	bool				bCheckIP		= 2;
+};
+message tagSSZRuleInfo
+{
+	optional	tagScriptData		scriptInfo		= 1;	//脚本数据
+};
+message tagMJRuleInfo
+{
+	required	uint32				u32Rate			= 1;	//基本倍率
+	optional	tagScriptData		scriptInfo		= 2;	//脚本数据
+};
+message tagDDZRuleInfo
+{
+	required	uint32				u32Rate			= 1;	//基本倍率
+	optional	tagScriptData		scriptInfo		= 2;	//脚本数据
+};
+message tagZJHRuleInfo
+{
+	required	uint32				u32Rate			= 1;	//基本倍率
+	optional	tagScriptData		scriptInfo		= 2;	//脚本数据
+};
+message tagFYBZRuleInfo
+{
+	required	uint32				u32Rate			= 1;	//基本倍率
+	optional	bool				bRP				= 2;	//是否丢牌
+	optional	bool				bDG				= 3;	//是否打枪
+	optional	bool				bHBL			= 4;	//是否红波浪
+	optional	bool				ISWang			= 5;	//是否用王
+	optional	bool				bSSZ			= 6;	//是否判断三顺子
+	optional	bool				bYTL			= 7;	//一条龙
+	optional	bool				SDZ				= 8;	//是否允许反红
+	optional	bool				bTZ				= 9;	//是否铁支
+	optional	bool				bCheckIP		= 10;	//是否检查IP相同的IP
+	optional	uint32				bQP				= 11;	//去牌方式 0 1  2
+	optional	bool				bYJPP			= 12;	//是否一键配牌
+	optional	uint32				u8MinRole		= 13;	//最少可以开牌的人数: <=u8RoleNum 为0表示不支持不满人开牌
+};
+//---------------------------------------------------------------1.规则设定---------------------------------------------------------------
+message tagRoomCommonInfo //房间的远程数据
+{
+	optional	uint32				u32RoomID				= 1;	//房间ID   
+	optional	RoomType			eType					= 2;	//房间类型
+	optional	RoomStateType		eRoomState				= 3;	//房间状态: 标记房间是系统房间 还是 比赛房间 还是AA房间 或者是房卡房间
+	optional	uint32				u32RoomMasterID			= 4;	//房间房主ID
+	optional	uint32				u8RoleNum				= 5;	//房间人数 房间配置完毕后 人数就固定了
+	optional	uint32				u8GameNum				= 6;	//局数 配置文件配置的局数大小为UINT8 为0 表示是无限制的
+	optional	bool				bDKFJ					= 7;	//是否是带开房间
+};
+message tagRoomRuleInfo	
+{
+	optional	tagRoomCommonInfo	roomCommonInfo			= 1;	//房间公用信息
+	//扩展其他游戏的具体的结构
+	optional	tagTLSSZRuleInfo	tlsszInfo				= 2;	//桐庐十三张
+	optional	tagNNRuleInfo		nnInfo					= 3;	//牛牛的配置
+	optional	tagJXSSZRuleInfo	jxsszInfo				= 4;	//嘉兴十三张
+	optional	tagJHSSZRuleInfo	jhsszInfo				= 5;	//金华十三张
+	optional	tagXSSSZRuleInfo	xssszInfo				= 6;	//萧山十三张
+	optional	tagYWSSZRuleInfo	ywsszInfo				= 7;	//义乌十三张
+	optional	tagLHSSZRuleInfo	lhsszInfo				= 8;	//临海十三张
+	optional	tagNCMJRuleInfo		ncmjInfo				= 9;	//南昌麻将
+	optional	tagJYSSZRuleInfo	jysszInfo				= 10;	//九幺十三张
+	optional	tagAQMJRuleInfo		aqmjInfo				= 11;	//安庆麻将
+	optional	tagKMMJRuleInfo		kmmjInfo				= 12;	//昆明麻将
+	optional	tagXZMJRuleInfo		xzmjInfo				= 13;	//血战麻将
+	optional	tagXLMJRuleInfo		xlmjInfo				= 14;	//血流麻将
+	optional	tagSSZRuleInfo		sszInfo					= 15;
+	optional	tagMJRuleInfo		mjInfo					= 16;
+	optional	tagDDZRuleInfo		ddzInfo					= 17;
+	optional	tagZJHRuleInfo		zjhInfo					= 18;
+	optional	tagFYBZRuleInfo		fybzInfo				= 19;	//富阳八张
+};
+//----------------斗地主------------------------------------------------------------------------------------------------
+enum DDZRoomOper	//斗地主 房间操作
+{
+	DDZRoomOper_JiaoDiZhu	= 1;		//叫地主
+	DDZRoomOper_QiangDiZhu	= 2;		//抢地主
+	DDZRoomOper_FaPai		= 3;		//发牌
+	DDZRoomOper_SetDiZhu	= 4;		//设置地主
+	DDZRoomOper_ChuPai		= 5;		//出牌
+	DDZRoomOper_RateChg		= 6;		//倍率变化
+	DDZRoomOper_GameStar	= 7;		//游戏开始
+	DDZRoomOper_GameStop	= 8;		//游戏结算
+	DDZRoomOper_Reset		= 9;		//重置 没人叫地主并且没人明牌的情况下 重新发牌的一个阶段
+	DDZRoomOper_MingPai		= 10;		//有玩家明牌了
+	DDZRoomOper_Guo			= 11;		//房间叫玩家过操作 就是轮到玩家出牌 但是玩家出不起牌
+};
+enum DDZRoleOper //斗地主 玩家操作
+{
+	DDZRoleOper_MingPai		= 1;		//明牌
+	DDZRoleOper_JiaoDiZhu	= 2;		//叫地主
+	DDZRoleOper_QiangDiZhu	= 3;		//抢地主
+	DDZRoleOper_ChuPai		= 4;		//出牌
+	DDZRoleOper_Guo			= 5;		//过
+};
+enum DDZRoomState
+{
+	DDZRoomState_Non		= 0;		//未开始
+	DDZRoomState_JiaoDiZhu	= 1;		//叫地主
+	DDZRoomState_QiangDiZhu	= 2;		//抢地主
+	DDZRoomState_ChuPai		= 3;		//出牌
+};
+enum DDZPokerType
+{
+	DDZPokerType_Err		= 0;		//错误排序
+	DDZPokerType_HJ			= 1;		//火箭  2
+	DDZPokerType_ZD			= 2;		//炸弹  4
+	DDZPokerType_FJSDY		= 3;		//飞机-> 三带一
+	DDZPokerType_FJSDL		= 4;		//飞机-> 三带两
+	DDZPokerType_SDL		= 5;		//4带2  6
+	DDZPokerType_SSZ		= 6;		//三顺子  3N ->  >=6
+	DDZPokerType_LSZ		= 7;		//两顺子  2N -> >=6
+	DDZPokerType_SDY		= 8;		//三带一  4
+	DDZPokerType_SZ			= 9;		//顺子    5
+	DDZPokerType_SP			= 10;		//散牌    1
+	DDZPokerType_DZ			= 11;		//对子    2
+	DDZPokerType_ST			= 12;		//三条	  3
+};
+message tagDDZRoleOper
+{
+	required		DDZRoleOper			roleOper		= 1;
+	required		uint32				u8SeatID		= 2;
+	optional		bool				bOper			= 3;
+	optional		uint32				u32MPRate		= 4;
+	optional		DDZPokerType		eType			= 5;
+	repeated		uint32				pokerArr		= 6;
+	optional		tagScriptData		scriptInfo		= 7;
+};
+message tagDDZBeginInfo
+{
+	required		uint32				u8GameNum		= 1;
+};	
+message tagDDZRoomOper
+{
+	required		DDZRoomOper			roomOper		= 1;
+	required		uint32				u32TimeMS		= 2;
+	optional		uint32				u8SeatID		= 3;
+	repeated		uint32				pokerArr		= 4;
+	optional		uint32				u32DZRate		= 5;
+	optional		uint32				u32HJRate		= 6;
+	optional		uint32				u32MPRate		= 7;
+	optional		uint32				u32ZDRate		= 8;
+	optional		tagDDZBeginInfo		begininfo		= 9;
+	optional		tagScriptData		scriptInfo		= 10;
+};
+message tagDDZEndInfoRoleItem
+{
+	required		uint32				u8SeatID		= 1;
+	repeated		uint32				pokerArr		= 2;
+	required		int32				n32Point		= 3;
+	required		uint32				u32Rate			= 4;
+};
+message tagDDZEndInfo
+{
+	required		uint32				u8GameNum		= 1;
+	required		uint32				u32HJRate		= 2;
+	required		uint32				u32ZDRate		= 3;
+	required		uint32				u32DZRate		= 4;
+	required		uint32				u32MPRate		= 5;
+	repeated		tagDDZEndInfoRoleItem	roleArr			= 6;
+	optional		tagScriptData		scriptInfo		= 7;
+};
+message tagDDZRoleInitInfo
+{
+	required		uint32				u8SeatID		= 1;
+	required		uint32				u32PokerNum		= 2;
+	repeated		uint32				pokerArr		= 3;
+};
+message tagDDZInitInfo
+{
+	required		uint32				u8SeatID		= 1;
+	required		uint32				u8GameNum		= 2;
+	optional		uint32				u8DZSeatID		= 3;		
+
+	required		uint32				u32HJRate		= 4;
+	required		uint32				u32ZDRate		= 5;
+	required		uint32				u32DZRate		= 6;
+	required		uint32				u32MPRate		= 7;
+	optional		uint32				u8ChuPaiSeatID	= 8;
+	repeated		uint32				ChuPaiArr		= 9;
+	repeated		tagDDZRoleInitInfo	roleArr			= 10;
+	optional		tagScriptData		scriptInfo		= 11;
+};
+message tagDDZRoomDataInfo
+{
+	required		uint32				u32WinNum		= 1;
+	required		uint32				u32LoseNum		= 2;
+	required		uint32				u32PJNum		= 3;
+	optional		tagScriptData		scriptInfo		= 4;
+};
+message tagDDZRoomLogInfo
+{
+	optional		tagScriptData		scriptInfo		= 1;
+};
+//---------------------------------------------麻将---------------------------------------------------------------------------------------------------------
+enum MJRoleOperS
+{
+	MJRoleOperS_Error		= 0;	//错误标记
+	MJRoleOperS_MoPai		= 1;	//玩家摸牌
+	MJRoleOperS_LChiPai		= 2;	//玩家左吃牌
+	MJRoleOperS_RChiPai		= 3;	//玩家右吃牌
+	MJRoleOperS_MChiPai		= 4;	//玩家中吃牌
+	MJRoleOperS_PengPai		= 5;	//玩家碰牌
+	MJRoleOperS_GangPai		= 6;	//玩家杠牌
+	MJRoleOperS_KaiGang		= 7;	//玩家开杠
+	MJRoleOperS_JiaGang		= 8;	//玩家加杠
+	MJRoleOperS_GangMo		= 9;	//玩家杠摸
+	MJRoleOperS_QiangGang	= 10;	//玩家抢杠胡
+	MJRoleOperS_HuPai		= 11;	//玩家胡牌
+	MJRoleOperS_ChuPai		= 12;	//玩家出牌
+	MJRoleOperS_ZMHuPai		= 13;	//玩家自摸胡牌
+	MJRoleOperS_BeQiangGang	= 14;	//玩家被抢杠
+	MJRoleOperS_Guo			= 15;	//玩家过操作
+	MJRoleOperS_DQ			= 16;	//定缺
+	MJRoleOperS_Huan3Zhang	= 17;	//换三张
+	MJRoleOperS_YPDX		= 18;	//一炮多响
+	MJRoleOperS_PointChg	= 19;	//总结算前的分数变化通知
+	MJRoleOperS_LiangPai	= 20;	//房间通知玩家亮牌
+};
+enum MJRoomOperS
+{
+	MJRoomOperS_Error		= 0;	//错误标记
+	MJRoomOperS_MoPai		= 1;	//房间让玩家摸牌
+	MJRoomOperS_LChiPai		= 2;	//房间让玩家左吃牌
+	MJRoomOperS_RChiPai		= 3;	//房间让玩家右吃牌
+	MJRoomOperS_MChiPai		= 4;	//房间让玩家中吃牌
+	MJRoomOperS_PengPai		= 5;	//房间让玩家碰牌
+	MJRoomOperS_GangPai		= 6;	//房间让玩家杠牌
+	MJRoomOperS_KaiGang		= 7;	//房间让玩家开杠
+	MJRoomOperS_JiaGang		= 8;	//房间让玩家加杠
+	MJRoomOperS_GangMo		= 9;	//房间让玩家杠摸
+	MJRoomOperS_QiangGang	= 10;	//房间让玩家抢杠胡
+	MJRoomOperS_HuPai		= 11;	//房间让玩家胡牌
+	MJRoomOperS_ChuPai		= 12;	//房间让玩家出牌
+	MJRoomOperS_ZMHuPai		= 13;	//房间让玩家自摸胡牌
+	MJRoomOperS_Guo			= 14;	//房间让玩家过操作 : 过操作不可以单独存在
+	MJRoomOperS_Star		= 15;	//开始
+	MJRoomOperS_Stop		= 16;	//结算
+	MJRoomOperS_DQ			= 17;	//定缺
+	MJRoomOperS_Huan3Zhang	= 18;	//换三张
+	MJRoomOperS_YPDX		= 19;	//一炮多响
+	MJRoomOperS_LiangPai	= 20;	//房间让玩家亮牌
+};
+message tagMJRoleOper
+{
+	required		MJRoleOperS			roleOper		= 1;
+	required		uint32				u8SeatID		= 2;
+	optional		uint32				u8SrcSeatID		= 3;
+	repeated		MJValue				mjArr			= 4;
+	optional		tagScriptData		scriptInfo		= 5;
+};
+message tagMJTiHuanInfo
+{
+	required		MJValue				eTiHuan			= 1;
+	repeated		MJValue				tingpaiArr		= 2;
+	repeated		uint32				rateArr			= 3;
+};
+message tagMJBeginRoleInfo
+{
+	required		uint32				u8SeatID		= 1;
+	required		uint32				u8MJNum			= 2;
+	repeated		MJValue				mjArr			= 3;
+	optional		tagScriptData		scriptInfo		= 4;
+};
+message tagMJBeginInfo
+{
+	required		uint32				u8GameNum		= 1;
+	repeated		uint32				ShaiZiArr		= 2;
+	required		uint32				u8MJNum			= 3;
+	repeated		tagMJBeginRoleInfo	roleArr			= 4;
+	optional		tagScriptData		scriptInfo		= 5;
+};
+message tagMJRoomOper
+{
+	required		MJRoomOperS			roomOper		= 1;
+	required		uint32				u32TimeMS		= 2;
+	optional		uint32				u8SeatID		= 3;
+	optional		uint32				u8SrcSeatID		= 4;
+	repeated		MJValue				mjArr			= 5;
+	repeated		tagMJTiHuanInfo		tihuanArr		= 6;
+	optional		tagMJBeginInfo		beginInfo		= 7;
+	optional		tagScriptData		scriptInfo		= 8;
+};
+message tagMJItem	//吃 碰 杠 的 一项
+{
+	optional		uint32				u8SrcSeatID		= 1;
+	repeated		MJValue				mjArr			= 2;
+};
+enum MJInfoType	//麻将胡牌结算命令里面的提示枚举
+{
+	//与最终结算相关的点数变化的枚举
+	MJInfoType_Err		= 0;	//错误标记符
+	//1.大冶麻将
+	MJInfoType_PH		= 1;	//平胡(就是普通胡牌2+3N)
+	MJInfoType_DDP		= 2;	//对对碰
+	MJInfoType_JYS		= 3;	//将一色
+	MJInfoType_FYS		= 4;	//风一色
+	MJInfoType_QYS		= 5;	//清一色
+	MJInfoType_QQR		= 6;	//全求人
+	MJInfoType_QGH		= 7;	//抢杠胡
+	MJInfoType_GSKH		= 8;	//杠上开花
+	MJInfoType_HDLY		= 9;	//海底捞月
+	MJInfoType_KK		= 10;	//开口
+	MJInfoType_HZG		= 11;	//红中杠
+	MJInfoType_FCG		= 12;	//发财杠
+	MJInfoType_LZG		= 13;	//癞子杠
+	MJInfoType_LZPG		= 14;	//癞子皮杠
+	MJInfoType_AG		= 15;	//暗杠
+	MJInfoType_MG		= 16;	//明杠
+	MJInfoType_JG		= 17;	//加杠
+	MJInfoType_MQQ		= 18;	//门前清
+	MJInfoType_DP		= 19;	//点炮
+	MJInfoType_ZM		= 20;	//自摸
+	MJInfoType_YP		= 21;	//硬牌
+	MJInfoType_CB		= 22;	//承包
+	MJInfoType_BCB		= 23;	//被承包
+	//2.松滋麻将
+	MJInfoType_YZM		= 24;	//硬自摸
+	MJInfoType_RZM		= 25;	//软自摸
+	MJInfoType_YLY		= 26;	//硬赖油
+	MJInfoType_RLY		= 27;	//软赖油
+	MJInfoType_CT		= 28;	//朝天
+	//3.南昌麻将
+	MJInfoType_SJF		= 29;	//上精分
+	MJInfoType_XJF		= 30;	//下精分
+	MJInfoType_BWJ		= 31;	//霸王精
+	MJInfoType_GJ		= 32;	//杠精
+	MJInfoType_DG		= 33;	//德国
+	MJInfoType_JHY		= 34;	//精还原
+	MJInfoType_DZD		= 35;	//德中德
+	MJInfoType_JD		= 36;	//精吊
+	MJInfoType_ZJ		= 37;	//庄家
+	MJInfoType_TH		= 38;	//天胡
+	MJInfoType_DH		= 39;	//地胡
+	MJInfoType_DQD		= 40;	//大七对
+	MJInfoType_XQD		= 41;	//小七对
+	MJInfoType_SSL		= 42;	//十三烂
+	MJInfoType_QXSSL	= 43;	//七星十三烂
+	MJInfoType_CZ		= 44;	//抄庄
+	//4.杭州麻将
+	MJInfoType_QD		= 45;	//七对
+	MJInfoType_HHQD		= 46;	//豪华七对
+	MJInfoType_LHHQD	= 47;	//两豪华七对
+	MJInfoType_SHHQD	= 48;	//三豪华七对
+	MJInfoType_BT		= 49;	//爆头
+	MJInfoType_CP		= 50;	//财飘
+	MJInfoType_GB		= 51;	//杠爆
+	MJInfoType_GP		= 52;	//杠飘
+	MJInfoType_PG		= 53;	//飘杠
+	//5.血战麻将
+	MJInfoType_GSP		= 54;	//杠上炮
+	MJInfoType_YPDX		= 55;	//一炮多响
+	MJInfoType_QDDH		= 56;	//清对	请对对胡
+	MJInfoType_QQD		= 57;	//清七对
+	MJInfoType_LQD		= 58;	//龙七对
+	MJInfoType_QLQD		= 59;	//清龙七对
+	MJInfoType_JGD		= 60;	//金钩钓
+	MJInfoType_QJGD		= 61;	//清金钩钓
+	MJInfoType_JJGD		= 62;	//将金钩钓
+	MJInfoType_JDH		= 63;	//将对
+	MJInfoType_QDY		= 64;	//全带幺
+	MJInfoType_QYJ		= 65;	//清幺九
+	MJInfoType_SBLH		= 66;	//十八罗汉
+	MJInfoType_QSBLH	= 67;	//清十八罗汉
+	MJInfoType_GF		= 68;	//刮风
+	MJInfoType_XY		= 69;	//下雨
+	MJInfoType_HJZY		= 70;	//呼叫转移
+	MJInfoType_HZ		= 71;	//花猪
+	MJInfoType_CJ		= 72;	//查叫
+	MJInfoType_DQTiao	= 73;	//定缺条
+	MJInfoType_DQWan	= 74;	//定缺万
+	MJInfoType_DQTong	= 75;	//定缺同
+	MJInfoType_Gen		= 76;	//根
+	//黄石麻将
+	MJInfoType_LiangPai = 77;	//亮牌	
+	MJInfoType_SanPuDao = 78;	//三扑倒
+	MJInfoType_DaHu		= 79;	//大胡 
+};
+message tagMJPointChgLog
+{
+	repeated	MJInfoType			typeArr			= 1;
+	repeated	int32				rateArr			= 2;
+	repeated	int32				pointArr		= 3;
+	repeated	int32				finishArr		= 4;
+	//
+	repeated	uint32				seatArr			= 5;	
+	repeated	MJValue				mjArr			= 6;	
+};
+message tagMJRoleEndInfo
+{
+	required		uint32				u8SeatID		= 1;
+	repeated		MJValue				mjArr			= 2;
+	repeated		tagMJItem			lchiArr			= 3;
+	repeated		tagMJItem			mchiArr			= 4;
+	repeated		tagMJItem			rchiArr			= 5;
+	repeated		tagMJItem			pengArr			= 6;
+	repeated		tagMJItem			gangArr			= 7;
+	repeated		tagMJItem			jiagangArr		= 8;
+	repeated		tagMJItem			kaigangArr		= 9;
+	required		int32				n32Point		= 10;
+	repeated		tagMJPointChgLog	pointInfo		= 11;
+	optional		tagScriptData		scriptInfo		= 12;
+};
+message tagMJEndInfo
+{
+	required		uint32				u8GameNum		= 1;
+	optional		uint32				u8HuPaiSeatID	= 2;
+	repeated		tagMJRoleEndInfo	roleArr			= 3;
+	optional		tagScriptData		scriptInfo		= 4;
+};
+message tagMJRoleInitInfo
+{
+	required		uint32				u8SeatID		= 1;
+	required		uint32				u8MJNum			= 2;
+	repeated		MJValue				mjArr			= 3;
+	repeated		tagMJItem			lchiArr			= 4;
+	repeated		tagMJItem			rchiArr			= 5;
+	repeated		tagMJItem			mchiArr			= 6;
+	repeated		tagMJItem			pengArr			= 7;
+	required		uint32				u8GangNum		= 8;
+	repeated		tagMJItem			gangArr			= 9;
+	repeated		tagMJItem			jiaGangArr		= 10;
+	repeated		tagMJItem			kaiGangArr		= 11;
+	repeated		MJValue				chupaiArr		= 12;
+	optional		tagScriptData		scriptInfo		= 13;
+};
+message tagMJInitInfo
+{
+	required		uint32				u8SeatID		= 1;
+	required		uint32				u8GameNum		= 2;
+	required		uint32				u8MJNum			= 3;
+	repeated		uint32				ShaiZiArr		= 4;
+	required		uint32				u8GangMoNum		= 5;
+	repeated		tagMJRoleInitInfo	roleArr			= 6;
+	optional		tagScriptData		scriptInfo		= 7;
+};
+message tagMJRoomDataInfo
+{
+	required		uint32				u32WinNum		= 1;
+	required		uint32				u32LoseNum		= 2;
+	required		uint32				u32PJNum		= 3;
+	optional		tagScriptData		scriptInfo		= 4;
+};
+message tagMJRoleOperItemLog
+{
+	required		uint32				u8SeatID		= 1;
+	required		MJRoleOperS			eOper			= 2;
+	optional		MJValue				eValue			= 3;
+	optional		tagScriptData		scriptInfo		= 4;
+};
+message tagMJRoomLogInfo
+{
+	required		tagMJBeginInfo		beginInfo		= 1;
+	required		tagMJEndInfo		endInfo			= 2;
+	repeated		tagMJRoleOperItemLog	operArr		= 3;
+	optional		tagScriptData		scriptInfo		= 4;
+};
+//---------------八张---------------
+enum BZRoomOper	//八张 房间操作
+{
+	BZRoomOper_GameBegin	= 1;		//开始
+	BZRoomOper_GameEnd		= 2;		//结算
+};
+enum BZRoleOper //八张 玩家操作
+{
+	BZRoleOper_SetPoker		= 1;		//设置牌
+	BZRoleOper_DiuPai		= 2;		//丢牌
+};
+enum BZType
+{
+	BZType_Error	= 0;
+	BZType_SP		= 1;	//散牌
+	BZType_DZ		= 2;	//对子
+	BZType_SZ		= 3;	//顺子
+	BZType_ZD		= 4;	//炸弹
+	BZType_THS		= 5;	//同花顺
+};
+enum BZTSType
+{
+	BZTSType_Error	= 0;	//
+	BZTSType_SSZ	= 1;	//三顺子
+	BZTSType_TZ		= 2;	//铁枝
+	BZTSType_SDZ	= 3;	//四对子
+	BZTSType_YTL	= 4;	//一条龙
+};
+message tagBZRoleOper	//玩家操作
+{
+	required		BZRoleOper			roleOper		= 1;	//操作类型
+	required		uint32				u8SeatID		= 2;	//座位ID
+	repeated		uint32				pokerArr		= 3;	//扑克的列表
+	optional		BZTSType			eTSType			= 4;	//特殊牌型
+	repeated		BZType				typeArr			= 5;	//各个蹲的牌型
+	optional		tagScriptData		scriptInfo		= 6;	//扩展数据
+	optional		uint32				u32exTypePoint	= 7;	//特殊牌型的点数
+};
+message tagBZRoomOper //房间操作
+{
+	required		BZRoomOper			roomOper		= 1;	//操作类型
+	required		uint32				u32TimeMS		= 2;	//剩余毫秒
+	optional		uint32				u8SeatID		= 3;	//座位ID
+	repeated		uint32				pokerArr		= 4;	//扑克列表
+	optional		tagScriptData		scriptInfo		= 5;	//扩展数据
+};
+message tagBZRoleEndInfo //玩家结算数据
+{
+	required		uint32				u8SeatID		= 1;	//座位ID
+	repeated		uint32				pokerArr		= 2;	//扑克列表
+	optional		BZTSType			eTSType			= 3;	//特殊牌型
+	repeated		BZType				typeArr			= 4;	//各个蹲的牌型
+	repeated		uint32				seatArr			= 5;	//座位列表
+	repeated		int32				pointArr		= 6;	//与当前座位的输赢点数
+	repeated		bool				dqArr			= 7;	//与当前座位是否打枪
+	required		int32				n32Point		= 8;	//总输赢点数
+};
+message tagBZEndInfo //房间结算数据
+{
+	required		uint32				u8GameNum		= 1;	//游戏局数
+	required		bool				bHBL			= 2;	//是否红波浪
+	repeated		tagBZRoleEndInfo	roleArr			= 3;	//玩家结算数组
+	optional		tagScriptData		scriptInfo		= 4;	//扩展数据
+	repeated		uint32				otherPokerArr	= 5;	//如果桌子上不满员的话 不在的玩家的牌
+};
+message tagBZRoleInitInfo //玩家初始化数据
+{
+	required		uint32				u8SeatID		= 1;	//座位ID
+	required		uint32				u32PokerNum		= 2;	//扑克数量
+	repeated		uint32				pokerArr		= 3;	//扑克列表
+	optional		BZTSType			eTSType			= 4;	//特殊牌型
+	repeated		BZType				typeArr			= 5;	//各个蹲的牌型
+	optional		uint32				u32exTypePoint	= 6;	//特殊牌型的点数
+};
+message tagBZInitInfo //房间初始化数据
+{
+	required		uint32				u8SeatID		= 1;	//座位ID
+	repeated		uint32				SeatArr			= 2;	//座位数组	
+	repeated		bool				operArr			= 3;	//是否已经完成操作了
+	repeated		tagBZRoleInitInfo	roleArr			= 4;	//玩家数据数组
+	optional		tagScriptData		scriptInfo		= 5;	//扩展数据
+};
+message tagBZRoomDataInfo //房间个人信息
+{
+	required		uint32				u32WinNum		= 1;	//胜利局数
+	required		uint32				u32LoseNum		= 2;	//失败局数
+	required		uint32				u32PJNum		= 3;	//和局局数
+	optional		tagScriptData		scriptInfo		= 4;	//扩展数据
+};
+message tagBZRoomLogInfo //房间回放记录
+{
+	optional		tagScriptData		scriptInfo		= 1;	//扩展数据
+};
+//---------------炸金花---------------
+
+//---------------十三水---------------
+enum SSZRoomOper	//十三张 房间操作
+{
+	SSZRoomOper_GameBegin	= 1;		//开始
+	SSZRoomOper_GameEnd		= 2;		//结算
+};
+enum SSZRoleOper //十三张 玩家操作
+{
+	SSZRoleOper_SetPoker	= 1;		//设置牌
+	SSZRoleOper_DiuPai		= 2;		//丢牌
+};
+enum SSZType
+{
+	SSZType_Error			= 0;		//错误标记
+	SSZType_SP				= 1;		//散牌
+	SSZType_DZ				= 2;		//对子
+	SSZType_LD				= 3;		//两对
+	SSZType_ST				= 4;		//三条
+	SSZType_SZ				= 5;		//顺子
+	SSZType_TH				= 6;		//同花
+	SSZType_HL				= 7;		//葫芦
+	SSZType_ZD				= 8;		//炸弹
+	SSZType_THS				= 9;		//同花顺
+};
+enum SSZTSType
+{
+	SSZTSType_Error	= 0;	//不是特殊牌型
+	SSZTSType_SSZ	= 1;	//特殊牌型 三顺子
+	SSZTSType_STH	= 2;	//特殊牌型 三同花
+	SSZTSType_LDB	= 3;	//特殊牌型 六队半
+	SSZTSType_QD8	= 4;	//特殊牌型 全大 8
+	SSZTSType_QD9	= 5;
+	SSZTSType_QD10	= 6;
+	SSZTSType_QDJ	= 7;
+	SSZTSType_WDYK	= 8;	//特殊牌型 五队一刻
+	SSZTSType_QBYDR	= 9;	//特殊牌型 全黑一点红
+	SSZTSType_QRYDB	= 10;	//特殊牌型 全红一点黑
+	SSZTSType_YTL	= 11;	//一条龙
+	SSZTSType_QB	= 12;	//全黑
+	SSZTSType_QR	= 13;	//全红
+	SSZTSType_ZZQL	= 14;	//至尊青龙
+};
+message tagSSZRoleOper	//玩家操作
+{
+	required		SSZRoleOper			roleOper		= 1;	//操作类型
+	required		uint32				u8SeatID		= 2;	//座位ID
+	repeated		uint32				pokerArr		= 3;	//扑克的列表
+	optional		BZTSType			eTSType			= 4;	//特殊牌型
+	repeated		BZType				typeArr			= 5;	//各个蹲的牌型
+	optional		tagScriptData		scriptInfo		= 6;	//扩展数据
+};
+message tagSSZRoomOper //房间操作
+{
+	required		SSZRoomOper			roomOper		= 1;	//操作类型
+	required		uint32				u32TimeMS		= 2;	//剩余毫秒
+	optional		uint32				u8SeatID		= 3;	//座位ID
+	repeated		uint32				pokerArr		= 4;	//扑克列表
+	optional		tagScriptData		scriptInfo		= 5;	//扩展数据
+};
+message tagSSZRoleEndInfo //玩家结算数据
+{
+	required		uint32				u8SeatID		= 1;	//座位ID
+	repeated		uint32				pokerArr		= 2;	//扑克列表
+	optional		SSZTSType			eTSType			= 3;	//特殊牌型
+	repeated		SSZType				typeArr			= 4;	//各个蹲的牌型
+	repeated		uint32				seatArr			= 5;	//座位列表
+	repeated		int32				pointArr		= 6;	//与当前座位的输赢点数
+	repeated		bool				dqArr			= 7;	//与当前座位是否打枪
+	required		uint32				u32MPRate		= 8;	//马牌的倍率
+	required		int32				n32Point		= 9;	//总输赢点数
+};
+message tagSSZEndInfo //房间结算数据
+{
+	required		uint32				u8GameNum		= 1;	//游戏局数
+	required		bool				bHBL			= 2;	//是否红波浪
+	required		bool				bFH				= 3;	//是否反红
+	required		uint32				u32LHRate		= 4;	//连红的倍率
+	repeated		tagSSZRoleEndInfo	roleArr			= 5;	//玩家结算数组
+	optional		tagScriptData		scriptInfo		= 6;	//扩展数据
+};
+message tagSSZRoleInitInfo //玩家初始化数据
+{
+	required		uint32				u8SeatID		= 1;	//座位ID
+	required		uint32				u32PokerNum		= 2;	//扑克数量
+	optional		uint32				pokerArr		= 3;	//扑克列表
+	optional		SSZTSType			eTSType			= 4;	//特殊牌型
+	repeated		SSZType				typeArr			= 5;	//各个蹲的牌型
+};
+message tagSSZInitInfo //房间初始化数据
+{
+	required		uint32				u8SeatID		= 1;	//座位ID
+	repeated		uint32				SeatArr			= 2;	//座位数组	
+	repeated		bool				operArr			= 3;	//是否已经完成操作了
+	repeated		tagSSZRoleInitInfo	roleArr			= 4;	//玩家数据数组
+	optional		tagScriptData		scriptInfo		= 5;	//扩展数据
+};
+message tagSSZRoomDataInfo //房间个人信息
+{
+	required		uint32				u32WinNum		= 1;	//胜利局数
+	required		uint32				u32LoseNum		= 2;	//失败局数
+	required		uint32				u32PJNum		= 3;	//和局局数
+	optional		tagScriptData		scriptInfo		= 4;	//扩展数据
+};
+message tagSSZRoomLogInfo //房间回放记录
+{
+	optional		tagScriptData		scriptInfo		= 1;	//扩展数据
+};
+
+
+//------------------------------------------------------------------------脚本房间数据----------------------------------------------------------------
+message tagScriptRoomRoleItem	 //脚本玩家数据
+{
+	optional	uint32				u32RoleID		= 1;	//玩家ID
+	optional	tagRoleRoomInfo		roleInfo		= 2;	//玩家房间数据 玩家名称 玩家头像 玩家状态
+	optional	int32				n32Point		= 3;	//玩家点数
+	optional	uint32				u8SeatID		= 4;	//玩家位置
+	optional	bool				bAccpet			= 5;	//玩家是否准备了
+	optional	RoomRoleState		eState			= 6;	//玩家状态
+	optional	bool				bDeposit		= 7;	//是否在托管状态
+};
+message tagScriptRoomRoleInfo	//房间玩家信息
+{
+	repeated	tagScriptRoomRoleItem	roleArr		= 1;	//变化玩家列表
+	repeated	uint32					delArr		= 2;	//离开的玩家列表
+};
+message tagScriptRoleOper		//房间玩家操作
+{
+	optional	tagDDZRoleOper			ddzInfo		= 1;
+	optional	tagBZRoleOper			bzInfo		= 2;
+	optional	tagSSZRoleOper			sszInfo		= 3;
+	optional	tagMJRoleOper			mjInfo		= 4;
+};
+message tagScriptRoomOper		//房间同步操作
+{
+	required	RoomType				eType		= 1;
+	repeated	tagDDZRoleOper			ddzRoleArr	= 2;
+	repeated	tagDDZRoomOper			ddzRoomArr	= 3;
+	repeated	tagMJRoleOper			mjRoleArr	= 4;
+	repeated	tagMJRoomOper			mjRoomArr	= 5;
+	repeated	tagBZRoleOper			bzRoleArr	= 6;
+	repeated	tagBZRoomOper			bzRoomArr	= 7;
+	repeated	tagSSZRoleOper			sszRoleArr	= 8;
+	repeated	tagSSZRoomOper			sszRoomArr	= 9;
+};
+message tagScriptRoomGroupInfo
+{
+	repeated	tagRoleRoomInfo			roleArr		= 1;	//玩家列表数据
+	repeated	int32					pointArr	= 2;	//玩家输赢点数
+};
+message tagScriptRoomEndInfo	//房间结算
+{
+	required	RoomType				eType		= 1;
+	optional	tagScriptRoomGroupInfo	groupInfo	= 2;	//房间最终统计数据 只有最后一局才有的
+	optional	tagDDZEndInfo			ddzInfo		= 3;
+	optional	tagMJEndInfo			mjInfo		= 4;
+	optional	tagBZEndInfo			bzInfo		= 5;
+	optional	tagSSZEndInfo			sszInfo		= 6;
+};
+message tagScriptRoomInit		//房间初始化
+{
+	required	tagRoomRuleInfo			ruleInfo	= 1;	//房间规则数据
+	optional	tagScriptRoomOper		roomOper	= 2;	//当前房间操作缓存
+	repeated	tagScriptRoomEndInfo	endArr		= 3;	//以前的结算数据 不包含统计数据
+	optional	tagScriptRoomGroupInfo	groupInfo	= 4;	//统计数据 只有房间待续费的时候才有
+	optional	bool					bSign		= 5;	//AA房间特有的 是否需要报名
+
+	optional	tagDDZInitInfo			ddzInfo		= 6;
+	optional	tagMJInitInfo			mjInfo		= 7;	
+	optional	tagBZInitInfo			bzInfo		= 8;		
+	optional	tagSSZInitInfo			sszInfo		= 9;		
+};
+message tagScriptRoomLogInfo	//房间回放
+{
+	required	RoomType				eType		= 1;	//房间类型
+	repeated	tagScriptRoomRoleItem	roleArr		= 2;	//玩家数据
+	optional	tagDDZRoomLogInfo		ddzInfo		= 3;
+	optional	tagMJRoomLogInfo		mjInfo		= 4;
+	optional	tagBZRoomLogInfo		bzInfo		= 5;
+	optional	tagSSZRoomLogInfo		sszInfo		= 6;
+};
+message tagScriptRoomDataInfo	//玩家房间数据记录
+{
+	required	RoomType				eType		= 1;	//房间类型
+	optional	tagDDZRoomDataInfo		ddzInfo		= 2;	//
+	optional	tagMJRoomDataInfo		mjInfo		= 3;
+	optional	tagBZRoomDataInfo		bzInfo		= 4;
+	optional	tagSSZRoomDataInfo		sszInfo		= 5;
+};
+//-------------------------------------------------------------------------桐庐十三张的数据----------------------------------------------------------------
+enum TLSSZType
+{
+	TLSSZType_Err		= 0;
+	TLSSZType_SP		= 1;	
+	TLSSZType_DZ		= 2;	
+	TLSSZType_LD		= 3;	
+	TLSSZType_ST		= 4;	
+	TLSSZType_SZ		= 5;	
+	TLSSZType_TH		= 6;	
+	TLSSZType_HL		= 7;	
+	TLSSZType_ZD		= 8;	
+	TLSSZType_THS		= 9;	
+};
+enum TLSSZTSType
+{
+	TLSSZTSType_Err			= 0; //不是特殊牌型
+	TLSSZTSType_SSZ			= 1; //特殊牌型 三顺子
+	TLSSZTSType_STH			= 2; //特殊牌型 三同花
+	TLSSZTSType_LDB			= 3; //特殊牌型 六队半
+	TLSSZTSType_WDYK		= 4; //特殊牌型 五队一刻
+	TLSSZTSType_QBYDR		= 5; //特殊牌型 全黑一点红
+	TLSSZTSType_QRYDB		= 6; //特殊牌型 全红一点黑
+	TLSSZTSType_YTL			= 7; //一条龙
+	TLSSZTSType_QB			= 8; //全黑
+	TLSSZTSType_QR			= 9; //全红
+	TLSSZTSType_ZZQL		= 10; //至尊青龙
+};
+message tagTLSSZLogInfo		//桐庐十三张 回放数据
+{
+	//目前桐庐十三张没有需要记录的数据
+
+};
+message tagTLSSZRoomDataInfo //桐庐十三张 玩家个人信息记录
+{
+	//桐庐十三张 玩家需要记录到数据库的数据
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+	optional	uint32					u32HBLNum	= 4;	//红波浪次数
+	optional	uint32					u32DGNum	= 5;	//打枪次数
+};
+message tagTLSSZRoleItem //桐庐13张玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagTLSSZRoleInfo //桐庐13张玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagTLSSZRoleItem	roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+message tagTLSSZRoleComInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	int32				pointArr		= 2;	//每个蹲位的积分变化 没有X倍率的
+	optional	bool				bDG				= 3;	//是否被打枪
+	optional	int32				n32BasePoint	= 4;	//最终积分的变化 没有涉及到倍率
+	optional	uint32				u32Rate			= 5;	//当前倍率 不是房间的倍率 -> 最终结果为 倍率X房间倍率X积分变化
+	optional	int32				n32FinalPoint	= 6;	//最终积分变化 房间倍率和基本倍率都计算上了的 2个玩家之间的积分变化
+};
+message tagTLSSZRoleEndInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	optional	bool				bHBL			= 2;	//是否是红波浪
+	optional	uint32				u32LHCount		= 3;	//连红次数
+	optional	bool				bMaPai			= 4;	//是否有马牌
+	repeated	TLSSZType			typeArr			= 5;	//每蹲的类型
+	optional	TLSSZTSType			typeex			= 6;	//特殊牌型  如果有特殊牌型 typeArr 无需使用
+	repeated	uint32				pokerArr		= 7;	//牌的数据
+	repeated	tagTLSSZRoleComInfo	comArr			= 8;	//和其他玩家比较的集合
+	repeated	int32				pointArr		= 9;	//每蹲的输赢积分
+	optional	int32				n32PointChange	= 10;	//当前玩家最终输赢的积分
+};
+message tagTLSSZGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagTLSSZEndInfo//桐庐13张结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagTLSSZRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	repeated	uint32				otherPokerArr	= 3;	//如果桌子上不满员的话 不在的玩家的牌
+	optional	tagTLSSZGroupInfo	groupinfo		= 4;	//当房间最后一局的时候 发送的房间统计数据
+};
+message tagTLSSZInitInfo//桐庐13张初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	uint32				u8MaPai			= 2;	//马牌的数据
+	required	tagRoomRuleInfo		ruleInfo		= 3;	//房间的规则数据
+	repeated	uint32				pokerArr		= 4;	//玩家的牌 如果已经发牌了
+	optional	TLSSZTSType			exType			= 5;	//特殊牌型
+	optional	uint32				u32exTypePoint	= 6;	//特殊牌型的点数
+	optional	bool				bSet			= 7;	//自己是否已经完成牌的设置了
+	optional	uint32				u32WriteTime	= 8;	//操作等待时间
+	repeated	tagTLSSZEndInfo		endArr			= 9;	//结算数据 前面所有局数的 只有重新链接才有
+	optional	uint32				u32InitTime		= 10;	///
+	optional	bool				bSign			= 11;	//AA房间特有的 是否需要报名
+}; 
+enum TLSSZRoleOper //玩家操作
+{
+	TLSSZRoleOper_SetAllFinish	= 1;	//直接设置13张牌 并且完成设置
+	TLSSZRoleOper_SetTSPoker	= 2;	//玩家丢牌
+};
+enum TLSSZRoomOper //系统操作
+{
+	TLSSZRoomOper_SendPoker		= 1;	//发牌 系统操作
+	TLSSZRoomOper_RoleSet		= 2;	//有玩家定牌了
+	TLSSZRoomOper_RoleReset		= 3;	//有玩家重新链接了 发送一些特殊数据给指定玩家
+};
+message tagTLSSZOperInfo //桐庐13张玩家操作数据
+{
+	required	TLSSZRoleOper		eOper			= 1;	//操作类型
+	repeated	uint32				paraArr			= 2;	//参数类型
+};
+message tagTLSSZSendPokerInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//扑克的列表 但是只有自己有
+	required	bool				bMaPai			= 3;	//是否拥有马牌
+	optional	TLSSZTSType			typeex			= 4;	//特殊牌型 如果是特殊牌型 这个值才存在
+	optional	uint32				u32exTypePoint	= 5;	//特殊牌型的点数
+};
+message tagTLSSZSetInfo
+{
+	repeated	uint32				setArr			= 1;	//
+};
+message tagTLSSZRoleReset
+{
+	repeated	uint32				seatArr			= 1;	//其他玩家的数据
+	repeated	bool				setArr			= 2;	//是否已经设置了
+	repeated	uint32				lhArr			= 3;	//玩家连红次数
+};
+message TLSSZRoomOperInfo
+{
+	required	TLSSZRoomOper			eOper		= 1;	//操作类型
+	optional	tagTLSSZSendPokerInfo	sendInfo	= 2;	//发牌数据 eOper == TLSSZRoomOper_SendPoker 才有这个数据
+	optional	tagTLSSZSetInfo			setInfo		= 3;	//已经完成操作的玩家 eOper == TLSSZRoomOper_RoleSet
+	optional	tagTLSSZRoleReset		resetInfo	= 4;	//
+};
+message tagTLSSZStateInfo
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	repeated	TLSSZRoomOperInfo	roomOperArr		= 2;	//房间操作的集合
+};
+//-------------------------------------------------------------------------牛牛的数据----------------------------------------------------------------
+//牛牛的数据处理 
+///回放数据
+message  tagNNLogInfo
+{
+	//牛牛目前无需回放数据
+};
+//个人信息
+message tagNNRoomDataInfo //牛牛 玩家的个人信息
+{
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+	optional	uint32					u32ZDNum	= 4;	//炸弹的次数
+	optional	uint32					u32WXNNum	= 5;	//五小牛的次数
+	optional	uint32					u32WHNNum	= 6;	//五花牛的次数
+	optional	uint32					u32SHNNum	= 7;	//四花牛的次数
+	optional	uint32					u32NNNum	= 8;	//牛牛的次数
+};
+enum NNType
+{
+	NNType_WN		= 1;	//无牛
+	NNType_N1		= 2;	//牛1
+	NNType_N2		= 3;
+	NNType_N3		= 4;
+	NNType_N4		= 5;
+	NNType_N5		= 6;
+	NNType_N6		= 7;
+	NNType_N7		= 8;
+	NNType_N8		= 9;
+	NNType_N9		= 10;	//牛9
+	NNType_NN		= 11;	//牛牛
+	NNType_SHN		= 12;	//四花牛
+	NNType_WHN		= 13;	//五花牛
+	NNType_WXN		= 14;	//五小牛
+	NNType_ZD		= 15;	//炸弹
+};
+message tagNNRoleItem //牛牛玩家数据
+{
+	optional	uint32				u32RoleID		= 1;	//玩家ID
+	optional	tagRoleRoomInfo		roleInfo		= 2;	//玩家头像 玩家名称的数据
+	optional	int32				n32Point		= 3;	//玩家点数 
+	optional	uint32				u8SeatID		= 4;	//玩家座位ID
+	optional	bool				bAccpet			= 5;	//玩家是否准备
+	optional	bool				bZJ				= 6;	//玩家是否是庄家
+	optional	uint32				u32RoleRate		= 7;	//玩家自己选择的倍率(如果是庄家就是庄家的倍率)
+	optional	uint32				u32ZJRate		= 8;	//抢庄的时候的倍率
+	optional	bool				bSet			= 9;	//玩家是否已经设置牌了
+	optional	RoomRoleState		eState			= 10;	//玩家的在线或者离线状态
+	optional	bool				bDeposit		= 11;	//是否在托管状态
+};
+//玩家状态
+message tagNNRoleInfo //牛牛玩家改变数据
+{
+	repeated	tagNNRoleItem		roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+//状态变化 服务器状态变化通知玩家
+enum NNRoomState
+{
+	NNRoomState_Null	= 0;	//没有进入游戏 在准备阶段
+	NNRoomState_QZ		= 1;	//抢庄
+	NNRoomState_Rate	= 2;	//倍率选择
+	NNRoomState_Send	= 3;	//发牌
+};
+message tagNNStateQZ
+{
+	repeated	uint32				pokerArr		= 1;	//看牌抢庄 发前4张牌给玩家
+};
+message tagNNStateRate
+{
+	required	uint32				u32ZJSeatID		= 1;	//0xFF表示没有庄家
+};
+message tagNNStateSend
+{
+	repeated	uint32				pokerArr		= 1;	//玩家自己的牌的数据
+};
+message tagNNStateInfo
+{
+	required	NNRoomState			eState			= 1;	//当前房间的状态
+	required	uint32				u32TimeLog		= 2;	//当前状态剩余的时间
+	required	uint32				u8GameNum		= 3;	//当前局数
+	optional	tagNNStateQZ		qzInfo			= 4;	//抢庄数据
+	optional	tagNNStateRate		rateInfo		= 5;	//倍率数据
+	optional	tagNNStateSend		sendInfo		= 6;	//发牌数据
+};
+//玩家操作
+enum NNRoleState
+{
+	NNRoleState_QZ		= 1;	//玩家抢庄
+	NNRoleState_Rate	= 2;	//玩家设置倍率
+	NNRoleState_Set		= 3;	//玩家设置牌
+	NNRoleState_GameStar= 4;	//房主手动开启游戏 需要房间规则支持
+};
+message tagNNOperQZ
+{
+	required	uint32				u32Point		= 1; //0-3
+};
+message tagNNOperRate
+{
+	required	uint32				u32Point		= 1; //0-3
+};
+message tagNNOperSet
+{
+	repeated	uint32				pokerArr		= 1; //
+};
+message tagNNOperInfo
+{
+	required	NNRoleState			eState			= 1;	//玩家的操作类型
+	optional	tagNNOperQZ			qzInfo			= 2;	//抢庄的操作数据
+	optional	tagNNOperRate		rateInfo		= 3;	//设置倍率的操作数据
+	optional	tagNNOperSet		setInfo			= 4;	//设置牌的操作数据
+};
+//结算
+message tagNNRoleComInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//排列好的牌
+	optional	NNType				eType			= 3;	//牌的类型
+	optional	int32				n32BasePoint	= 4;	//最终积分的变化 没有涉及到倍率
+	optional	uint32				u32Rate			= 5;	//当前倍率 不是房间的倍率 -> 最终结果为 倍率X房间倍率X积分变化
+	optional	int32				n32FinalPoint	= 6;	//最终积分变化 房间倍率和基本倍率都计算上了的 2个玩家之间的积分变化
+};
+message tagNNOtherRolePokerInfo //非比牌玩家的输赢
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//排列好的牌
+	optional	NNType				eType			= 3;	//牌的类型
+	optional	int32				n32FinalPoint	= 4;	//最终积分变化
+};
+message tagNNRoleEndInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//排列好的牌
+	optional	NNType				eType			= 3;	//牌的类型
+	optional	uint32				u32Rate			= 4;	//玩家的倍率
+	repeated	tagNNRoleComInfo	roleArr			= 5;	//其他玩家比牌输赢
+	optional	int32				n32PointChange	= 6;	//当前玩家最终输赢的积分
+	//
+	repeated	tagNNOtherRolePokerInfo	otherRole	= 7;	//其他非和自己比牌玩家的数据
+};
+message tagNNGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagNNEndInfo//牛牛结算数据
+{
+	optional	uint32				u8GameNum		= 1;	//游戏局数
+	optional	uint32				u8ZJSeatID		= 2;	//本局庄家ID
+	repeated	tagNNRoleEndInfo	roleArr			= 3;	//每个玩家的结算数据
+	optional	tagNNGroupInfo		groupinfo		= 4;	//
+};
+//初始化 
+message tagNNInitInfo//牛牛初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	tagRoomRuleInfo		ruleInfo		= 2;	//房间的规则数据
+	required	NNRoomState			eState			= 3;	//当前房间的状态
+	required	uint32				u32TimeLog		= 4;	//当前状态剩余时间
+	repeated	uint32				pokerArr		= 5;	//玩家的牌 如果已经发牌了
+	repeated	tagNNEndInfo		endArr			= 6;	//结算数据 上一局的结算数据
+	optional	uint32				u8ZJSeatID		= 7;	//庄家的ID 如果已经确定庄家了
+	optional	bool				bSign			= 8;	//AA房间特有的 是否需要报名
+};
+//-------------------------------------------------------------------------嘉兴十三张的数据----------------------------------------------------------------
+message tagJXSSZLogInfo //嘉兴十三张 回放数据
+{
+	
+};
+message tagJXSSZRoomDataInfo //嘉兴十三张 个人数据
+{
+	//嘉兴十三张 玩家需要记录到数据库的数据
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+	optional	uint32					u32HBLNum	= 4;	//红波浪次数
+	optional	uint32					u32DGNum	= 5;	//打枪次数
+};
+enum JXSSZType
+{
+	JXSSZType_Err		= 0;
+	JXSSZType_SP		= 1;	
+	JXSSZType_DZ		= 2;	
+	JXSSZType_LD		= 3;	
+	JXSSZType_ST		= 4;	
+	JXSSZType_SZ		= 5;	
+	JXSSZType_TH		= 6;	
+	JXSSZType_HL		= 7;	
+	JXSSZType_ZD		= 8;	
+	JXSSZType_THS		= 9;	
+};
+enum JXSSZTSType
+{
+	JXSSZTSType_Err			= 0; //不是特殊牌型
+	JXSSZTSType_SSZ			= 1; //特殊牌型 三顺子
+	JXSSZTSType_STH			= 2; //特殊牌型 三同花
+	JXSSZTSType_LDB			= 3; //特殊牌型 六队半
+	JXSSZTSType_QD8			= 4; //特殊牌型 全大 8
+	JXSSZTSType_QD9			= 5;
+	JXSSZTSType_QD10		= 6;
+	JXSSZTSType_QDJ			= 7;
+	JXSSZTSType_WDYK		= 8; //特殊牌型 五队一刻
+	JXSSZTSType_QBYDR		= 9; //特殊牌型 全黑一点红
+	JXSSZTSType_QRYDB		= 10; //特殊牌型 全红一点黑
+	JXSSZTSType_YTL			= 11; //一条龙
+	JXSSZTSType_QB			= 12; //全黑
+	JXSSZTSType_QR			= 13; //全红
+	JXSSZTSType_ZZQL		= 14; //至尊青龙
+};
+message tagJXSSZRoleItem //嘉兴13张玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagJXSSZRoleInfo //嘉兴13张玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagJXSSZRoleItem	roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+message tagJXSSZRoleComInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	int32				pointArr		= 2;	//每个蹲位的积分变化 没有X倍率的 如果是特殊牌型的对比 只有n32BasePoint数据 pointArr 为空
+	optional	bool				bDG				= 3;	//是否被打枪
+	optional	int32				n32BasePoint	= 4;	//最终积分的变化 没有涉及到倍率
+	optional	uint32				u32Rate			= 5;	//当前倍率 不是房间的倍率 -> 最终结果为 倍率X房间倍率X积分变化
+	optional	int32				n32FinalPoint	= 6;	//最终积分变化 房间倍率和基本倍率都计算上了的 2个玩家之间的积分变化
+};
+message tagJXSSZRoleEndInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	optional	bool				bHBL			= 2;	//是否是红波浪
+	optional	bool				bFH				= 3;	//是否反红
+	optional	uint32				u32LHCount		= 4;	//连红次数
+	optional	bool				bMaPai			= 5;	//是否有马牌
+	optional	JXSSZTSType			typeex			= 6;	//特殊牌型  如果有特殊牌型 typeArr 无需使用
+	repeated	JXSSZType			typeArr			= 7;	//每蹲的类型
+	repeated	uint32				pokerArr		= 8;	//牌的数据
+	repeated	tagJXSSZRoleComInfo	comArr			= 9;	//和其他玩家比较的集合
+	repeated	int32				pointArr		= 10;	//每蹲的输赢积分
+	optional	int32				n32PointChange	= 11;	//当前玩家最终输赢的积分
+};
+message tagJXSSZGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagJXSSZEndInfo//嘉兴13张结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagJXSSZRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	repeated	uint32				otherPokerArr	= 3;	//如果桌子上不满员的话 不在的玩家的牌
+	optional	tagJXSSZGroupInfo	groupinfo		= 4;	//当房间最后一局的时候 发送的房间统计数据
+};
+message tagJXSSZInitInfo//嘉兴13张初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	uint32				u8MaPai			= 2;	//马牌的数据
+	required	tagRoomRuleInfo		ruleInfo		= 3;	//房间的规则数据
+	repeated	uint32				pokerArr		= 4;	//玩家的牌 如果已经发牌了
+	optional	JXSSZTSType			exType			= 5;	//特殊牌型
+	optional	uint32				u32exTypePoint	= 6;	//特殊牌型的点数
+	optional	bool				bSet			= 7;	//自己是否已经完成牌的设置了
+	optional	uint32				u32WriteTime	= 8;	//操作等待时间
+	repeated	tagJXSSZEndInfo		endArr			= 9;	//结算数据
+	optional	uint32				u32InitTime		= 10;	//
+	optional	bool				bSign			= 11;	//AA房间特有的 是否需要报名
+};
+enum JXSSZRoleOper //玩家操作
+{
+	JXSSZRoleOper_SetAllFinish	= 1;	//直接设置13张牌 并且完成设置
+	JXSSZRoleOper_SetTSPoker	= 2;	//丢牌 表示是特殊牌型
+};
+enum JXSSZRoomOper //系统操作
+{
+	JXSSZRoomOper_SendPoker		= 1;	//发牌 系统操作
+	JXSSZRoomOper_RoleSet		= 2;	//有玩家定牌了
+	JXSSZRoomOper_RoleReset		= 3;	//有玩家重新链接了 发送一些特殊数据给指定玩家
+};
+message tagJXSSZOperInfo //桐庐13张玩家操作数据
+{
+	required	JXSSZRoleOper		eOper			= 1;	//操作类型
+	repeated	uint32				paraArr			= 2;	//参数类型
+};
+message tagJXSSZSendPokerInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//扑克的列表 但是只有自己有
+	required	bool				bMaPai			= 3;	//是否拥有马牌
+	optional	JXSSZTSType			typeex			= 4;	//特殊牌型 如果是特殊牌型 这个值才存在
+	optional	uint32				u32exTypePoint	= 5;	//特殊牌型的点数
+};
+message tagJXSSZSetInfo
+{
+	repeated	uint32				setArr			= 1;	//
+};
+message tagJXSSZRoleReset
+{
+	repeated	uint32				seatArr			= 1;	//其他玩家的数据
+	repeated	bool				setArr			= 2;	//是否已经设置了
+	repeated	uint32				lhArr			= 3;	//玩家连红次数
+};
+message JXSSZRoomOperInfo
+{
+	required	JXSSZRoomOper			eOper		= 1;	//操作类型
+	optional	tagJXSSZSendPokerInfo	sendInfo	= 2;	//发牌数据 eOper == JXSSZRoomOper_SendPoker 才有这个数据
+	optional	tagJXSSZSetInfo			setInfo		= 3;	//已经完成操作的玩家 eOper == JXSSZRoomOper_RoleSet
+	optional	tagJXSSZRoleReset		resetInfo	= 4;	//
+};
+message tagJXSSZStateInfo
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	repeated	JXSSZRoomOperInfo	roomOperArr		= 2;	//房间操作的集合
+};
+//-------------------------------------------------------------------------义乌十三张的数据----------------------------------------------------------------
+message tagYWSSZLogInfo //义乌十三张 回放数据
+{
+	
+};
+message tagYWSSZRoomDataInfo //义乌十三张 个人数据
+{
+	//义乌十三张 玩家需要记录到数据库的数据
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+	optional	uint32					u32HBLNum	= 4;	//红波浪次数
+	optional	uint32					u32DGNum	= 5;	//打枪次数
+};
+enum YWSSZType
+{
+	YWSSZType_Err		= 0;
+	YWSSZType_SP		= 1;	
+	YWSSZType_DZ		= 2;	
+	YWSSZType_LD		= 3;	
+	YWSSZType_ST		= 4;	
+	YWSSZType_SZ		= 5;	
+	YWSSZType_TH		= 6;	
+	YWSSZType_HL		= 7;	
+	YWSSZType_ZD		= 8;	
+	YWSSZType_THS		= 9;	
+};
+enum YWSSZTSType
+{
+	YWSSZTSType_Err			= 0; //不是特殊牌型
+	YWSSZTSType_SSZ			= 1; //特殊牌型 三顺子
+	YWSSZTSType_STH			= 2; //特殊牌型 三同花
+	YWSSZTSType_LDB			= 3; //特殊牌型 六队半
+	YWSSZTSType_WDYK		= 4; //特殊牌型 五队一刻
+	YWSSZTSType_QBYDR		= 5; //特殊牌型 全黑一点红
+	YWSSZTSType_QRYDB		= 6; //特殊牌型 全红一点黑
+	YWSSZTSType_YTL			= 7; //一条龙
+	YWSSZTSType_QB			= 8; //全黑
+	YWSSZTSType_QR			= 9; //全红
+	YWSSZTSType_ZZQL		= 10; //至尊青龙
+};
+message tagYWSSZRoleItem //义乌13张玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagYWSSZRoleInfo //义乌13张玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagYWSSZRoleItem	roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+message tagYWSSZRoleComInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	int32				pointArr		= 2;	//每个蹲位的积分变化 没有X倍率的 如果是特殊牌型的对比 只有n32BasePoint数据 pointArr 为空
+	optional	bool				bDG				= 3;	//是否被打枪
+	optional	int32				n32BasePoint	= 4;	//最终积分的变化 没有涉及到倍率
+	optional	uint32				u32Rate			= 5;	//当前倍率 不是房间的倍率 -> 最终结果为 倍率X房间倍率X积分变化
+	optional	int32				n32FinalPoint	= 6;	//最终积分变化 房间倍率和基本倍率都计算上了的 2个玩家之间的积分变化
+};
+message tagYWSSZRoleEndInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	optional	bool				bHBL			= 2;	//是否是红波浪
+	optional	uint32				u32LHCount		= 3;	//连红次数
+	optional	bool				bMaPai			= 4;	//是否有马牌
+	optional	YWSSZTSType			typeex			= 5;	//特殊牌型  如果有特殊牌型 typeArr 无需使用
+	repeated	YWSSZType			typeArr			= 6;	//每蹲的类型
+	repeated	uint32				pokerArr		= 7;	//牌的数据
+	repeated	tagYWSSZRoleComInfo	comArr			= 8;	//和其他玩家比较的集合
+	repeated	int32				pointArr		= 9;	//每蹲的输赢积分
+	optional	int32				n32PointChange	= 10;	//当前玩家最终输赢的积分
+};
+message tagYWSSZGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagYWSSZEndInfo//义乌13张结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagYWSSZRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	repeated	uint32				otherPokerArr	= 3;	//如果桌子上不满员的话 不在的玩家的牌
+	optional	tagYWSSZGroupInfo	groupinfo		= 4;	//当房间最后一局的时候 发送的房间统计数据
+};
+message tagYWSSZInitInfo//义乌13张初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	uint32				u8MaPai			= 2;	//马牌的数据
+	required	tagRoomRuleInfo		ruleInfo		= 3;	//房间的规则数据
+	repeated	uint32				pokerArr		= 4;	//玩家的牌 如果已经发牌了
+	optional	YWSSZTSType			exType			= 5;	//特殊牌型
+	optional	uint32				u32exTypePoint	= 6;	//特殊牌型的点数
+	optional	bool				bSet			= 7;	//自己是否已经完成牌的设置了
+	optional	uint32				u32WriteTime	= 8;	//操作等待时间
+	repeated	tagYWSSZEndInfo		endArr			= 9;	//结算数据
+	optional	uint32				u32InitTime		= 10;	///
+	optional	bool				bSign			= 11;	//AA房间特有的 是否需要报名
+};
+enum YWSSZRoleOper //玩家操作
+{
+	YWSSZRoleOper_SetAllFinish	= 1;	//直接设置13张牌 并且完成设置
+	YWSSZRoleOper_SetTSPoker	= 2;	//丢牌 表示是特殊牌型
+};
+enum YWSSZRoomOper //系统操作
+{
+	YWSSZRoomOper_SendPoker		= 1;	//发牌 系统操作
+	YWSSZRoomOper_RoleSet		= 2;	//有玩家定牌了
+	YWSSZRoomOper_RoleReset		= 3;	//有玩家重新链接了 发送一些特殊数据给指定玩家
+};
+message tagYWSSZOperInfo //义乌13张玩家操作数据
+{
+	required	YWSSZRoleOper		eOper			= 1;	//操作类型
+	repeated	uint32				paraArr			= 2;	//参数类型
+};
+message tagYWSSZSendPokerInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//扑克的列表 但是只有自己有
+	required	bool				bMaPai			= 3;	//是否拥有马牌
+	optional	YWSSZTSType			typeex			= 4;	//特殊牌型 如果是特殊牌型 这个值才存在
+	optional	uint32				u32exTypePoint	= 5;	//特殊牌型的点数
+};
+message tagYWSSZSetInfo
+{
+	repeated	uint32				setArr			= 1;	//
+};
+message tagYWSSZRoleReset
+{
+	repeated	uint32				seatArr			= 1;	//其他玩家的数据
+	repeated	bool				setArr			= 2;	//是否已经设置了
+	repeated	uint32				lhArr			= 3;	//玩家连红次数
+};
+message YWSSZRoomOperInfo
+{
+	required	YWSSZRoomOper			eOper		= 1;	//操作类型
+	optional	tagYWSSZSendPokerInfo	sendInfo	= 2;	//发牌数据 eOper == YWSSZRoomOper_SendPoker 才有这个数据
+	optional	tagYWSSZSetInfo			setInfo		= 3;	//已经完成操作的玩家 eOper == YWSSZRoomOper_RoleSet
+	optional	tagYWSSZRoleReset		resetInfo	= 4;	//
+};  
+message tagYWSSZStateInfo
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	repeated	YWSSZRoomOperInfo	roomOperArr		= 2;	//房间操作的集合
+};
+//-------------------------------------------------------------------------萧山十三张的数据----------------------------------------------------------------
+enum XSSSZType
+{
+	XSSSZType_Err		= 0;
+	XSSSZType_SP		= 1;	
+	XSSSZType_DZ		= 2;	
+	XSSSZType_LD		= 3;	
+	XSSSZType_ST		= 4;	
+	XSSSZType_SZ		= 5;	
+	XSSSZType_TH		= 6;	
+	XSSSZType_HL		= 7;	
+	XSSSZType_ZD		= 8;	
+	XSSSZType_THS		= 9;	
+};
+message tagXSSSZLogInfo		//萧山十三张 回放数据
+{
+
+
+};
+message tagXSSSZRoomDataInfo //萧山十三张 玩家个人信息记录
+{
+	//萧山十三张 玩家需要记录到数据库的数据
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+	optional	uint32					u32HBLNum	= 4;	//红波浪次数
+	optional	uint32					u32DGNum	= 5;	//打枪次数
+};
+message tagXSSSZRoleItem //萧山13张玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagXSSSZRoleInfo //萧山13张玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagXSSSZRoleItem	roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+message tagXSSSZRoleComInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	int32				pointArr		= 2;	//每个蹲位的积分变化 没有X倍率的
+	optional	bool				bDG				= 3;	//是否被打枪
+	optional	int32				n32BasePoint	= 4;	//最终积分的变化 没有涉及到倍率
+	optional	uint32				u32Rate			= 5;	//当前倍率 不是房间的倍率 -> 最终结果为 倍率X房间倍率X积分变化
+	optional	int32				n32FinalPoint	= 6;	//最终积分变化 房间倍率和基本倍率都计算上了的 2个玩家之间的积分变化
+};
+message tagXSSSZRoleEndInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	optional	bool				bHBL			= 2;	//是否是红波浪
+	optional	bool				bFH				= 3;	//是否反红
+	optional	uint32				u32LHCount		= 4;	//连红次数
+	optional	bool				bMaPai			= 5;	//是否有马牌
+	repeated	XSSSZType			typeArr			= 6;	//每蹲的类型
+	repeated	uint32				pokerArr		= 7;	//牌的数据
+	repeated	tagXSSSZRoleComInfo	comArr			= 8;	//和其他玩家比较的集合
+	repeated	int32				pointArr		= 9;	//每蹲的输赢积分
+	optional	int32				n32PointChange	= 10;	//当前玩家最终输赢的积分
+};
+message tagXSSSZGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagXSSSZEndInfo//萧山13张结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagXSSSZRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	repeated	uint32				otherPokerArr	= 3;	//如果桌子上不满员的话 不在的玩家的牌
+	optional	tagXSSSZGroupInfo	groupinfo		= 4;	//当房间最后一局的时候 发送的房间统计数据
+};
+message tagXSSSZInitInfo//萧山13张初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	uint32				u8MaPai			= 2;	//马牌的数据
+	required	tagRoomRuleInfo		ruleInfo		= 3;	//房间的规则数据
+	repeated	uint32				pokerArr		= 4;	//玩家的牌 如果已经发牌了
+	optional	bool				bSet			= 5;	//自己是否已经完成牌的设置了
+	optional	uint32				u32WriteTime	= 6;	//操作等待时间
+	repeated	tagXSSSZEndInfo		endArr			= 7;	//结算数据
+	optional	uint32				u32InitTime		= 8;	///
+	optional	bool				bSign			= 9;	//AA房间特有的 是否需要报名
+};
+enum XSSSZRoleOper //玩家操作
+{
+	XSSSZRoleOper_SetAllFinish	= 1;	//直接设置13张牌 并且完成设置
+};
+enum XSSSZRoomOper //系统操作
+{
+	XSSSZRoomOper_SendPoker		= 1;	//发牌 系统操作
+	XSSSZRoomOper_RoleSet		= 2;	//有玩家定牌了
+	XSSSZRoomOper_RoleReset		= 3;	//有玩家重新链接了 发送一些特殊数据给指定玩家
+};
+message tagXSSSZOperInfo //桐庐13张玩家操作数据
+{
+	required	XSSSZRoleOper		eOper			= 1;	//操作类型
+	repeated	uint32				paraArr			= 2;	//参数类型
+};
+message tagXSSSZSendPokerInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//扑克的列表 但是只有自己有
+	required	bool				bMaPai			= 3;	//是否拥有马牌
+};
+message tagXSSSZSetInfo
+{
+	repeated	uint32				setArr			= 1;	//
+};
+message tagXSSSZRoleReset
+{
+	repeated	uint32				seatArr			= 1;	//其他玩家的数据
+	repeated	bool				setArr			= 2;	//是否已经设置了
+	repeated	uint32				lhArr			= 3;	//玩家连红次数
+};
+message XSSSZRoomOperInfo
+{
+	required	XSSSZRoomOper			eOper		= 1;	//操作类型
+	optional	tagXSSSZSendPokerInfo	sendInfo	= 2;	//发牌数据 eOper == XSSSZRoomOper_SendPoker 才有这个数据
+	optional	tagXSSSZSetInfo			setInfo		= 3;	//已经完成操作的玩家 eOper == XSSSZRoomOper_RoleSet
+	optional	tagXSSSZRoleReset		resetInfo	= 4;	//
+};
+message tagXSSSZStateInfo
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	repeated	XSSSZRoomOperInfo	roomOperArr		= 2;	//房间操作的集合
+};
+//-------------------------------------------------------------------------临海十三张的数据----------------------------------------------------------------
+enum LHSSZType
+{
+	LHSSZType_Err		= 0;
+	LHSSZType_SP		= 1;	
+	LHSSZType_DZ		= 2;	
+	LHSSZType_LD		= 3;	
+	LHSSZType_ST		= 4;	
+	LHSSZType_SZ		= 5;	
+	LHSSZType_TH		= 6;	
+	LHSSZType_HL		= 7;	
+	LHSSZType_ZD		= 8;	
+	LHSSZType_THS		= 9;	
+};
+message tagLHSSZLogInfo		//临海十三张 回放数据
+{
+	//目前临海十三张没有需要记录的数据
+
+};
+message tagLHSSZRoomDataInfo //临海十三张 玩家个人信息记录
+{
+	//临海十三张 玩家需要记录到数据库的数据
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+};
+message tagLHSSZRoleItem //临海13张玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagLHSSZRoleInfo //临海13张玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagLHSSZRoleItem	roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+message tagLHSSZRoleComInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	int32				pointArr		= 2;	//每个蹲位的积分变化 没有X倍率的
+	optional	bool				bDG				= 3;	//是否被打枪
+	optional	int32				n32BasePoint	= 4;	//最终积分的变化 没有涉及到倍率
+	optional	uint32				u32Rate			= 5;	//当前倍率 不是房间的倍率 -> 最终结果为 倍率X房间倍率X积分变化
+	optional	int32				n32FinalPoint	= 6;	//最终积分变化 房间倍率和基本倍率都计算上了的 2个玩家之间的积分变化
+};
+message tagLHSSZRoleEndInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	LHSSZType			typeArr			= 2;	//每蹲的类型
+	repeated	uint32				pokerArr		= 3;	//牌的数据
+	repeated	tagLHSSZRoleComInfo	comArr			= 4;	//和其他玩家比较的集合
+	repeated	int32				pointArr		= 5;	//每蹲的输赢积分
+	optional	int32				n32PointChange	= 6;	//当前玩家最终输赢的积分
+};
+message tagLHSSZGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagLHSSZEndInfo//临海13张结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagLHSSZRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	repeated	uint32				otherPokerArr	= 3;	//如果桌子上不满员的话 不在的玩家的牌
+	optional	tagLHSSZGroupInfo	groupinfo		= 4;	//当房间最后一局的时候 发送的房间统计数据
+};
+message tagLHSSZInitInfo//临海13张初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	tagRoomRuleInfo		ruleInfo		= 2;	//房间的规则数据
+	repeated	uint32				pokerArr		= 3;	//玩家的牌 如果已经发牌了
+	optional	bool				bSet			= 4;	//自己是否已经完成牌的设置了
+	optional	uint32				u32WriteTime	= 5;	//操作等待时间
+	repeated	tagLHSSZEndInfo		endArr			= 6;	//结算数据
+	optional	uint32				u32InitTime		= 8;	///
+	optional	bool				bSign			= 9;	//AA房间特有的 是否需要报名
+};
+enum LHSSZRoleOper //玩家操作
+{
+	LHSSZRoleOper_SetAllFinish	= 1;	//直接设置13张牌 并且完成设置
+};
+enum LHSSZRoomOper //系统操作
+{
+	LHSSZRoomOper_SendPoker		= 1;	//发牌 系统操作
+	LHSSZRoomOper_RoleSet		= 2;	//有玩家定牌了
+	LHSSZRoomOper_RoleReset		= 3;	//有玩家重新链接了 发送一些特殊数据给指定玩家
+};
+message tagLHSSZOperInfo //临海13张玩家操作数据
+{
+	required	LHSSZRoleOper		eOper			= 1;	//操作类型
+	repeated	uint32				paraArr			= 2;	//参数类型
+};
+message tagLHSSZSendPokerInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//扑克的列表 但是只有自己有
+};
+message tagLHSSZSetInfo
+{
+	repeated	uint32				setArr			= 1;	//
+};
+message tagLHSSZRoleReset
+{
+	repeated	uint32				seatArr			= 1;	//其他玩家的数据
+	repeated	bool				setArr			= 2;	//是否已经设置了
+};
+message LHSSZRoomOperInfo
+{
+	required	LHSSZRoomOper			eOper		= 1;	//操作类型
+	optional	tagLHSSZSendPokerInfo	sendInfo	= 2;	//发牌数据 eOper == LHSSZRoomOper_SendPoker 才有这个数据
+	optional	tagLHSSZSetInfo			setInfo		= 3;	//已经完成操作的玩家 eOper == LHSSZRoomOper_RoleSet
+	optional	tagLHSSZRoleReset		resetInfo	= 4;	//
+};
+message tagLHSSZStateInfo
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	repeated	LHSSZRoomOperInfo	roomOperArr		= 2;	//房间操作的集合
+};
+//-------------------------------------------------------------------------金华十三张的数据----------------------------------------------------------------
+enum JHSSZType
+{
+	JHSSZType_Err		= 0;
+	JHSSZType_SP		= 1;	
+	JHSSZType_DZ		= 2;	
+	JHSSZType_LD		= 3;	
+	JHSSZType_ST		= 4;	
+	JHSSZType_SZ		= 5;	
+	JHSSZType_TH		= 6;	
+	JHSSZType_HL		= 7;	
+	JHSSZType_ZD		= 8;	
+	JHSSZType_THS		= 9;	
+};
+message tagJHSSZLogInfo		//金华十三张 回放数据
+{
+
+};
+message tagJHSSZRoomDataInfo //金华十三张 玩家个人信息记录
+{
+	//金华十三张 玩家需要记录到数据库的数据
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+	optional	uint32					u32HBLNum	= 4;	//红波浪次数
+	optional	uint32					u32DGNum	= 5;	//打枪次数
+};
+message tagJHSSZRoleItem //金华13张玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagJHSSZRoleInfo //金华13张玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagJHSSZRoleItem	roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+message tagJHSSZRoleComInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	int32				pointArr		= 2;	//每个蹲位的积分变化 没有X倍率的
+	optional	bool				bDG				= 3;	//是否被打枪
+	optional	int32				n32BasePoint	= 4;	//最终积分的变化 没有涉及到倍率
+	optional	uint32				u32Rate			= 5;	//当前倍率 不是房间的倍率 -> 最终结果为 倍率X房间倍率X积分变化
+	optional	int32				n32FinalPoint	= 6;	//最终积分变化 房间倍率和基本倍率都计算上了的 2个玩家之间的积分变化
+};
+message tagJHSSZRoleEndInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	optional	bool				bHBL			= 2;	//是否是红波浪
+	optional	uint32				u32LHCount		= 3;	//连红次数
+	optional	bool				bFH				= 4;	//反红
+	optional	bool				bMaPai			= 5;	//是否有马牌
+	repeated	JHSSZType			typeArr			= 6;	//每蹲的类型
+	repeated	uint32				pokerArr		= 7;	//牌的数据
+	repeated	tagJHSSZRoleComInfo	comArr			= 8;	//和其他玩家比较的集合
+	repeated	int32				pointArr		= 9;	//每蹲的输赢积分
+	optional	int32				n32PointChange	= 10;	//当前玩家最终输赢的积分
+};
+message tagJHSSZGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagJHSSZEndInfo//金华13张结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagJHSSZRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	repeated	uint32				otherPokerArr	= 3;	//如果桌子上不满员的话 不在的玩家的牌
+	optional	tagJHSSZGroupInfo	groupinfo		= 4;	//当房间最后一局的时候 发送的房间统计数据
+};
+message tagJHSSZInitInfo//金华13张初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	uint32				u8MaPai			= 2;	//马牌的数据
+	required	tagRoomRuleInfo		ruleInfo		= 3;	//房间的规则数据
+	repeated	uint32				pokerArr		= 4;	//玩家的牌 如果已经发牌了
+	optional	bool				bSet			= 5;	//自己是否已经完成牌的设置了
+	optional	uint32				u32WriteTime	= 6;	//操作等待时间
+	repeated	tagJHSSZEndInfo		endArr			= 7;	//结算数据
+	optional	uint32				u32InitTime		= 8;	///
+	optional	bool				bSign			= 9;	//AA房间特有的 是否需要报名
+};
+enum JHSSZRoleOper //玩家操作
+{
+	JHSSZRoleOper_SetAllFinish	= 1;	//直接设置13张牌 并且完成设置
+};
+enum JHSSZRoomOper //系统操作
+{
+	JHSSZRoomOper_SendPoker		= 1;	//发牌 系统操作
+	JHSSZRoomOper_RoleSet		= 2;	//有玩家定牌了
+	JHSSZRoomOper_RoleReset		= 3;	//有玩家重新链接了 发送一些特殊数据给指定玩家
+};
+message tagJHSSZOperInfo //桐庐13张玩家操作数据
+{
+	required	JHSSZRoleOper		eOper			= 1;	//操作类型
+	repeated	uint32				paraArr			= 2;	//参数类型
+};
+message tagJHSSZSendPokerInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//扑克的列表 但是只有自己有
+	required	bool				bMaPai			= 3;	//是否拥有马牌
+};
+message tagJHSSZSetInfo
+{
+	repeated	uint32				setArr			= 1;	//
+};
+message tagJHSSZRoleReset
+{
+	repeated	uint32				seatArr			= 1;	//其他玩家的数据
+	repeated	bool				setArr			= 2;	//是否已经设置了
+	repeated	uint32				lhArr			= 3;	//玩家连红次数
+};
+message JHSSZRoomOperInfo
+{
+	required	JHSSZRoomOper			eOper		= 1;	//操作类型
+	optional	tagJHSSZSendPokerInfo	sendInfo	= 2;	//发牌数据 eOper == JHSSZRoomOper_SendPoker 才有这个数据
+	optional	tagJHSSZSetInfo			setInfo		= 3;	//已经完成操作的玩家 eOper == JHSSZRoomOper_RoleSet
+	optional	tagJHSSZRoleReset		resetInfo	= 4;	//
+};
+message tagJHSSZStateInfo
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	repeated	JHSSZRoomOperInfo	roomOperArr		= 2;	//房间操作的集合
+};
+//-------------------------------------------------------------------------南昌麻将的数据----------------------------------------------------------------
+enum NCMJType //南昌麻将的类型
+{
+	NCMJType_ZM		= 1;	//自摸
+	NCMJType_GSKH	= 2;	//杠上开花
+	NCMJType_QGH	= 3;	//抢杠胡
+	NCMJType_DP		= 4;	//点炮
+	NCMJType_JD		= 5;	//精吊
+	NCMJType_TH		= 6;	//天胡
+	NCMJType_DH		= 7;	//地胡
+	NCMJType_JDTH	= 8;	//精吊天胡
+	NCMJType_JDDH	= 9;	//精吊地胡
+	NCMJType_JBHP	= 10;	//基本胡牌 2+3N
+	NCMJType_QDD	= 11;	//七大对
+	NCMJType_QXD	= 12;	//七小对
+	NCMJType_SSL	= 13;	//十三烂
+	NCMJType_QXSSL	= 14;	//七星十三烂
+	NCMJType_CZ		= 15;	//抄庄
+	NCMJType_BWJ	= 16;	//霸王精
+	NCMJType_GJ		= 17;	//杠精
+	NCMJType_DG		= 18;	//德国
+	NCMJType_DZD	= 19;	//德中德
+	NCMJType_JHY	= 20;	//精还原
+	NCMJType_ZJ		= 21;	//庄家
+};
+message tagNCMJRoleMJInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	required	uint32				u8MJNum			= 2;	//手上手牌的数量
+	repeated	MJValue				mjArr			= 3;	//玩家当前麻将的数组
+	repeated	MJValue				lchiArr			= 4;	//左吃牌的数据
+	repeated	MJValue				rchiArr			= 5;	//右吃牌的数据
+	repeated	MJValue				mchiArr			= 6;	//中吃牌的数据
+	repeated	MJValue				pengArr			= 7;	//碰的数据
+	repeated	MJValue				minggangArr		= 8;	//明杠
+	repeated	MJValue				angang			= 9;	//暗杠
+	repeated	MJValue				jiagang			= 10;	//加杠
+	repeated	MJValue				chuArr			= 11;	//玩家出牌的数据
+	repeated	MJValue				tschiArr		= 12;	//南昌麻将特有的特殊吃牌
+};
+message tagNCMJRoomDataInfo //南昌麻将 玩家个人信息记录
+{
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+};
+//玩家数据
+message tagNCMJRoleItem //南昌麻将玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagNCMJRoleInfo //南昌麻将玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagNCMJRoleItem		roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+//结算数据
+message tagNCMJRoleEndInfo //单个玩家的结算数据
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	//牌的数据
+	optional	tagNCMJRoleMJInfo	mjInfo			= 2;	//麻将的数据
+	//结算 输赢的数据
+	//1.下精分  2.奖励分  3.牌型分
+	optional	int32				n32XJPoint		= 3;	//下精分输赢
+	optional	int32				n32JFPoint		= 4;	//奖励分输赢
+	optional	int32				n32HuPaiPoint	= 5;	//牌型分输赢
+	optional	int32				n32GangPoint	= 6;	//杠精分 和 杠分
+	optional    int32				n32FinalPoint	= 7;	//最终输赢分
+	repeated	uint32				xjanumArr		= 8;	//下精A的数量
+	repeated	uint32				xjbnumArr		= 9;	//下精B的数量
+};
+message tagNCMJGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagNCMJEndInfo//南昌麻将结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	optional	uint32				u8HuPaiSeatID	= 2;	//胡牌的位置 和局 0xFF
+	optional	MJValue				eHuPaiValue		= 3;	//胡牌的值 没有就是 MJValue_Error
+	repeated	tagNCMJRoleEndInfo	roleArr			= 4;	//每个玩家的结算数据
+	repeated	NCMJType			typeArr			= 5;	//涉及到的状态列表
+	optional	tagNCMJGroupInfo	groupinfo		= 6;	//当房间最后一局的时候 发送的房间统计数据
+	repeated	MJValue				eXJValueAArr	= 7;	//下精A  同一首歌 可能有多个
+	repeated	MJValue				eXJValueBArr	= 8;	//下精B  同一首歌 可能有多个
+};
+
+//南昌麻将 玩家操作
+message tagNCMJOperInfo //南昌麻将玩家操作数据
+{
+	optional	tagMJBaseRoleOper	eOper			= 1;	//玩家的操作
+	repeated	MJValue				testArr			= 2;	//测试使用
+};
+//南昌麻将 房间的操作
+enum NCMJRoomOper
+{
+	NCMJRoomOper_GameBegin	= 1;	//游戏开始
+};
+message tagNCMJRoomOper_GameBegin //房间状态游戏开始
+{
+	optional	uint32				u8GameNum		= 1;	//游戏局数
+	optional	uint32				u32SeZiNumA		= 2;	//第一次骰子的点数
+	optional	uint32				u32SeZiNumB		= 3;	//第二次骰子的点数
+	optional	uint32				u32SeZiNumC		= 4;	//第三次骰子的点数
+	optional	MJValue				eZJValue		= 5;	//正精	
+	optional	MJValue				eFJValue		= 6;	//副精
+	optional	MJValue				eXJValueA		= 7;	//下精A  只有回头一笑 和 开局上下翻精才会携带
+	optional	MJValue				eXJValueB		= 8;	//下精B  只有回头一笑 和 开局上下翻精才会携带
+	repeated	tagNCMJRoleMJInfo	roleMjArr		= 9;	//每个玩家的牌的数据 其他玩家只显示牌的数量就可以了
+	//开局上下翻精
+	repeated	uint32				seatArr			= 10;	//座位ID
+	repeated	int32				pointArr		= 11;	//点数列表
+	repeated	uint32				xjaArr			= 12;	//下精A的数量
+	repeated	uint32				xjbArr			= 13;	//下精B的数量
+};
+message tagNCMJRoomOper
+{
+	required	NCMJRoomOper		eOper			= 1;	//扩展操作类型
+	required	tagNCMJRoomOper_GameBegin info		= 2;	//开局操作 ->设置基本数据 
+};
+message tagNCMJStateInfo //房间同一时间可能 发送出去多个房间状态 如何处理呢?
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	required	uint32				u8State			= 2;	//1表示扩展操作 2表示基本操作 3表示 玩家操作 (大于3的特殊处理)
+	//服务器的Room操作
+	optional	tagNCMJRoomOper		exOper			= 3;	//扩展操作
+	repeated	tagMJBaseRoomOper	baseOperArr		= 4;	//基本操作数组 因为可能有多个基本操作
+	//玩家的操作
+	optional	tagNCMJOperInfo		roleOper		= 5;	//服务器返回的玩家的操作
+};
+message tagNCMJOperLog
+{
+	optional	tagNCMJStateInfo	roomOper		= 1;
+	optional	tagNCMJOperInfo		roleOper		= 2;
+};
+message tagNCMJTimeLimit
+{
+	optional	tagNCMJStateInfo	roomOper		= 1;	//房间操作
+	optional	tagNCMJOperInfo		roleOper		= 2;	//玩家操作
+	optional	tagNCMJEndInfo		endOper			= 3;	//结算操作
+};
+message tagNCMJLogInfo		//南昌麻将 回放数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	repeated	tagNCMJRoleItem		roleArr			= 2;	//房间内全部的玩家基本数据
+	repeated	tagNCMJRoleMJInfo	roleMjArr		= 3;	//每个玩家初始化的时候的手牌的数据
+	optional	uint32				u32SeZiNumA		= 4;	//第一次骰子的点数
+	optional	uint32				u32SeZiNumB		= 5;	//第二次骰子的点数
+	optional	uint32				u32SeZiNumC		= 6;	//第三次骰子的点数
+	optional	MJValue				eZJValue		= 7;	//正精	
+	optional	MJValue				eFJValue		= 8;	//副精
+	optional	MJValue				eXJValueA		= 9;	//下精A
+	optional	MJValue				eXJValueB		= 10;	//下精B
+	//开局翻精的数据
+	repeated	uint32				seatArr			= 11;	//座位ID
+	repeated	int32				pointArr		= 12;	//点数列表
+	//结算数据
+	repeated	tagNCMJRoleEndInfo	roleEndArr		= 13;	//每个玩家的结算数据
+	//游戏流程数据
+	repeated	tagNCMJOperLog		operArr			= 14;	//操作记录
+};
+//南昌麻将初始化数据
+message tagNCMJInitInfo//南昌麻将初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	tagRoomRuleInfo		ruleInfo		= 2;	//房间的规则数据
+	//桌子上的数据-> 让玩家进入桌子后 可以根据这些数据还原桌子上全部的内容
+	optional	uint32				u8MJNum			= 3;	//桌子上剩余麻将数
+	optional	uint32				u8BGNum			= 4;	//补杠的次数 补杠从牌尾拿牌 
+	optional	uint32				u32SeZiNumA		= 5;	//第一次骰子的点数
+	optional	uint32				u32SeZiNumB		= 6;	//第二次骰子的点数
+	optional	uint32				u32SeZiNumC		= 7;	//第二次骰子的点数
+	optional	MJValue				eZJValue		= 8;	//正精	
+	optional	MJValue				eFJValue		= 9;	//副精
+	repeated	tagNCMJRoleMJInfo	roleMjArr		= 10;	//每个玩家的牌的数据(包括自己的 其他的玩家的牌 只可以看见可看的牌)
+	optional	tagNCMJStateInfo	roomOper		= 11;	//当前房间的状态
+	optional	MJValue				eMoPai			= 12;	//玩家最后摸牌的数据
+	//前面局数的游戏操作记录
+	repeated	tagNCMJEndInfo		endArr			= 13;	//结算数据
+	optional	bool				bSign			= 14;	//AA房间特有的 是否需要报名
+};
+//-------------------------------------------------------------------------九幺十三张的数据----------------------------------------------------------------
+message tagJYSSZLogInfo //九幺十三张 回放数据
+{
+	
+};
+message tagJYSSZRoomDataInfo //九幺十三张 个人数据
+{
+	//九幺十三张 玩家需要记录到数据库的数据
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+	optional	uint32					u32HBLNum	= 4;	//红波浪次数
+	optional	uint32					u32DGNum	= 5;	//打枪次数
+};
+enum JYSSZType
+{
+	JYSSZType_Err		= 0;	//错误码
+	JYSSZType_SP		= 1;	
+	JYSSZType_DZ		= 2;	
+	JYSSZType_LD		= 3;	
+	JYSSZType_ST		= 4;	
+	JYSSZType_SZ		= 5;	
+	JYSSZType_TH		= 6;	
+	JYSSZType_HL		= 7;	
+	JYSSZType_ZD		= 8;	
+	JYSSZType_THS		= 9;	
+};
+enum JYSSZTSType
+{
+	JYSSZTSType_Err			= 0; //不是特殊牌型
+	JYSSZTSType_SSZ			= 1; //特殊牌型 三顺子
+	JYSSZTSType_STH			= 2; //特殊牌型 三同花
+	JYSSZTSType_LDB			= 3; //特殊牌型 六队半
+	JYSSZTSType_WDYK		= 4; //特殊牌型 五队一刻
+	JYSSZTSType_QBYDR		= 5; //特殊牌型 全黑一点红
+	JYSSZTSType_QRYDB		= 6; //特殊牌型 全红一点黑
+	JYSSZTSType_YTL			= 7; //一条龙
+	JYSSZTSType_QB			= 8; //全黑
+	JYSSZTSType_QR			= 9; //全红
+	JYSSZTSType_ZZQL		= 10; //至尊青龙
+};
+message tagJYSSZRoleItem //九幺13张玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagJYSSZRoleInfo //九幺13张玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagJYSSZRoleItem	roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+message tagJYSSZRoleComInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	int32				pointArr		= 2;	//每个蹲位的积分变化 没有X倍率的 如果是特殊牌型的对比 只有n32BasePoint数据 pointArr 为空
+	optional	bool				bDG				= 3;	//是否被打枪
+	optional	int32				n32BasePoint	= 4;	//最终积分的变化 没有涉及到倍率
+	optional	uint32				u32Rate			= 5;	//当前倍率 不是房间的倍率 -> 最终结果为 倍率X房间倍率X积分变化
+	optional	int32				n32FinalPoint	= 6;	//最终积分变化 房间倍率和基本倍率都计算上了的 2个玩家之间的积分变化
+};
+message tagJYSSZRoleEndInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	optional	bool				bHBL			= 2;	//是否是红波浪
+	optional	uint32				u32LHCount		= 3;	//连红次数
+	optional	uint32				u32MaPaiRate	= 4;	//马牌的倍率
+	optional	bool				bFH				= 5;	//反红
+	optional	JYSSZTSType			typeex			= 6;	//特殊牌型  如果有特殊牌型 typeArr 无需使用
+	repeated	JYSSZType			typeArr			= 7;	//每蹲的类型
+	repeated	uint32				pokerArr		= 8;	//牌的数据
+	repeated	tagJYSSZRoleComInfo	comArr			= 9;	//和其他玩家比较的集合
+	repeated	int32				pointArr		= 10;	//每蹲的输赢积分
+	optional	int32				n32PointChange	= 11;	//当前玩家最终输赢的积分
+};
+message tagJYSSZGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagJYSSZEndInfo//九幺13张结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagJYSSZRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	repeated	uint32				otherPokerArr	= 3;	//如果桌子上不满员的话 不在的玩家的牌
+	optional	tagJYSSZGroupInfo	groupinfo		= 4;	//当房间最后一局的时候 发送的房间统计数据
+};
+message tagJYSSZInitInfo//九幺13张初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	tagRoomRuleInfo		ruleInfo		= 2;	//房间的规则数据
+	repeated	uint32				pokerArr		= 3;	//玩家的牌 如果已经发牌了
+	optional	JYSSZTSType			exType			= 4;	//特殊牌型
+	optional	uint32				u32exTypePoint	= 5;	//特殊牌型的点数
+	optional	bool				bSet			= 6;	//自己是否已经完成牌的设置了
+	optional	uint32				u32WriteTime	= 7;	//操作等待时间
+	repeated	tagJYSSZEndInfo		endArr			= 8;	//结算数据
+	optional	uint32				u32InitTime		= 9;	///
+	optional	bool				bSign			= 10;	//AA房间特有的 是否需要报名
+};
+enum JYSSZRoleOper //玩家操作
+{
+	JYSSZRoleOper_SetAllFinish	= 1;	//直接设置13张牌 并且完成设置
+	JYSSZRoleOper_SetTSPoker	= 2;	//丢牌 表示是特殊牌型
+};
+enum JYSSZRoomOper //系统操作
+{
+	JYSSZRoomOper_SendPoker		= 1;	//发牌 系统操作
+	JYSSZRoomOper_RoleSet		= 2;	//有玩家定牌了
+	JYSSZRoomOper_RoleReset		= 3;	//有玩家重新链接了 发送一些特殊数据给指定玩家
+};
+message tagJYSSZOperInfo //九幺13张玩家操作数据
+{
+	required	JYSSZRoleOper		eOper			= 1;	//操作类型
+	repeated	uint32				paraArr			= 2;	//参数类型
+};
+message tagJYSSZSendPokerInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//扑克的列表 但是只有自己有
+	required	uint32				u32MaPaiRate	= 3;	//拥有马牌的倍率
+	optional	JYSSZTSType			typeex			= 4;	//特殊牌型 如果是特殊牌型 这个值才存在
+	optional	uint32				u32exTypePoint	= 5;	//特殊牌型的点数
+};
+message tagJYSSZSetInfo
+{
+	repeated	uint32				setArr			= 1;	//
+};
+message tagJYSSZRoleReset
+{
+	repeated	uint32				seatArr			= 1;	//其他玩家的数据
+	repeated	bool				setArr			= 2;	//是否已经设置了
+	repeated	uint32				lhArr			= 3;	//玩家连红次数
+};
+message JYSSZRoomOperInfo
+{
+	required	JYSSZRoomOper			eOper		= 1;	//操作类型
+	optional	tagJYSSZSendPokerInfo	sendInfo	= 2;	//发牌数据 eOper == JYSSZRoomOper_SendPoker 才有这个数据
+	optional	tagJYSSZSetInfo			setInfo		= 3;	//已经完成操作的玩家 eOper == JYSSZRoomOper_RoleSet
+	optional	tagJYSSZRoleReset		resetInfo	= 4;	//
+};  
+message tagJYSSZStateInfo
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	repeated	JYSSZRoomOperInfo	roomOperArr		= 2;	//房间操作的集合
+};
+
+//-------------------------安庆麻将的数据
+
+enum AQMJHuPaiType
+{
+	AQMJType_0				=0;		//未胡牌
+	AQMJType_PingHu			=1;		//平胡
+	AQMJType_ZiMo			=2;		//自摸
+	AQMJType_ShiSanLan		=3;		//十三烂
+	AQMJType_BaoDiaoTou		=4;		//宝吊头
+	AQMJType_QingYiSe		=5;		//清一色
+	AQMJType_PengPengHu		=6;		//碰碰胡
+	AQMJType_QiangGangHu	=7;		//抢杠胡
+	AQMJType_QiDui			=8;		//七对
+	AQMJType_HunYiSe		=9;	//混一色
+	AQMJType_GangShangHua	=10;	//杠上花
+};
+
+
+message tagAQMJRoleMJInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	required	uint32				u8MJNum			= 2;	//手上手牌的数量 包括宝牌
+	repeated	MJValue				mjArr			= 3;	//玩家当前麻将的数组
+	repeated	MJValue				lchiArr			= 4;	//左吃牌的数据
+	repeated	MJValue				rchiArr			= 5;	//右吃牌的数据
+	repeated	MJValue				mchiArr			= 6;	//中吃牌的数据
+	repeated	MJValue				pengArr			= 7;	//碰的数据
+	repeated	MJValue				minggangArr		= 8;	//明杠
+	repeated	MJValue				angang			= 9;	//暗杠
+	repeated	MJValue				jiagang			= 10;	//加杠
+	repeated	MJValue				chuArr			= 11;	//玩家出牌的数据
+	required	uint32				u8BPNum			= 12;	//宝牌的数量
+	required	uint32				u8HuaPaiNum		= 13;	//花牌的数量
+	repeated	MJValue				huaArr			= 14;	//花牌的数组
+};
+
+message tagAQMJRoomDataInfo //安庆麻将 玩家个人信息记录
+{
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+};
+//玩家数据
+message tagAQMJRoleItem //安庆麻将玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+
+message tagAQMJRoleInfo //安庆麻将玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagAQMJRoleItem		roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+
+//结算数据
+message tagAQMJRoleEndInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	optional	uint32				u32FPeng		= 2;	//风碰的个数
+	optional	uint32				u32HZPeng		= 3;	//红中碰的个数
+	optional	uint32				u32MingGang		= 4;	//普通明杠的个数
+	optional	uint32				u32AnGang		= 5;	//普通暗杠的个数
+	optional	uint32				u32FMingGang	= 6;	//风牌明杠的个数
+	optional	uint32				u32FAnGang		= 7;	//风牌暗杠的个数
+
+	required	tagAQMJRoleMJInfo	mjInfo			= 8;	//牌数据		
+
+	repeated	AQMJHuPaiType		hupaitype		= 9;	//胡牌的类型(可以多种组合)
+
+	required	int32				n32HuTypePoint  = 10;	//牌型分
+	required	int32				n32GangPoint	= 11;	//杠分
+	required	int32				n32HuaPoint		= 12;	//花分
+	required	int32				n32LongZiPoint	= 13;	//笼子分
+
+	optional	int32				n32PointChange	= 14;	//当前玩家最终输赢的积分	
+};
+
+
+message tagAQMJGroupInfo
+{
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+
+message tagAQMJEndInfo
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagAQMJRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	optional	tagAQMJGroupInfo	groupinfo		= 3;	//当房间最后一局的时候 发送的房间统计数据
+};
+
+
+//安庆麻将初始化数据
+message tagAQMJInitInfo                 //安庆麻将初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	tagRoomRuleInfo		ruleInfo		= 2;	//房间的规则数据
+	//桌子上的数据-> 让玩家进入桌子后 可以根据这些数据还原桌子上全部的内容
+	optional	uint32				u8MJNum			= 3;	//桌子上剩余麻将数
+	optional	uint32				u8BGNum			= 4;	//补杠的次数 补杠从牌尾拿牌 
+	optional	uint32				u32SeZiNumA		= 5;	//第一次骰子的点数
+	optional	uint32				u32SeZiNumB		= 6;	//第二次骰子的点数
+	optional	MJValue				mjBaoPai		= 7;	//宝牌
+	optional	MJValue				mjBaoPaiMask	= 8;
+	repeated	MJValue				mjHuaPaiArr		= 9;	//本局的花牌列表
+	repeated	tagAQMJRoleMJInfo	roleMjArr		= 10;	//每个玩家的牌的数据(包括自己的 其他的玩家的牌 只可以看见可看的牌)
+	optional	tagAQMJStateInfo	roomOper		= 11;	//当前房间的状态
+	//前面局数的游戏操作记录
+	repeated	tagAQMJEndInfo		endArr			= 12;	//结算数据
+	optional	bool				bSign			= 13;	//AA房间特有的 是否需要报名
+};
+//安庆麻将 玩家操作
+enum AQMJRoleOper
+{
+	AQMJRoleOper_BuHua	 =				1; //玩家补花操作
+};
+
+
+
+message tagAQMJRoleBuHua
+{
+	optional	uint32					u8SeatID		= 1; //座位ID
+	required	MJValue					eValue			= 2; //补花的牌
+	optional	MJValue					MoeValue		= 3; //补花后摸的牌
+	optional	tagRoleHuPaiInfo		tihuanInfo		= 4; //补花后的替换列表
+};
+
+
+message AQMJExpRoleOper
+{
+	required	AQMJRoleOper			eOper			= 1;
+	optional	tagAQMJRoleBuHua		roleBuHua		= 2;	//补花
+};
+
+message tagAQMJOperInfo //安庆麻将玩家操作数据
+{
+	optional	tagMJBaseRoleOper	eOper			= 1;	//玩家的操作
+	optional	AQMJExpRoleOper	expOper			= 2;	//扩展操作
+};
+
+
+//安庆麻将 房间的操作
+enum AQMJRoomOper
+{
+	AQMJRoomOper_GameBegin	= 1;	//游戏开始
+	AQMJRoomOper_BuHua		= 2;	//补花
+};
+message tagAQMJRoomOper_GameBegin //房间状态游戏开始
+{
+	optional	uint32				u8GameNum		= 1;	//游戏局数
+	optional	uint32				u32SeZiNumA		= 2;	//第一次骰子的点数
+	optional	uint32				u32SeZiNumB		= 3;	//第二次骰子的点数
+	required	MJValue				mjBaoPaiMask	= 4;	//翻开的宝牌 如果这张是一万，那么宝牌就是2万
+	required	MJValue				mjBaoPaiValue	= 5;	//宝牌的值，2万
+	repeated	MJValue				mjHuaPaiArr		= 6;	//产生花牌信息 每局的花牌可能不一样 
+	repeated	tagAQMJRoleMJInfo	roleMjArr		= 7;	//每个玩家的牌的数据 其他玩家只显示牌的数量就可以了
+	repeated	uint32				seatArr			= 8;	//座位ID
+	repeated	int32				pointArr		= 9;	//点数列表
+};
+message tagAQMJRoomOper_BuHua
+{
+	required	uint32				u8SeatID		= 1;
+	repeated	MJValue				evalue			= 2;							
+};
+
+
+message tagAQMJRoomOper
+{
+	required	AQMJRoomOper		eOper			= 1;	//扩展操作类型
+	optional	tagAQMJRoomOper_GameBegin info		= 2;	//开局操作 ->设置基本数据 
+	optional	tagAQMJRoomOper_BuHua	  buhuainfo		= 3;
+};
+message tagAQMJStateInfo //房间同一时间可能 发送出去多个房间状态 如何处理呢?
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	required	uint32				u8State			= 2;	//1表示扩展操作 2表示基本操作 3表示 玩家操作 (大于3的特殊处理)
+	//服务器的Room操作
+	optional	tagAQMJRoomOper		exOper			= 3;	//扩展操作
+	repeated	tagMJBaseRoomOper	baseOperArr		= 4;	//基本操作数组 因为可能有多个基本操作
+	//玩家的操作
+	optional	tagAQMJOperInfo		roleOper		= 5;	//服务器返回的玩家的操作
+};
+message tagAQMJOperLog
+{
+	optional	tagAQMJStateInfo	roomOper		= 1;
+	optional	tagAQMJOperInfo		roleOper		= 2;
+};
+
+message tagAQMJTimeLimit
+{
+	optional	tagAQMJStateInfo	roomOper		= 1;
+	optional	tagAQMJOperInfo		roleOper		= 2;
+	optional	tagAQMJEndInfo		endOper			= 3;
+};
+
+message tagAQMJLogInfo		//安庆麻将 回放数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	repeated	tagAQMJRoleItem		roleArr			= 2;	//房间内全部的玩家基本数据
+	repeated	tagAQMJRoleMJInfo	roleMjArr		= 3;	//每个玩家初始化的时候的手牌的数据
+	optional	uint32				u32SeZiNumA		= 4;	//第一次骰子的点数
+	optional	uint32				u32SeZiNumB		= 5;	//第二次骰子的点数
+	required	MJValue				mjBaoPaiMask	= 6;
+	required	MJValue				mjBaoPaiValue  	= 7;	//宝牌
+	repeated	MJValue				mjHuaPaiArr		= 8;	//本局的花牌列表
+	//结算数据
+	repeated	tagAQMJRoleEndInfo	roleEndArr		= 9;	//每个玩家的结算数据
+	//游戏流程数据
+	repeated	tagAQMJOperLog		operArr			= 10;	//操作记录
+	repeated	uint32				seatArr			= 11;	//座位ID
+	repeated	int32				pointArr		= 12;	//点数列表
+};
+
+//-------------------------------------------------------------------------昆明麻将的数据----------------------------------------------------------------
+enum KMMJType	//昆明麻将的类型
+{
+	KMMJType_ER			= 0;	//无数据
+	KMMJType_ZM			= 1;	//自摸
+	KMMJType_GSKH		= 2;	//杠上开花
+	KMMJType_GSP		= 3;	//杠上炮
+	KMMJType_QGH		= 4;	//抢杠胡
+	KMMJType_BQGH		= 5;	//被抢杠胡
+	KMMJType_PH			= 6;	//平胡
+	KMMJType_QYS		= 7;	//清一色
+	KMMJType_DDH		= 8;	//对对胡
+	KMMJType_QDDH		= 9;	//清对 清对对胡
+	KMMJType_QD			= 10;	//七对
+	KMMJType_QQD		= 11;	//清七对
+	KMMJType_LQD		= 12;	//龙七对
+	KMMJType_QLQD		= 13;	//清龙七对
+	KMMJType_JGD		= 15;	//金钩钓
+	KMMJType_YPDX		= 16;	//一炮多响
+	KMMJType_ZJ			= 17;	//庄家
+	KMMJType_GF			= 18;	//刮风
+	KMMJType_XY			= 19;	//下雨
+	KMMJType_DQTiao		= 20;	//定缺条
+	KMMJType_DQWan		= 21;	//定缺万
+	KMMJType_DQTong		= 22;	//定缺筒
+	KMMJType_HZ			= 23;	//花猪
+	KMMJType_CJ			= 24;	//查叫
+	KMMJType_HD			= 25;	//海底
+};
+message tagKMMJRoleMJInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	required	uint32				u8MJNum			= 2;	//手上手牌的数量
+	optional	KMMJType			DingQue			= 3;	//玩家确定后的定缺牌型	0初始1条2万3筒	全可见
+	optional	bool				bHuaZhu			= 4;	//花猪
+	optional	bool				bChaJiao		= 5;	//查叫	
+	repeated	MJValue				mjArr			= 6;	//玩家当前麻将的数组
+	repeated	MJValue				pengArr			= 7;	//碰的数据
+	repeated	MJValue				minggangArr		= 8;	//明杠
+	repeated	MJValue				angang			= 9;	//暗杠
+	repeated	MJValue				jiagang			= 10;	//加杠
+	repeated	MJValue				chuArr			= 11;	//玩家出牌的数据
+};
+message tagKMMJRoomDataInfo //昆明麻将 玩家个人信息记录
+{
+	optional	uint32				u32SLNum		= 1;	//胜利局数
+	optional	uint32				u32SBNum		= 2;	//失败局数
+	optional	uint32				u32HNum			= 3;	//和牌局数
+};
+//玩家数据
+message tagKMMJRoleItem //昆明麻将玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagKMMJRoleInfo //昆明麻将玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagKMMJRoleItem		roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+//结算数据
+message tagKMMJRoleEndInfo //单个玩家的结算数据
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	//牌的数据
+	optional	tagKMMJRoleMJInfo	mjInfo			= 2;	//麻将的数据
+	//结算 输赢的数据
+	optional	int32				n32HPoint		= 3;	//胡牌分
+	optional	int32				n32FYPoint		= 4;	//风雨钱
+	optional    int32				n32FinalPoint	= 5;	//最终输赢分
+	//状态标记
+	repeated	KMMJType			typeArr			= 6;	//涉及到的状态列表
+};
+message tagKMMJGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagKMMJEndInfo//昆明麻将结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagKMMJRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	optional	tagKMMJGroupInfo	groupinfo		= 3;	//当房间最后一局的时候 发送的房间统计数据
+};
+//昆明麻将初始化数据
+message tagKMMJInitInfo//昆明麻将初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	tagRoomRuleInfo		ruleInfo		= 2;	//房间的规则数据
+	//桌子上的数据-> 让玩家进入桌子后 可以根据这些数据还原桌子上全部的内容
+	optional	uint32				u8MJNum			= 3;	//桌子上剩余麻将数
+	optional	uint32				u8BGNum			= 4;	//补杠的次数 补杠从牌尾拿牌 	
+	repeated	uint32				dingQueArr		= 5;	//每个玩家定缺的牌型
+	repeated	tagKMMJRoleMJInfo	roleMjArr		= 9;	//每个玩家的牌的数据(包括自己的 其他的玩家的牌 只可以看见可看的牌)
+	optional	tagKMMJStateInfo	roomOper		= 10;	//当前房间的状态
+	//前面局数的游戏操作记录
+	repeated	tagKMMJEndInfo		endArr			= 11;	//结算数据
+	optional	bool				bSign			= 12;	//AA房间特有的 是否需要报名
+};
+message tagRoleDingQue
+{
+	optional	uint32				u8SeatID		= 1;
+	required	KMMJType			dingque			= 2;
+};
+message tagKMMJOperInfo //昆明麻将玩家操作数据
+{
+	optional	tagMJBaseRoleOper	eOper			= 1;	//玩家的操作
+	optional	tagRoleDingQue		dqOper			= 2;	//玩家的定缺操作
+};
+//昆明麻将 房间的操作
+enum KMMJRoomOper
+{
+	KMMJRoomOper_GameBegin	= 1;
+	KMMJRoomOper_DingQue	= 2;	//定缺
+	KMMJRoomOper_PointChg	= 3;	//
+};
+message tagKMMJRoomOper_GameBegin //房间状态游戏开始
+{
+	optional	uint32				u8GameNum		= 1;	//游戏局数
+	optional	uint32				u32SeZiNum		= 2;	//第一颗骰子的点数
+	repeated	tagKMMJRoleMJInfo	roleMjArr		= 3;	//每个玩家的牌的数据 其他玩家只显示牌的数量就可以了
+};
+message tagKMMJRoomOper_DingQue		//推荐定缺信息
+{
+	repeated	KMMJType			TJdingQue		= 1;	//向玩家推荐的定缺 只有自己可看
+};
+message tagKMMJRoomOper_PointChg				//分数改变
+{
+	repeated	KMMJType			chgTypeArr		= 1;
+	repeated	uint32				seatArr			= 2;
+	repeated	int32				pointArr		= 3;
+};
+message tagKMMJRoomOper
+{
+	required	KMMJRoomOper				eOper		= 1;	//扩展操作类型
+	optional	tagKMMJRoomOper_GameBegin	bginfo		= 2;	//开局操作 ->设置基本数据 
+	optional	tagKMMJRoomOper_DingQue		dqinfo		= 3;	//定缺
+	optional	tagKMMJRoomOper_PointChg	pointinfo	= 4;	//
+};
+message tagKMMJStateInfo //房间同一时间可能 发送出去多个房间状态 如何处理呢?
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	required	uint32				u8State			= 2;	//1表示扩展操作 2表示基本操作 3表示 玩家操作 (大于3的特殊处理)
+	//服务器的Room操作
+	optional	tagKMMJRoomOper		exOper			= 3;	//扩展操作
+	repeated	tagMJBaseRoomOper	baseOperArr		= 4;	//基本操作数组 因为可能有多个基本操作
+	//玩家的操作
+	optional	tagKMMJOperInfo		roleOper		= 5;	//服务器返回的玩家的操作
+	optional	uint32				u8SeatID		= 6;
+};
+message tagKMMJOperLog
+{
+	optional	tagKMMJStateInfo	roomOper		= 1;
+	optional	tagKMMJOperInfo		roleOper		= 2;
+};
+message tagKMMJTimeLimit
+{
+	optional	tagKMMJStateInfo	roomOper		= 1;
+	optional	tagKMMJOperInfo		roleOper		= 2;
+	optional	tagKMMJEndInfo		endOper			= 3;
+};
+message tagKMMJLogInfo		//昆明麻将 回放数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	repeated	tagKMMJRoleItem		roleArr			= 2;	//房间内全部的玩家基本数据
+	repeated	tagKMMJRoleMJInfo	roleMjArr		= 3;	//每个玩家初始化的时候的手牌的数据
+	//结算数据
+	repeated	tagKMMJRoleEndInfo	roleEndArr		= 4;	//每个玩家的结算数据
+	//游戏流程数据
+	repeated	tagKMMJOperLog		operArr			= 5;	//操作记录
+};
+message tagKMMJTempJieSuan		//发给客户端显示分数变化，到了当局游戏结束，再统计总分进行真正的分数加减
+{
+	repeated	KMMJType			JStype			= 1;
+	repeated	int32				JSpoint			= 2;
+};
+
+//-------------------------------------------------------------------------血战麻将的数据----------------------------------------------------------------
+enum XZMJType	//血战麻将的类型
+{
+	XZMJType_ER			= 0;	//无数据
+	XZMJType_ZM			= 1;	//自摸
+	XZMJType_GSKH		= 2;	//杠上开花
+	XZMJType_GSP		= 3;	//杠上炮
+	XZMJType_QGH		= 4;	//抢杠胡
+	XZMJType_BQGH		= 5;	//被抢杠胡
+	XZMJType_PH			= 6;	//平胡
+	XZMJType_QYS		= 7;	//清一色
+	XZMJType_DDH		= 8;	//对对胡
+	XZMJType_QDDH		= 9;	//清对 清对对胡
+	XZMJType_QD			= 10;	//七对
+	XZMJType_QQD		= 11;	//清七对
+	XZMJType_LQD		= 12;	//龙七对
+	XZMJType_QLQD		= 13;	//清龙七对
+	XZMJType_JGD		= 15;	//金钩钓
+	XZMJType_YPDX		= 16;	//一炮多响
+	XZMJType_ZJ			= 17;	//庄家
+	XZMJType_GF			= 18;	//刮风
+	XZMJType_XY			= 19;	//下雨
+	XZMJType_DQTiao		= 20;	//定缺条
+	XZMJType_DQWan		= 21;	//定缺万
+	XZMJType_DQTong		= 22;	//定缺筒
+	XZMJType_HZ			= 23;	//花猪
+	XZMJType_CJ			= 24;	//查叫
+	XZMJType_HJZY		= 25;	//呼叫转移
+	XZMJType_TH			= 26;	//天胡
+	XZMJType_DH			= 27;	//地胡
+	XZMJType_QDYH		= 28;	//全带幺
+	XZMJType_QYJH		= 29;	//清幺九
+	XZMJType_JDH		= 30;	//将对
+	XZMJType_JJGDH		= 31;	//将金钩钓
+	XZMJType_QJGDH		= 32;	//清金钩钓
+	XZMJYype_SBLH		= 33;	//十八罗汉
+	XZMJYype_QSBLH		= 34;	//清十八罗汉
+	XZMJType_HD			= 35;	//海底
+};
+message tagXZMJRoleMJInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	required	uint32				u8MJNum			= 2;	//手上手牌的数量
+	optional	XZMJType			DingQue			= 3;	//玩家确定后的定缺牌型	0初始1条2万3筒	全可见
+	optional	bool				bHuaZhu			= 4;	//花猪
+	optional	bool				bChaJiao		= 5;	//查叫	
+	repeated	MJValue				mjArr			= 6;	//玩家当前麻将的数组
+	repeated	MJValue				pengArr			= 7;	//碰的数据
+	repeated	MJValue				minggangArr		= 8;	//明杠
+	repeated	MJValue				angang			= 9;	//暗杠
+	repeated	MJValue				jiagang			= 10;	//加杠
+	repeated	MJValue				chuArr			= 11;	//玩家出牌的数据
+};
+message tagXZMJRoomDataInfo //血战麻将 玩家个人信息记录
+{
+	optional	uint32				u32SLNum		= 1;	//胜利局数
+	optional	uint32				u32SBNum		= 2;	//失败局数
+	optional	uint32				u32HNum			= 3;	//和牌局数
+};
+//玩家数据
+message tagXZMJRoleItem //血战麻将玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagXZMJRoleInfo //血战麻将玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagXZMJRoleItem		roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+//结算数据
+message tagXZMJRoleEndInfo //单个玩家的结算数据
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	//牌的数据
+	optional	tagXZMJRoleMJInfo	mjInfo			= 2;	//麻将的数据
+	//结算 输赢的数据
+	optional	int32				n32HPoint		= 3;	//胡牌分
+	optional	int32				n32FYPoint		= 4;	//风雨钱
+	optional    int32				n32FinalPoint	= 5;	//最终输赢分
+	//状态标记
+	repeated	XZMJType			typeArr			= 6;	//涉及到的状态列表
+};
+message tagXZMJGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagXZMJEndInfo//血战麻将结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagXZMJRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	optional	tagXZMJGroupInfo	groupinfo		= 3;	//当房间最后一局的时候 发送的房间统计数据
+};
+//血战麻将初始化数据
+message tagXZMJInitInfo//血战麻将初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	tagRoomRuleInfo		ruleInfo		= 2;	//房间的规则数据
+	//桌子上的数据-> 让玩家进入桌子后 可以根据这些数据还原桌子上全部的内容
+	optional	uint32				u8MJNum			= 3;	//桌子上剩余麻将数
+	optional	uint32				u8BGNum			= 4;	//补杠的次数 补杠从牌尾拿牌 	
+	repeated	uint32				dingQueArr		= 5;	//每个玩家定缺的牌型
+	repeated	tagXZMJRoleMJInfo	roleMjArr		= 9;	//每个玩家的牌的数据(包括自己的 其他的玩家的牌 只可以看见可看的牌)
+	optional	tagXZMJStateInfo	roomOper		= 10;	//当前房间的状态
+
+	//前面局数的游戏操作记录
+	repeated	tagXZMJEndInfo		endArr			= 11;	//结算数据
+	optional	bool				bSign			= 12;
+};
+message tagXZMJRoleDingQue
+{
+	optional	uint32				u8SeatID		= 1;
+	required	XZMJType			dingque			= 2;
+};
+message tagXZMJOperInfo //血战麻将玩家操作数据
+{
+	optional	tagMJBaseRoleOper	eOper			= 1;	//玩家的操作
+	optional	tagXZMJRoleDingQue	dqOper			= 2;	//玩家的定缺操作
+	optional	tagXZMJexChange3	exC3Oper		= 3;
+};
+//血战麻将 房间的操作
+enum XZMJRoomOper
+{
+	XZMJRoomOper_GameBegin	= 1;
+	XZMJRoomOper_DingQue	= 2;	//定缺
+	XZMJRoomOper_PointChg	= 3;	//
+	XZMJRoomOper_exChange3	= 4;	//开局换三张
+};
+message tagXZMJRoomOper_GameBegin //房间状态游戏开始
+{
+	optional	uint32				u8GameNum		= 1;	//游戏局数
+	optional	uint32				u32SeZiNum		= 2;	//第一颗骰子的点数
+	repeated	tagXZMJRoleMJInfo	roleMjArr		= 3;	//每个玩家的牌的数据 其他玩家只显示牌的数量就可以了
+	optional	uint32				u8ShunXu		= 4;
+};
+message tagXZMJexChange3
+{
+	repeated	MJValue				roleTJexC3		= 1;
+};
+message tagXZMJRoomOper_exChange3
+{
+	repeated	tagXZMJexChange3	allTJexC3		= 1;
+	optional	uint32				roleID			= 2;
+};
+message tagXZMJRoomOper_DingQue		//推荐定缺信息
+{
+	repeated	XZMJType			TJdingQue		= 1;	//向玩家推荐的定缺 只有自己可看
+	repeated	tagXZMJexChange3	ex3arr			= 2;	//玩家换三张得到的三张牌
+};
+message tagXZMJRoomOper_PointChg				//分数改变
+{
+	repeated	XZMJType			chgTypeArr		= 1;
+	repeated	uint32				seatArr			= 2;
+	repeated	int32				pointArr		= 3;
+};
+message tagXZMJRoomOper
+{
+	required	XZMJRoomOper				eOper		= 1;	//扩展操作类型
+	optional	tagXZMJRoomOper_GameBegin	bginfo		= 2;	//开局操作 ->设置基本数据 
+	optional	tagXZMJRoomOper_DingQue		dqinfo		= 3;	//定缺
+	optional	tagXZMJRoomOper_PointChg	pointinfo	= 4;	//
+	optional	tagXZMJRoomOper_exChange3   exC3info	= 5;
+};
+message tagXZMJStateInfo //房间同一时间可能 发送出去多个房间状态 如何处理呢?
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	required	uint32				u8State			= 2;	//1表示扩展操作 2表示基本操作 3表示 玩家操作 (大于3的特殊处理)
+	//服务器的Room操作
+	optional	tagXZMJRoomOper		exOper			= 3;	//扩展操作
+	repeated	tagMJBaseRoomOper	baseOperArr		= 4;	//基本操作数组 因为可能有多个基本操作
+	//玩家的操作
+	optional	tagXZMJOperInfo		roleOper		= 5;	//服务器返回的玩家的操作
+	optional	uint32				u8SeatID		= 6;
+};
+message tagXZMJOperLog
+{
+	optional	tagXZMJStateInfo	roomOper		= 1;
+	optional	tagXZMJOperInfo		roleOper		= 2;
+};
+message tagXZMJTimeLimit
+{
+	optional	tagXZMJStateInfo	roomOper		= 1;
+	optional	tagXZMJOperInfo		roleOper		= 2;
+	optional	tagXZMJEndInfo		endOper			= 3;
+};
+message tagXZMJLogInfo		//血战麻将 回放数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	repeated	tagXZMJRoleItem		roleArr			= 2;	//房间内全部的玩家基本数据
+	repeated	tagXZMJRoleMJInfo	roleMjArr		= 3;	//每个玩家初始化的时候的手牌的数据
+	//结算数据
+	repeated	tagXZMJRoleEndInfo	roleEndArr		= 4;	//每个玩家的结算数据
+	//游戏流程数据
+	repeated	tagXZMJOperLog		operArr			= 5;	//操作记录
+};
+message tagXZMJTempJieSuan		//发给客户端显示分数变化，到了当局游戏结束，再统计总分进行真正的分数加减
+{
+	repeated	XZMJType			JStype			= 1;
+	repeated	int32				JSpoint			= 2;
+};
+
+//-------------------------------------------------------------------------血流麻将的数据----------------------------------------------------------------
+enum XLMJType	//血战麻将的类型
+{
+	XLMJType_ER			= 0;	//无数据
+	XLMJType_ZM			= 1;	//自摸
+	XLMJType_GSKH		= 2;	//杠上开花
+	XLMJType_GSP		= 3;	//杠上炮
+	XLMJType_QGH		= 4;	//抢杠胡
+	XLMJType_BQGH		= 5;	//被抢杠胡
+	XLMJType_PH			= 6;	//平胡
+	XLMJType_QYS		= 7;	//清一色
+	XLMJType_DDH		= 8;	//对对胡
+	XLMJType_QDDH		= 9;	//清对 清对对胡
+	XLMJType_QD			= 10;	//七对
+	XLMJType_QQD		= 11;	//清七对
+	XLMJType_LQD		= 12;	//龙七对
+	XLMJType_QLQD		= 13;	//清龙七对
+	XLMJType_JGD		= 15;	//金钩钓
+	XLMJType_YPDX		= 16;	//一炮多响
+	XLMJType_ZJ			= 17;	//庄家
+	XLMJType_GF			= 18;	//刮风
+	XLMJType_XY			= 19;	//下雨
+	XLMJType_DQTiao		= 20;	//定缺条
+	XLMJType_DQWan		= 21;	//定缺万
+	XLMJType_DQTong		= 22;	//定缺筒
+	XLMJType_HZ			= 23;	//花猪
+	XLMJType_CJ			= 24;	//查叫
+	XLMJType_HJZY		= 25;	//呼叫转移
+	XLMJType_TH			= 26;	//天胡
+	XLMJType_DH			= 27;	//地胡
+	XLMJType_QDYH		= 28;	//全带幺
+	XLMJType_QYJH		= 29;	//清幺九
+	XLMJType_JDH		= 30;	//将对
+	XLMJType_JJGDH		= 31;	//将金钩钓
+	XLMJType_QJGDH		= 32;	//清金钩钓
+	XLMJType_SBLH		= 33;	//十八罗汉
+	XLMJType_QSBLH		= 34;	//清十八罗汉
+	XLMJType_HD			= 35;	//海底
+};
+message tagXLMJRoleMJInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	required	uint32				u8MJNum			= 2;	//手上手牌的数量
+	optional	XLMJType			DingQue			= 3;	//玩家确定后的定缺牌型	0初始1条2万3筒	全可见
+	optional	bool				bHuaZhu			= 4;	//花猪
+	optional	bool				bChaJiao		= 5;	//查叫	
+	repeated	MJValue				mjArr			= 6;	//玩家当前麻将的数组
+	repeated	MJValue				pengArr			= 7;	//碰的数据
+	repeated	MJValue				minggangArr		= 8;	//明杠
+	repeated	MJValue				angang			= 9;	//暗杠
+	repeated	MJValue				jiagang			= 10;	//加杠
+	repeated	MJValue				chuArr			= 11;	//玩家出牌的数据
+};
+message tagXLMJRoomDataInfo //血流麻将 玩家个人信息记录
+{
+	optional	uint32				u32SLNum		= 1;	//胜利局数
+	optional	uint32				u32SBNum		= 2;	//失败局数
+	optional	uint32				u32HNum			= 3;	//和牌局数
+};
+//玩家数据
+message tagXLMJRoleItem //血流麻将玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagXLMJRoleInfo //血流麻将玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagXLMJRoleItem		roleArr			= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+//结算数据
+message tagXLMJRoleEndInfo //单个玩家的结算数据
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	//牌的数据
+	optional	tagXLMJRoleMJInfo	mjInfo			= 2;	//麻将的数据
+	//结算 输赢的数据
+	optional	int32				n32HPoint		= 3;	//胡牌分
+	optional	int32				n32FYPoint		= 4;	//风雨钱
+	optional    int32				n32FinalPoint	= 5;	//最终输赢分
+	//状态标记
+	repeated	XLMJType			typeArr			= 6;	//涉及到的状态列表
+};
+message tagXLMJGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagXLMJEndInfo//血流麻将结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagXLMJRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	optional	tagXLMJGroupInfo	groupinfo		= 3;	//当房间最后一局的时候 发送的房间统计数据
+};
+//血流麻将初始化数据
+message tagXLMJInitInfo
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	tagRoomRuleInfo		ruleInfo		= 2;	//房间的规则数据
+	//桌子上的数据-> 让玩家进入桌子后 可以根据这些数据还原桌子上全部的内容
+	optional	uint32				u8MJNum			= 3;	//桌子上剩余麻将数
+	optional	uint32				u8BGNum			= 4;	//补杠的次数 补杠从牌尾拿牌 	
+	repeated	uint32				dingQueArr		= 5;	//每个玩家定缺的牌型
+	repeated	tagXLMJRoleMJInfo	roleMjArr		= 9;	//每个玩家的牌的数据(包括自己的 其他的玩家的牌 只可以看见可看的牌)
+	optional	tagXLMJStateInfo	roomOper		= 10;	//当前房间的状态
+
+	//前面局数的游戏操作记录
+	repeated	tagXLMJEndInfo		endArr			= 11;	//结算数据
+	optional	bool				bSign			= 12;	//			
+};
+message tagXLMJRoleDingQue
+{
+	optional	uint32				u8SeatID		= 1;
+	required	XLMJType			dingque			= 2;
+};
+message tagXLMJOperInfo //血流麻将玩家操作数据
+{
+	optional	tagMJBaseRoleOper	eOper			= 1;	//玩家的操作
+	optional	tagXLMJRoleDingQue	dqOper			= 2;	//玩家的定缺操作
+	optional	tagXLMJexChange3	exC3Oper		= 3;
+};
+//血流麻将 房间的操作
+enum XLMJRoomOper
+{
+	XLMJRoomOper_GameBegin	= 1;
+	XLMJRoomOper_DingQue	= 2;	//定缺
+	XLMJRoomOper_PointChg	= 3;	//
+	XLMJRoomOper_exChange3	= 4;	//开局换三张
+};
+message tagXLMJRoomOper_GameBegin //房间状态游戏开始
+{
+	optional	uint32				u8GameNum		= 1;	//游戏局数
+	optional	uint32				u32SeZiNum		= 2;	//第一颗骰子的点数
+	repeated	tagXLMJRoleMJInfo	roleMjArr		= 3;	//每个玩家的牌的数据 其他玩家只显示牌的数量就可以了
+	optional	uint32				u8ShunXu		= 4;
+};
+message tagXLMJexChange3
+{
+	repeated	MJValue				roleTJexC3		= 1;
+};
+message tagXLMJRoomOper_exChange3
+{
+	repeated	tagXLMJexChange3	allTJexC3		= 1;
+	optional	uint32				roleID			= 2;
+};
+message tagXLMJRoomOper_DingQue		//推荐定缺信息
+{
+	repeated	XLMJType			TJdingQue		= 1;	//向玩家推荐的定缺 只有自己可看
+	repeated	tagXLMJexChange3	ex3arr			= 2;	//玩家换三张得到的三张牌
+};
+message tagXLMJRoomOper_PointChg				//分数改变
+{
+	repeated	XLMJType			chgTypeArr		= 1;
+	repeated	uint32				seatArr			= 2;
+	repeated	int32				pointArr		= 3;
+};
+message tagXLMJRoomOper
+{
+	required	XLMJRoomOper				eOper		= 1;	//扩展操作类型
+	optional	tagXLMJRoomOper_GameBegin	bginfo		= 2;	//开局操作 ->设置基本数据 
+	optional	tagXLMJRoomOper_DingQue		dqinfo		= 3;	//定缺
+	optional	tagXLMJRoomOper_PointChg	pointinfo	= 4;	//
+	optional	tagXLMJRoomOper_exChange3   exC3info	= 5;
+};
+message tagXLMJStateInfo //房间同一时间可能 发送出去多个房间状态 如何处理呢?
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	required	uint32				u8State			= 2;	//1表示扩展操作 2表示基本操作 3表示 玩家操作 (大于3的特殊处理)
+	//服务器的Room操作
+	optional	tagXLMJRoomOper		exOper			= 3;	//扩展操作
+	repeated	tagMJBaseRoomOper	baseOperArr		= 4;	//基本操作数组 因为可能有多个基本操作
+	//玩家的操作
+	optional	tagXLMJOperInfo		roleOper		= 5;	//服务器返回的玩家的操作
+	optional	uint32				u8SeatID		= 6;
+};
+message tagXLMJOperLog
+{
+	optional	tagXLMJStateInfo	roomOper		= 1;
+	optional	tagXLMJOperInfo		roleOper		= 2;
+};
+message tagXLMJTimeLimit
+{
+	optional	tagXLMJStateInfo	roomOper		= 1;
+	optional	tagXLMJOperInfo		roleOper		= 2;
+	optional	tagXLMJEndInfo		endOper			= 3;
+};
+message tagXLMJLogInfo		//血流麻将 回放数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	repeated	tagXLMJRoleItem		roleArr			= 2;	//房间内全部的玩家基本数据
+	repeated	tagXLMJRoleMJInfo	roleMjArr		= 3;	//每个玩家初始化的时候的手牌的数据
+	//结算数据
+	repeated	tagXLMJRoleEndInfo	roleEndArr		= 4;	//每个玩家的结算数据
+	//游戏流程数据
+	repeated	tagXLMJOperLog		operArr			= 5;	//操作记录
+};
+message tagXLMJTempJieSuan		//发给客户端显示分数变化，到了当局游戏结束，再统计总分进行真正的分数加减
+{
+	repeated	XLMJType			JStype			= 1;
+	repeated	int32				JSpoint			= 2;
+};
+
+//-------------------------------------------------富阳八张算法-------------------------------------------------
+enum FYBZType
+{
+	FYBZType_Error	= 0;
+	FYBZType_SP		= 1;	//散牌
+	FYBZType_DZ		= 2;	//对子
+	FYBZType_SZ		= 3;	//顺子
+	FYBZType_ZD		= 4;	//炸弹
+	FYBZType_THS	= 5;	//同花顺
+};
+enum FYBZTSType
+{
+	FYBZTSType_Error	= 0;	//
+	FYBZTSType_SSZ		= 1;	//三顺子
+	FYBZTSType_TZ		= 2;	//铁枝
+	FYBZTSType_SDZ		= 3;	//四对子
+	FYBZTSType_YTL		= 4;	//一条龙
+};
+message tagFYBZLogInfo		//富阳八张 回放数据
+{
+	//目前富阳八张没有需要记录的数据
+
+};
+message tagFYBZRoomDataInfo //富阳八张 玩家个人信息记录
+{
+	//富阳八张 玩家需要记录到数据库的数据
+	optional	uint32					u32SLNum	= 1;	//胜利局数
+	optional	uint32					u32SBNum	= 2;	//失败局数
+	optional	uint32					u32HNum		= 3;	//和牌局数
+	optional	uint32					u32HBLNum	= 4;	//红波浪次数
+	optional	uint32					u32DGNum	= 5;	//打枪次数
+};
+message tagFYBZRoleItem //富阳八张玩家数据
+{
+	optional	uint32				u32RoleID		= 1;
+	optional	tagRoleRoomInfo		roleInfo		= 2;
+	optional	int32				n32Point		= 3;
+	optional	uint32				u8SeatID		= 4;
+	optional	bool				bAccpet			= 5;
+	optional	RoomRoleState		eState			= 6;
+	optional	bool				bDeposit		= 7;
+};
+message tagFYBZRoleInfo //富阳八张玩家改变数据
+{
+	//外部玩家的数据变化
+	repeated	tagFYBZRoleItem	roleArr				= 1;	//变化玩家列表
+	repeated	uint32				delArr			= 2;	//离开的玩家列表
+};
+message tagFYBZRoleComInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	repeated	int32				pointArr		= 2;	//每个蹲位的积分变化 没有X倍率的
+	optional	bool				bDG				= 3;	//是否被打枪
+	optional	int32				n32BasePoint	= 4;	//最终积分的变化 没有涉及到倍率
+	optional	uint32				u32Rate			= 5;	//当前倍率 不是房间的倍率 -> 最终结果为 倍率X房间倍率X积分变化
+	optional	int32				n32FinalPoint	= 6;	//最终积分变化 房间倍率和基本倍率都计算上了的 2个玩家之间的积分变化
+};
+message tagFYBZRoleEndInfo
+{
+	optional	uint32				u8SeatID		= 1;	//座位ID
+	optional	bool				bHBL			= 2;	//是否是红波浪
+	repeated	FYBZType			typeArr			= 3;	//每蹲的类型
+	optional	FYBZTSType			typeex			= 4;	//特殊牌型  如果有特殊牌型 typeArr 无需使用
+	repeated	uint32				pokerArr		= 5;	//牌的数据
+	repeated	tagFYBZRoleComInfo	comArr			= 6;	//和其他玩家比较的集合
+	repeated	int32				pointArr		= 7;	//每蹲的输赢积分
+	optional	int32				n32PointChange	= 8;	//当前玩家最终输赢的积分
+};
+message tagFYBZGroupInfo
+{	
+	repeated	tagRoleRoomInfo		roleArr			= 1;	//玩家数据集合 ->必须发送玩家全部的数据(因为有可能部分玩家数据不存在)
+	repeated	int32				pointArr		= 2;	//输赢点数变化
+};
+message tagFYBZEndInfo//富阳八张结算数据
+{
+	required	uint32				u8GameNum		= 1;	//当前游戏局数
+	repeated	tagFYBZRoleEndInfo	roleArr			= 2;	//每个玩家的结算数据
+	repeated	uint32				otherPokerArr	= 3;	//如果桌子上不满员的话 不在的玩家的牌
+	optional	tagFYBZGroupInfo	groupinfo		= 4;	//当房间最后一局的时候 发送的房间统计数据
+};
+message tagFYBZInitInfo//富阳八张初始化数据
+{
+	required	uint32				u8GameNum		= 1;	//游戏局数
+	required	tagRoomRuleInfo		ruleInfo		= 2;	//房间的规则数据
+	repeated	uint32				pokerArr		= 3;	//玩家的牌 如果已经发牌了
+	optional	FYBZTSType			exType			= 4;	//特殊牌型
+	optional	uint32				u32exTypePoint	= 5;	//特殊牌型的点数
+	optional	bool				bSet			= 6;	//自己是否已经完成牌的设置了
+	optional	uint32				u32WriteTime	= 7;	//操作等待时间
+	repeated	tagFYBZEndInfo		endArr			= 8;	//结算数据 前面所有局数的 只有重新链接才有
+	optional	uint32				u32InitTime		= 9;	///
+	optional	bool				bSign			= 10;	//AA房间特有的 是否需要报名
+}; 
+enum FYBZRoleOper //玩家操作
+{
+	FYBZRoleOper_SetAllFinish	= 1;	//直接设置13张牌 并且完成设置
+	FYBZRoleOper_SetTSPoker		= 2;	//玩家丢牌
+	FYBZRoleState_GameStar		= 3;	//玩家手动开始游戏
+};
+enum FYBZRoomOper //系统操作
+{
+	FYBZRoomOper_SendPoker		= 1;	//发牌 系统操作
+	FYBZRoomOper_RoleSet		= 2;	//有玩家定牌了
+	FYBZRoomOper_RoleReset		= 3;	//有玩家重新链接了 发送一些特殊数据给指定玩家
+};
+message tagFYBZOperInfo //桐庐13张玩家操作数据
+{
+	required	FYBZRoleOper		eOper			= 1;	//操作类型
+	repeated	uint32				paraArr			= 2;	//参数类型
+};
+message tagFYBZSendPokerInfo
+{
+	required	uint32				u8SeatID		= 1;	//座位ID
+	repeated	uint32				pokerArr		= 2;	//扑克的列表 但是只有自己有
+	optional	FYBZTSType			typeex			= 3;	//特殊牌型 如果是特殊牌型 这个值才存在
+	optional	uint32				u32exTypePoint	= 4;	//特殊牌型的点数
+};
+message tagFYBZSetInfo
+{
+	repeated	uint32				setArr			= 1;	//
+};
+message tagFYBZRoleReset
+{
+	repeated	uint32				seatArr			= 1;	//其他玩家的数据
+	repeated	bool				setArr			= 2;	//是否已经设置了
+};
+message FYBZRoomOperInfo
+{
+	required	FYBZRoomOper			eOper		= 1;	//操作类型
+	optional	tagFYBZSendPokerInfo	sendInfo	= 2;	//发牌数据 eOper == FYBZRoomOper_SendPoker 才有这个数据
+	optional	tagFYBZSetInfo			setInfo		= 3;	//已经完成操作的玩家 eOper == FYBZRoomOper_RoleSet
+	optional	tagFYBZRoleReset		resetInfo	= 4;	//
+};
+message tagFYBZStateInfo
+{
+	optional	uint32				u8GameNum		= 1;	//当前局数
+	repeated	FYBZRoomOperInfo	roomOperArr		= 2;	//房间操作的集合
+};
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------游戏全局的添加---------------------------------------------------------------
+
+//---------------------------------------------------------------2.日志设定---------------------------------------------------------------
+//战局数据
+message tagRoomSimLogItem
+{
+	repeated	uint32				roleArr			= 1;	//玩家ID列表
+	repeated	int32				pointArr		= 2;	//玩家点数
+};
+message tagRoomSimLogInfo //房间战局数据
+{
+	optional	uint32				u32OnlyID		= 1;	//唯一ID 数据库主键ID
+	optional	uint32				u32RoomID		= 2;	//房间ID
+	optional	RoomType			eType			= 3;	//房间类型
+	optional	int32				n32BeginTime	= 4;	//本局开始时间
+	repeated	tagRoleRoomInfo		roleArr			= 5;	//涉及到的全部玩家ID的列表
+	repeated	tagRoomSimLogItem	resultArr		= 6;	//对于玩家输赢的积分变化 
+};
+message tagRoomLogInfo //房间回放数据
+{
+	required	RoomType				eRoomType				= 1;	//房间类型
+	optional	uint32					u32OnlyID				= 2;	//唯一ID 8位数值的唯一ID
+	optional	uint32					u32RoomID				= 3;	//房间ID
+	optional	tagTLSSZLogInfo			tlsszInfo				= 4;	//桐庐十三张待保存的数据
+	optional	tagNNLogInfo			nnInfo					= 5;	//牛牛
+	optional	tagJXSSZLogInfo			jxsszInfo				= 6;	//嘉兴十三张待保存的数据
+	optional	tagJHSSZLogInfo			jhsszInfo				= 7;	//金华十三张
+	optional	tagXSSSZLogInfo			xssszInfo				= 8;	//萧山十三张
+	optional	tagYWSSZLogInfo			ywsszInfo				= 9;	//义乌十三张
+	optional	tagLHSSZLogInfo			lhsszInfo				= 10;	//临海十三张
+	optional	tagNCMJLogInfo			ncmjInfo				= 11;	//南昌麻将
+	optional	tagJYSSZLogInfo			jysszInfo				= 12;	//九幺十三张
+	optional	tagAQMJLogInfo			aqmjInfo				= 13;	//安庆麻将
+	optional	tagKMMJLogInfo			kmmjInfo				= 14;	//昆明麻将
+	optional	tagXZMJLogInfo			xzmjInfo				= 15;	//血战麻将
+	optional	tagXLMJLogInfo			xlmjInfo				= 16;	//血流麻将
+	optional	tagScriptRoomLogInfo	scriptInfo				= 17;	//脚本
+	optional	tagFYBZLogInfo			fybzInfo				= 18;	//富阳八张待保存的数据
+};
+//---------------------------------------------------------------3.玩家个人信息设定---------------------------------------------------------------
+message tagRoleRoomDataInfo //特别的处理 每个麻将都必须 单独写一个
+{
+	optional	tagTLSSZRoomDataInfo		tlsszinfo	= 1;	//桐庐的数据
+	optional	tagNNRoomDataInfo			nninfo		= 2;	//牛牛的数据
+	optional	tagJXSSZRoomDataInfo		jxsszinfo	= 3;	//嘉兴十三张的数据
+	optional	tagJHSSZRoomDataInfo		jhsszInfo	= 4;	//金华十三张的数据
+	optional	tagXSSSZRoomDataInfo		xssszInfo	= 5;	//萧山十三张的数据
+	optional	tagYWSSZRoomDataInfo		ywsszInfo	= 6;	//义乌十三张的数据
+	optional	tagLHSSZRoomDataInfo		lhsszInfo	= 7;	//临海十三张的数据
+	optional	tagNCMJRoomDataInfo			ncmjInfo	= 8;	//南昌麻将的数据
+	optional	tagJYSSZRoomDataInfo		jysszInfo	= 9;	//九幺十三张
+	optional	tagAQMJRoomDataInfo			aqmjInfo	= 10;	//安庆
+	optional	tagKMMJRoomDataInfo			kmmjInfo	= 11;	//昆明麻将的数据
+	optional	tagXZMJRoomDataInfo			xzmjInfo	= 12;	//血战麻将的数据
+	optional	tagXLMJRoomDataInfo			xlmjInfo	= 13;	//血流麻将的数据
+	optional	tagScriptRoomDataInfo		hzmjInfo	= 14;	//杭州麻将的数据
+	optional	tagScriptRoomDataInfo		ddzInfo		= 15;	//斗地主的数据
+	optional	tagScriptRoomDataInfo		ncmjsInfo	= 16;	//新南昌麻将的数据
+	optional	tagScriptRoomDataInfo		szmjInfo	= 17;	//松滋麻将
+	optional	tagFYBZRoomDataInfo			fybzInfo	= 18;	//富阳八张
+	optional	tagScriptRoomDataInfo		ketmjInfo	= 19;	//卡二条麻将的数据
+	optional	tagScriptRoomDataInfo		nxzmjInfo	= 20;	//新血战麻将的数据
+	optional	tagScriptRoomDataInfo		nxlmjInfo	= 21;	//新血流麻将的数据
+	optional	tagScriptRoomDataInfo		hsmjInfo	= 22;	//黄石麻将
+};
+//---------------------------------------------------------------4.房间操作信息设定---------------------------------------------------------------
+message tagRoomOperInfo //玩家在房间的操作命令
+{
+	optional	tagTLSSZOperInfo	tlsszInfo				= 1;	//桐庐十三张
+	optional	tagNNOperInfo		nnInfo					= 2;	//牛牛
+	optional	tagJXSSZOperInfo	jxsszInfo				= 3;
+	optional	tagJHSSZOperInfo	jhsszInfo				= 4;
+	optional	tagXSSSZOperInfo	xssszInfo				= 5;
+	optional	tagYWSSZOperInfo	ywsszInfo				= 6;
+	optional	tagLHSSZOperInfo	lhsszInfo				= 7;
+	optional	tagNCMJOperInfo		ncmjInfo				= 8;
+	optional	tagJYSSZOperInfo	jysszInfo				= 9;	//九幺十三张
+	optional	tagAQMJOperInfo		aqmjInfo				= 10;	
+	optional	tagKMMJOperInfo		kmmjInfo				= 11;
+	optional	tagXZMJOperInfo		xzmjInfo				= 12;
+	optional	tagXLMJOperInfo		xlmjInfo				= 13;
+	optional	tagScriptRoleOper	scriptInfo				= 14;
+	optional	tagFYBZOperInfo		fybzInfo				= 15;	//富阳八张
+};
+message tagRoomInitInfo
+{
+	required	RoomType			eRoomType				= 1;	//房间类型
+	optional	tagTLSSZInitInfo	tlsszInfo				= 2;	//
+	optional	tagNNInitInfo		nnInfo					= 3;
+	optional	tagJXSSZInitInfo	jxsszInfo				= 4;
+	optional	tagJHSSZInitInfo	jhsszInfo				= 5;
+	optional	tagXSSSZInitInfo	xssszInfo				= 6;
+	optional	tagYWSSZInitInfo	ywsszInfo				= 7;
+	optional	tagLHSSZInitInfo	lhsszInfo				= 8;
+	optional	tagNCMJInitInfo		ncmjInfo				= 9;
+	optional	tagJYSSZInitInfo	jysszInfo				= 10;	//九幺十三张
+	optional	tagAQMJInitInfo		aqmjInfo				= 11;	
+	optional	tagKMMJInitInfo		kmmjInfo				= 12;
+	optional	tagXZMJInitInfo		xzmjInfo				= 13;
+	optional	tagXLMJInitInfo		xlmjInfo				= 14;
+	optional	tagScriptRoomInit	scriptInfo				= 15;
+	optional	tagFYBZInitInfo		fybzInfo				= 16;	//富阳八张
+};
+message tagRoomEndInfo
+{
+	required	RoomType			eRoomType				= 1;	//房间类型
+	optional	tagTLSSZEndInfo		tlsszInfo				= 2;
+	optional	tagNNEndInfo		nnInfo					= 3;
+	optional	tagJXSSZEndInfo		jxsszInfo				= 4;
+	optional	tagJHSSZEndInfo		jhsszInfo				= 5;
+	optional	tagXSSSZEndInfo		xssszInfo				= 6;
+	optional	tagYWSSZEndInfo		ywsszInfo				= 7;
+	optional	tagLHSSZEndInfo		lhsszInfo				= 8;
+	optional	tagNCMJEndInfo		ncmjInfo				= 9;
+	optional	tagJYSSZEndInfo		jysszInfo				= 10;	//九幺十三张
+	optional	tagAQMJEndInfo		aqmjInfo				= 11;	
+	optional	tagKMMJEndInfo		kmmjInfo				= 12;
+	optional	tagXZMJEndInfo		xzmjInfo				= 13;
+	optional	tagXLMJEndInfo		xlmjInfo				= 14;
+	optional	tagScriptRoomEndInfo scriptInfo				= 15;
+	optional	tagFYBZEndInfo		fybzInfo				= 16;	//富阳八张
+};
+message tagRoomStateInfo
+{
+	required	RoomType			eRoomType				= 1;	//房间类型
+	optional	tagTLSSZStateInfo	tlsszInfo				= 2;
+	optional	tagNNStateInfo		nnInfo					= 3;
+	optional	tagJXSSZStateInfo	jxsszInfo				= 4;
+	optional	tagJHSSZStateInfo	jhsszInfo				= 5;
+	optional	tagXSSSZStateInfo	xssszInfo				= 6;
+	optional	tagYWSSZStateInfo	ywsszInfo				= 7;
+	optional	tagLHSSZStateInfo	lhsszInfo				= 8;
+	optional	tagNCMJStateInfo	ncmjInfo				= 9;
+	optional	tagJYSSZStateInfo	jysszInfo				= 10;	//九幺十三张
+	optional	tagAQMJStateInfo	aqmjInfo				= 11;	
+	optional	tagKMMJStateInfo	kmmjInfo				= 12;
+	optional	tagXZMJStateInfo	xzmjInfo				= 13;
+	optional	tagXLMJStateInfo	xlmjInfo				= 14;
+	optional	tagScriptRoomOper	scriptInfo				= 15;
+	optional	tagFYBZStateInfo	fybzInfo				= 16;	//富阳八张
+};
+message tagRoomRoleInfo
+{
+	required	RoomType			eRoomType				= 1;	//房间类型
+	optional	tagTLSSZRoleInfo	tlsszInfo				= 2;
+	optional	tagNNRoleInfo		nnInfo					= 3;
+	optional	tagJXSSZRoleInfo	jxsszInfo				= 4;
+	optional	tagJHSSZRoleInfo	jhsszInfo				= 5;
+	optional	tagXSSSZRoleInfo	xssszInfo				= 6;
+	optional	tagYWSSZRoleInfo	ywsszInfo				= 7;
+	optional	tagLHSSZRoleInfo	lhsszInfo				= 8;
+	optional	tagNCMJRoleInfo		ncmjInfo				= 9;
+	optional	tagJYSSZRoleInfo	jysszInfo				= 10;	//九幺十三张
+	optional	tagAQMJRoleInfo		aqmjInfo				= 11;	//
+	optional	tagKMMJRoleInfo		kmmjInfo				= 12;
+	optional	tagXZMJRoleInfo		xzmjInfo				= 13;
+	optional	tagXLMJRoleInfo		xlmjInfo				= 14;
+	optional	tagScriptRoomRoleInfo	scriptInfo			= 15;
+	optional	tagFYBZRoleInfo		fybzInfo				= 16;	//富阳八张
+};
+//-------------------------------------------------------------------------------------------------------------------------------------
+//游戏的数据结构
+//1.玩家数据
+enum RoleState //玩家状态
+{
+	RoleState_Leave		= 1;	//玩家处理离线状态(服务器端完全没有缓存玩家数据)
+	RoleState_Cache		= 2;	//玩家基本数据缓存在服务器端(扩展数据没有缓存)
+	RoleState_CacheEx	= 3;	//玩家全部数据被缓存在服务器端
+	RoleState_OnLine	= 4;	//玩家在线
+};
+enum SaveType
+{
+	SaveType_DB			= 1;	//保存到数据库去	
+	SaveType_Client		= 2;	//保存到客户端去
+};
+message tagRoleGroupInfo
+{
+	optional	uint32				u32TotalGameNum			= 1;	//总游戏局数
+	optional	uint32				u32TodayGameNum			= 2;	//今天游戏局数
+	optional	bool				bTodatFirGameReward		= 3;	//今天第一次游戏奖励是否已经领取
+	//
+	optional	uint32				u32ZhuanPanNum			= 4;	//今天转盘的次数
+	optional	uint32				u32WeekZhuanPanUse		= 5;	//本周转盘的花费
+	//
+	optional	uint32				u32TodayFXRewardNum		= 6;	//今天获取分享奖励的次数
+	repeated	uint32				u32shopid				= 7;	//活动商品id
+	repeated	uint32				u32count				= 8;	//活动已经购买的次数
+	//
+	optional	uint32				u32TodayWeiXinFXcount	= 9;	//今天微信分享的次数
+};
+message tagRoleExInfo //玩家的扩展数据 (1.后期功能扩展使用 2.玩家基本缓存不加载的数据)
+{
+	//如果后期需要扩展 在这里
+	repeated	tagRoomSimLogInfo		roomlogArr			= 1;	//战绩的数据
+	optional	tagRoleRoomDataInfo		roominfo			= 2;	//额外数据
+	optional	tagRoleGroupInfo		groupInfo			= 3;	//统计数据
+};
+message tagRoleInfo //玩家的基本数据
+{
+	optional	string				strAccount				= 1;	//账号
+	optional	uint32				u32Password				= 2;	//密码
+	optional	int32				n32FreezeEndTime		= 3;	//账号冻结结束时间
+	optional	uint32				u32RoleID				= 4;	//玩家ID
+	optional	string				strRoleName				= 5;	//玩家名称
+	optional	string				strFaceURL				= 6;	//玩家头像
+	optional	int32				n32Gold					= 7;	//玩家金币
+	optional	uint32				u32YuanBao				= 8;	//玩家RMB货币数量
+	optional	uint32				u32RoomCard				= 9;	//房卡数量
+	optional	int32				n32LastLoginTime		= 10;	//最后次登录的时间
+	optional	int32				n32LastOnlineTime		= 11;	//最后在线的时间 也可以叫 最后次登出的时间(与缓存无关)
+	optional	uint32				u32BindID				= 12;	//绑定的代理商的ID
+	optional	int32				n32UserID				= 13;	//会员ID 和代理商ID一起使用的
+	optional	uint32				u32MagicCount			= 14;	//魔法表情的个数
+	optional	string				strIdentity				= 15;	//玩家身份证ID
+	optional	bool				bGender					= 16;	//性别
+	optional	tagRoleExInfo		roleexInfo				= 17;	//玩家扩展数据(非基本数据)
+};
+message tagRoleRuntimeData //玩家运行时的数据 
+{
+	repeated	uint32				delroomlogarr			= 1;	//待删除的战绩记录 通知客户端进行删除处理
+};
+//----------------------------------------------------------日志数据-------------------------------------------------
+//3.
+//1.玩家登陆或者登出的记录
+message tagLogRoleLoginOrOutInfo
+{
+	required	uint32						u32RoleID			= 1;
+	required	uint32						u32BindID			= 2;
+	required	LoginType					eType				= 3;
+	required	uint32						u32YuanBaoNum		= 4;
+	required	uint32						u32RoomCardNum		= 5;
+	required	int32						n32GoldNum			= 6;
+	required	bool						bLogOutOrIn			= 7;
+	required	int32						n32LogTime			= 8;
+};
+//2.玩家进出房间的记录
+message tagLogRoleJoinOrLeaveRoomInfo
+{
+	required	uint32						u32RoleID			= 1;
+	required	uint32						u32BindID			= 2;
+	required	RoomType					eType				= 3;
+	required	RoomStateType				eState				= 4;
+	required	uint32						u32YuanBaoNum		= 5;
+	required	uint32						u32RoomCardNum		= 6;
+	required	int32						n32GoldNum			= 7;
+	required	uint32						u32UseYuanBaoNum	= 8;
+	required	uint32						u32UseRoomCardNum	= 9;
+	required	bool						bLeaveOrJoin		= 10;
+	required	uint32						u8GameNum			= 11;
+	required	uint32						u8RoleNum			= 12;
+	required	int32						n32LogTime			= 13;
+	required	uint32						u32RoomID			= 14;
+};
+//3.玩家创建房间的记录
+message tagRoleCreateRoomInfo
+{
+	required	uint32						u32RoleID			= 1;
+	required	uint32						u32BindID			= 2;
+	required	RoomType					eType				= 3;
+	required	RoomStateType				eState			= 4;
+	required	uint32						u32UseYuanBaoNum	= 5;
+	required	uint32						u32UseRoomCardNum	= 6;
+	required	uint32						u32YuanBaoNum		= 7;
+	required	uint32						u32RoomCardNum		= 8;
+	required	int32						n32GoldNum			= 9;
+	required	uint32						u8GameNum			= 10;
+	required	uint32						u8RoleNum			= 11;
+	required	int32						n32LogTime			= 12;
+	required	uint32						u32RoomID			= 13;
+};
+//4.玩家续费房间的记录
+message tagRoleRenewRoomInfo
+{
+	required	uint32						u32RoleID			= 1;
+	required	uint32						u32BindID			= 2;
+	required	RoomType					eType				= 3;
+	required	RoomStateType				eState				= 4;
+	required	uint32						u8GameNum			= 5;
+	required	uint32						u8RoleNum			= 6;
+	required	uint32						u32UseYuanBaoNum	= 7;
+	required	uint32						u32UseRoomCardNum	= 8;
+	required	uint32						u32YuanBaoNum		= 9;
+	required	uint32						u32RoomCardNum		= 10;
+	required	int32						n32GoldNum			= 11;
+	required	int32						n32LogTime			= 12;
+	required	uint32						u32RoomID			= 13;
+};
+//5.玩家元宝变化
+enum YuanBaoState
+{
+	YuanBaoState_CreateRoom		= 1;	//创建房间扣除元宝
+	YuanBaoState_SignRoom		= 2;	//报名房间扣除元宝
+	YuanBaoState_RenewRoom		= 3;	//续费房间扣除元宝
+	YuanBaoState_CloseRoom		= 4;	//关闭房间退还元宝
+	YuanBaoState_Pay			= 5;	//充值添加元宝
+	YuanBaoState_CreateFailed	= 6;	//创建房间失败 退还元宝
+	YuanBaoState_SignFailed		= 7;	//报名失败 退换元宝
+	YuanBaoState_RenewFailed	= 8;	//续费失败 退换元宝
+	YuanBaoState_Charm			= 9;	//使用魔法表情扣除元宝
+	YuanBaoState_ToDayFirGame	= 10;	//每天第一次游戏奖励5钻石
+	YuanBaoState_ToDayFXReward  = 11;	//每天分享奖励
+	YuanBaoState_GM				= 12;	//GM修改	
+	YuanBaoState_Action			= 13;	//活动赠送
+	YuanBaoState_Give			= 14;	//赠送元宝
+	YuanBaoState_BeGive			= 15;	//被赠送元宝
+	YuanBaoState_ZhuanPanCost	= 16;	//转盘花费
+	YuanBaoState_ZhuanPanReward = 17;	//转盘奖励
+	YuanBaoState_ZhuanPanFailed = 18;	//转盘退还元宝
+}
+message tagRoleYuanBaoChangeInfo
+{
+	required	uint32						u32RoleID			= 1;
+	required	uint32						u32BindID			= 2;
+	required	YuanBaoState				eState				= 3;
+	required	int32						n32ChangeNum		= 4;
+	required	uint32						u32YuanBaoNum		= 5;
+	required	int32						n32LogTime			= 6;
+};
+//6.房卡变化数据
+enum RoomCardState
+{
+	RoomCardState_CreateRoom		= 1;	//创建房间扣除房卡
+	RoomCardState_SignRoom			= 2;	//报名房间扣除房卡
+	RoomCardState_RenewRoom			= 3;	//续费房间扣除房卡
+	RoomCardState_CloseRoom			= 4;	//关闭房间退还房卡
+	RoomCardState_Pay				= 5;	//充值添加房卡
+	RoomCardState_CreateFailed		= 6;	//创建房间失败 退还房卡
+	RoomCardState_SignFailed		= 7;	//报名失败 退换房卡
+	RoomCardState_RenewFailed		= 8;	//续费失败 退换房卡
+	RoomCardState_GM				= 9;	//GM修改
+	RoomCardState_WeiXinFXReward	= 10;	//每天第一次微信分享奖励1房卡
+};
+message tagRoleRoomCardChangeInfo
+{
+	required	uint32						u32RoleID			= 1;
+	required	uint32						u32BindID			= 2;
+	required	RoomCardState				eState				= 3;
+	required	int32						n32ChangeNum		= 4;
+	required	uint32						u32RoomCardNum		= 5;
+	required	int32						n32LogTime			= 6;
+};
+//7.玩家创建订单
+message tagRoleCreateOrderInfo
+{
+	required	uint32						u32RoleID			= 1;
+	required	uint32						u32BindID			= 2;
+	required	uint64						u64OrderID			= 3;
+	required	uint32						u32ShopID			= 4;
+	required	uint32						u32RMBNum			= 5;
+	required	PayType						eType				= 6;
+	required	int32						n32LogTime			= 7;
+};
+//8.玩家成功的充值订单
+message tagRoleSucessOrderInfo
+{
+	required	uint32						u32RoleID			= 1;
+	required	uint32						u32BindID			= 2;
+	required	uint64						u64OrderID			= 3;
+	required	PayType						eType				= 4;
+	required	string						strPayInfo			= 5;
+	required	uint32						u32RMBNum			= 6;
+	required	uint32						u32ShopID			= 7;
+	required	uint32						u32AddYuanBaoNum	= 8;
+	required	uint32						u32AddRoomCardNum	= 9;
+	required	int32						n32LogTime			= 10;
+	required	int32						n32UserID			= 11;
+	required	int32						n32BigUid			= 12;
+};
+//9.外部失败的订单记录
+message tagErrorOrderInfo
+{
+	required	uint64						u64OrderID			= 1;
+	required	string						strPayInfo			= 2;
+	required	string						strErrorInfo		= 3;
+	required	int32						n32LogTime			= 4;
+};
+//10.房间关闭记录
+message tagRoomCloseInfo
+{
+	required	uint32						u32RoomID			= 1;
+	required	RoomType					eType				= 2;
+	required	RoomStateType				eState				= 3;
+	required	uint32						u8GameNum			= 4;
+	required	uint32						u8RoleNum			= 5;
+	required	int32						n32LogTime			= 6;
+};
+//11.房间提供清算数据
+message tagRoomStopInfo
+{
+	required	uint32						u32RoomID			= 1;
+	required	RoomType					eType				= 2;
+	required	RoomStateType				eState				= 3;
+	required	uint32						u8GameNum			= 4;
+	required	uint32						u8NowGameNum		= 5;
+	required	uint32						u8RoleNum			= 6;
+	required	uint32						u32RoleID			= 7;
+	required	int32						n32LogTime			= 8;
+};
+//12.GM操作
+message tagGMOperInfo
+{
+	required	string						saccount			= 1;
+	required	int32						n32ip				= 2;
+	required	int32						n32LogTime			= 3;
+	required	string						sdescript			= 4;
+};
+//13.房间特殊记录
+message tagRoomRoleLogInfo
+{
+	required	uint32						u32RoomID			= 1;
+	required	RoomType					eType				= 2;
+	required	RoomStateType				eState				= 3;
+	required	string						strLogInfo			= 4;
+	required	uint32						u32RoleID			= 5;
+	required	string						strRoleName			= 6;
+	required	int32						n32LogTime			= 7;
+};
+message tagLogInfo
+{
+	repeated	tagLogRoleLoginOrOutInfo		loginArr			= 1;
+	repeated	tagLogRoleJoinOrLeaveRoomInfo	roomArr				= 2;
+	repeated	tagRoleCreateRoomInfo			createroomArr		= 3;
+	repeated	tagRoleRenewRoomInfo			renewArr			= 4;
+	repeated	tagRoleYuanBaoChangeInfo		yuanbaoArr			= 5;
+	repeated	tagRoleRoomCardChangeInfo		roomcardArr			= 6;
+	repeated	tagRoleCreateOrderInfo			createorderArr		= 7;
+	repeated	tagRoleSucessOrderInfo			sucessorderArr		= 8;
+	repeated	tagErrorOrderInfo				errororderArr		= 9;
+	repeated	tagRoomCloseInfo				roomcloseArr		= 10;
+	repeated	tagRoomStopInfo					roomstopArr			= 11;
+	repeated	tagGMOperInfo					gmoperArr			= 12;
+	repeated	tagRoomRoleLogInfo				roomroleArr			= 13;
+};
+
+//--------------------------------------------------------基本操作类型-----------------------------------------------------
+enum RoleLoginResult
+{
+	RoleLoginResult_Sucess		= 1;	//登录成功
+	RoleLoginResult_Freeze		= 2;	//账号被冻结了
+	RoleLoginResult_PassErr		= 3;	//密码错误
+	RoleLoginResult_TokenErr	= 4;	//令牌错误
+	RoleLoginResult_IsLogin		= 5;	//已经登陆了
+	RoleLoginResult_SystemLimit = 6;
+};
+enum CreateRoomResult
+{
+	CreateRoomResult_Sucess			= 1;	//创建成功
+	CreateRoomResult_RoomTypeErr	= 2;	//房间类型错误
+	CreateRoomResult_IsInRoom		= 3;	//已经在房间里面了
+	CreateRoomResult_NonRoomCard	= 4;	//没有房卡
+	CreateRoomResult_NonYuanBao		= 5;	//没有元宝
+	CreateRoomResult_NonCost		= 6;	//没有元宝和房卡
+	CreateRoomResult_System			= 7;	//系统错误
+	CreateRoomResult_NonLogin		= 8;	//未登陆
+	CreateRoomResult_GameNonRoom	= 9;	//Game上没有房间
+	CreateRoomResult_NonGame		= 10;	//GameServer未开启 不支持当前房间
+};
+enum JoinRoomResult
+{
+	JoinRoomResult_Sucess		= 1;	
+	JoinRoomResult_RoomErr		= 2;
+	JoinRoomResult_IsInRoom		= 3;
+	JoinRoomResult_RoomIsFull	= 4;
+	JoinRoomResult_RoomLimit	= 5;
+	JoinRoomResult_System		= 6;
+	JoinRoomResult_NonRoomCard	= 7;
+	JoinRoomResult_NonYuanBao	= 8;
+	JoinRoomResult_NonCost		= 9;
+	JoinRoomResult_NonLogin		= 10;
+	JoinRoomResult_NonGame		= 11;
+	JoinRoomResult_NonRoom		= 12;
+	JoinRoomResult_NeedRenew	= 13;
+	JoinRoomResult_IPLimit		= 14;
+};
+enum LeaveRoomResult
+{
+	LeaveRoomResult_Sucess		= 1;
+	LeaveRoomResult_NotInRoom	= 2;
+	LeaveRoomResult_NonGame		= 3;
+	LeaveRoomResult_VoteErr		= 4;
+	LeaveRoomResult_ProtecdTime = 5;
+	LeaveRoomResult_VoteProtecd	= 6;
+};
+enum BeLoginLeaveType
+{
+	BeLoginLeaveType_ResetLogin		= 1;	//重复登录 被顶掉
+	BeLoginLeaveType_ServerKick		= 2;	//服务器主动剔除
+	BeLoginLeaveType_Freeze			= 3;	//账号被冻结 剔除
+};
+enum BeRemoveRoomType
+{
+	BeRemoveRoomType_GameLeave		= 1;	//游戏服务器关闭
+	BeRemoveRoomType_MasterKick		= 2;	//房主踢除
+	BeRemoveRoomType_RoomClose		= 3;	//房间关闭
+	BeRemoveRoomType_NonSign		= 4;	//AA房间续费后 如果玩家30s内没有选择续费 就被剔除
+	BeRemoveRoomType_PointLimit		= 5;	//系统房间: 玩家本局后金币过少 无法继续进行
+	BeRemoveRoomType_RoleBeLeave	= 6;	//玩家不在线
+	BeRemoveRoomType_VoteKick		= 7;	//投票剔除
+	BeRemoveRoomType_VoteLeave		= 8;	//投票主动离开
+	BeRemoveRoomType_NonRenew		= 9;	//未续费
+};
+
+enum KickRoomRoleResult
+{
+	KickRoomRoleResult_Sucess		= 1;
+	KickRoomRoleResult_NonMaster	= 2;
+	KickRoomRoleResult_NonRoom		= 3;
+	KickRoomRoleResult_TypeErr		= 4;
+	KickRoomRoleResult_InGame		= 5;
+	KickRoomRoleResult_KickMe		= 6;
+	KickRoomRoleResult_RoleNum		= 7;
+	KickRoomRoleResult_RoomKick		= 8;
+};
+enum AddRoomGameNumResult
+{
+	AddRoomGameNumResult_Sucess		= 1;	//成功
+	AddRoomGameNumResult_NonRoom	= 2;	//不在房间里面
+	AddRoomGameNumResult_NonCard	= 3;	//没房卡
+	AddRoomGameNumResult_TypeErr	= 4;	//房间类型错误
+};
+enum RenewRoomResult
+{
+	RenewRoomResult_Sucess			= 1;	//成功
+	RenewRoomResult_NonRoomCard		= 2;	//没有房卡
+	RenewRoomResult_NonYuanBao		= 3;
+	RenewRoomResult_NonCost			= 4;
+	RenewRoomResult_NonRoom			= 5;	//房间不存在
+	RenewRoomResult_IsRenew			= 6;	//其他玩家已经续费了
+	RenewRoomResult_SystemRoom		= 7;	//系统房间
+	RenewRoomResult_NonRenew		= 8;	//无需续费房间
+	RenewRoomResult_IsSign			= 9;	//AA房间已经续费过了
+	RenewRoomResult_NonGame			= 10;
+	RenewRoomResult_RoomTypeErr		= 11;
+};
+enum RoomInfoResult
+{
+	RoomInfoResult_Sucess			= 1;	//申请房间回放数据成功
+	RoomInfoResult_Non				= 2;	//房间回放数据过期了
+};
+enum BindIDResult
+{
+	BindIDResult_Sucess				= 1;
+	BindIDResult_IsBind				= 2;
+	BindIDResult_BindIDErr			= 3;
+	BindIDResult_UserIDErr			= 4; //先关注公众号 
+};
+enum ShopPayResult
+{
+	ShopPayResult_Sucess			= 1;	//充值成功
+	ShopPayResult_TokenErr			= 2;	//凭证验证失败
+	ShopPayResult_ShopIDErr			= 3;	//商品不存在
+	ShopPayResult_PriceErr			= 4;	//实际付款价格和商品价格不符合
+	ShopPayResult_TokenTimeOut		= 5;	//凭证验证操作
+};
+enum CloseRoomResult
+{
+	CloseRoomResult_Sucess			= 1;	//关闭房间成功
+	CloseRoomResult_NonMaster		= 2;	//不是房主
+	CloseRoomResult_IsSystem		= 3;	//系统房间 无法关闭
+	CloseRoomResult_IsAA			= 4;	//AA房间无法关闭
+	CloseRoomResult_IsRule			= 5;	//房间规则控制 无法关闭
+	CloseRoomResult_NonRoom			= 6;	//不在房间里面
+};
+enum PayResult
+{
+	PayResult_Sucess	= 1;	//充值成功
+	PayResult_OrderErr	= 2;	//指定的订单不存在
+	PayResult_PriceErr	= 3;	//价格和服务器缓存价格不对 
+	PayResult_SignErr	= 4;	//签名验证错误
+	PayResult_WebErr	= 5;	//第三方服务器充值失败
+	PayResult_WebSucess	= 6;	//订单已经成功提供给第三方服务器了 等待异步回调
+	PayResult_NonBind	= 7;	//没有绑定代理商
+	PayResult_NonLogin	= 8;	//未登录
+	PayResult_NonShop	= 9;	//商品不存在
+	PayResult_AppIDErr = 10;
+	PayResult_TimeOut	= 11;
+};
+enum RoleCharmResult
+{
+	RoleCharmResult_Sucess		= 1;
+	RoleCharmResult_NonLogin	= 2;	//玩家未登陆
+	RoleCharmResult_NonYuanBao	= 3;	//没有元宝
+	RoleCharmResult_NonRoom		= 4;	//不在房间里面
+};
+enum TodayFirRewardResult
+{
+	TodayFirRewardResult_Sucess		= 1;	//成功录取
+	TodayFirRewardResult_NonGame	= 2;	//没有进行游戏 无法录取
+	TodayFirRewardResult_IsReward	= 3;	//已经录取了
+};
+
+enum RoleZhuanPanResult
+{	
+	RoleZhuanPanResult_Sucess		= 1;
+	RoleZhuanPanResult_NonYuanBao	= 2;
+};
+enum RoleEntityItemResult
+{
+	RoleEntityItemResult_Sucess		= 1;
+	RoleEntityItemResult_PhoneErr	= 2;
+	RoleEntityItemResult_NonReward  = 3;
+	RoleEntityItemResult_LingJiang  = 4;
+};
+enum FXRewardResult
+{
+	FXRewardResult_Sucess		= 1;
+	FXRewardResult_IsReward		= 2;
+};
+enum WeiXinFXRewardResult
+{
+	WeiXinFXRewardResult_Sucess		= 1;
+	WeiXinFXRewardResult_IsReward	= 2;
+	WeiXinFXRewardResult_Failed		= 3;
+};
+enum ShiMingIDResult
+{
+	ShiMingIDResult_Sucess		= 1;
+	ShiMingIDResult_Failed		= 2;
+};
+enum GiveYuanBaoResult
+{
+	GiveYuanBaoResult_Sucess	= 1;
+	GiveYuanBaoResult_NonYuanBao= 2;
+};
