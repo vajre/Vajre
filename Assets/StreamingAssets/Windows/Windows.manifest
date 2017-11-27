@@ -1,0 +1,44 @@
+ManifestFileVersion: 0
+CRC: 306605906
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: scene_1/scene_1.u3d
+      Dependencies: {}
+    Info_1:
+      Name: scene_1/textures.ab
+      Dependencies: {}
+    Info_2:
+      Name: scene_3/models.ab
+      Dependencies:
+        Dependency_0: scene_3/materials.ab
+    Info_3:
+      Name: scene_3/textures.ab
+      Dependencies: {}
+    Info_4:
+      Name: scene_3/effect.ab
+      Dependencies: {}
+    Info_5:
+      Name: scene_3/shader.ab
+      Dependencies: {}
+    Info_6:
+      Name: scene_3/prefabs.ab
+      Dependencies:
+        Dependency_0: scene_3/models.ab
+        Dependency_1: scene_3/materials.ab
+    Info_7:
+      Name: scene_3/materials.ab
+      Dependencies:
+        Dependency_0: scene_3/models.ab
+        Dependency_1: scene_3/shader.ab
+    Info_8:
+      Name: scene_1/materials.ab
+      Dependencies:
+        Dependency_0: scene_1/textures.ab
+    Info_9:
+      Name: scene_1/prefabs.ab
+      Dependencies:
+        Dependency_0: scene_1/materials.ab
+    Info_10:
+      Name: scene_3/audio.ab
+      Dependencies: {}

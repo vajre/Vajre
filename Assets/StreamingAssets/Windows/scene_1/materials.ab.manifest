@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 1675026609
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 198fc8d2e5c02812fd89d77aebeb2caf
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d1ae6e26fb0b4d11fccd18da598542fa
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/AB_Res/Scene_1/Materials/Floor.mat
+Dependencies:
+- D:/Workspace/Vajre/Assets/StreamingAssets/Windows/scene_1/textures.ab

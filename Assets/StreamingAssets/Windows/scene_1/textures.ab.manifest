@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 566211024
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: b3017a92ad668bc5168f8a23f30ef780
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: c1642440719609290a7e09a50a7286f4
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+Assets:
+- Assets/AB_Res/Scene_1/Textures/ABC/unitychan_tile6.png
+- Assets/AB_Res/Scene_1/Textures/Floor.jpg
+- Assets/AB_Res/Scene_1/Textures/Tex/WhileFloor.jpg
+- Assets/AB_Res/Scene_1/Textures/unitychan_tile3.png
+- Assets/AB_Res/Scene_1/Textures/Path (Rocky).jpg
+Dependencies: []

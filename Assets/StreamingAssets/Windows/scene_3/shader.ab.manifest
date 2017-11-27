@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 1768907252
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: d1b8a3ef441f4a1783ec042003e60544
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: cc7b69794a2bdada249e557ebbfded10
+HashAppended: 0
+ClassTypes:
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/AB_Res/Scene_3/Shader/Curved.shader
+Dependencies: []
