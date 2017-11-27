@@ -80,19 +80,12 @@ namespace LuaFramework
         {
             if (AppConst.DebugMode && AppConst.UpdateMode == false)
             {
-                string rootPath = AppConst.FrameworkRoot;
-                lua.AddSearchPath(rootPath + "/Lua");
-                lua.AddSearchPath(rootPath + "/ToLua/Lua");
+                lua.AddSearchPath(LuaConst.luaDir);
+                lua.AddSearchPath(LuaConst.toluaDir);
             }
             else
             {
-                if (AppConst.UpdateMode)
-                    lua.AddSearchPath(Util.DataPath + "lua");
-                else
-                {
-                    Debug.LogError(Util.LocalPath + "lua");
-                    lua.AddSearchPath(Util.LocalPath + "lua");
-                }
+                lua.AddSearchPath(PathTools.ABFilePath + "/lua");
             }
         }
 

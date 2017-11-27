@@ -11,17 +11,16 @@ Game = {}
 local this = Game
 
 function Game.OnInitOK()
+
     Event.Init()
     UserData.Init()
     Sound.Init()
     Network.Init()
     CtrlManager.Init()
-    CtrlManager.ToggleCtrl("LoginCtrl")
-    LuaNativePlatform.SendPlatformMsg("OnLuaStarted")
-    local str = LuaNativePlatform.SendPlatformMsg("GetTextFromClipboard")
+    -- CtrlManager.ToggleCtrl("LoginCtrl")
 end
 
 --销毁--
 function Game.OnDestroy()
-    Network.OnDestroy()
+    -- Network.OnDestroy()
 end

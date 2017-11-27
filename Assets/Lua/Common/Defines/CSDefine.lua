@@ -11,7 +11,6 @@ CS.ByteBuffer = LuaFramework.ByteBuffer
 CS.GameManager = CS.LuaHelper.GetGameManager()
 CS.ResManager = CS.LuaHelper.GetResManager()
 CS.SoundManager = CS.LuaHelper.GetSoundManager()
-CS.LoadingManager = CS.LuaHelper.GetLoadingManager()
 CS.ObjectPoolManager = CS.LuaHelper.GetObjectPoolManager()
 CS.SoundManager = CS.LuaHelper.GetSoundManager()
 

@@ -266,7 +266,6 @@ namespace LuaFramework
         /// <summary>
         /// 资源初始化结束
         /// </summary>
-        /// 
         public void OnResourceInited()
         {
             ResManager.Initialize(delegate()
@@ -275,6 +274,9 @@ namespace LuaFramework
             });
         }
 
+        /// <summary>
+        /// 初始化Lua虚拟机
+        /// </summary>
         void OnInitialize()
         {
             LuaManager.InitStart();
