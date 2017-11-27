@@ -38,14 +38,6 @@ namespace LuaFramework {
 			return AppFacade.Instance.GetManager<ObjectPoolManager> (ManagerName.ObjectPool);
 		}
 
-		/// <summary>
-		/// 资源加载管理器
-		/// </summary>
-		public static LoadingManager GetLoadingManager()
-		{
-			return AppFacade.Instance.GetManager<LoadingManager>(ManagerName.Loading); 
-		}
-
         /// <summary>
         /// 资源管理器
         /// </summary>

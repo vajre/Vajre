@@ -1,0 +1,31 @@
+ManifestFileVersion: 0
+CRC: 3714972461
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: f098b005917bf93aa8839adae00ea6bb
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b528d64c2c759ff5b44d71d7e6709a32
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+Assets:
+- Assets/AB_Res/Scene_2/Materials/Tx_modelB001-6.mat
+- Assets/AB_Res/Scene_2/Materials/TheCube_Jump.mat
+- Assets/AB_Res/Scene_2/Materials/TheCube_Magnet.mat
+- Assets/AB_Res/Scene_2/Materials/Tx_modelB001.mat
+- Assets/AB_Res/Scene_2/Materials/Tx_modelB001-3.mat
+- Assets/AB_Res/Scene_2/Materials/Gave.mat
+- Assets/AB_Res/Scene_2/Materials/Tx_modelB001-5.mat
+- Assets/AB_Res/Scene_2/Materials/TheCube_Run.mat
+- Assets/AB_Res/Scene_2/Materials/Tx_modelB001-2.mat
+- Assets/AB_Res/Scene_2/Materials/TheCube_Multiply.mat
+- Assets/AB_Res/Scene_2/Materials/Road.mat
+- Assets/AB_Res/Scene_2/Materials/Board.mat
+- Assets/AB_Res/Scene_2/Materials/Car_Texture.mat
+- Assets/AB_Res/Scene_2/Materials/CoinTexture.mat
+- Assets/AB_Res/Scene_2/Materials/Store.mat
+- Assets/AB_Res/Scene_2/Materials/Tx_modelB001-4.mat
+Dependencies: []

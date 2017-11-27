@@ -184,7 +184,6 @@ public static class CustomSettings
         _GT(typeof(TimerManager)),
         _GT(typeof(ThreadManager)),
         _GT(typeof(ResourceManager)),
-		_GT(typeof(LoadingManager)),
 		_GT(typeof(ObjectPoolManager)),
 
 		_GT(typeof(ScrollLocationHelper)),

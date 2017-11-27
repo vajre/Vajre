@@ -49,21 +49,21 @@ public class AppView : View
 
 	void AddUpdatePanel(bool isLocal)
 	{
-		LoadingManager.CSLoadPanel("UpdatePanel", delegate(UnityEngine.Object[] objs) {
-			if (objs.Length == 0) return;
-			GameObject prefab = objs[0] as GameObject;
-			if (prefab == null) return;
+//		LoadingManager.CSLoadPanel("UpdatePanel", delegate(UnityEngine.Object[] objs) {
+//			if (objs.Length == 0) return;
+//			GameObject prefab = objs[0] as GameObject;
+//			if (prefab == null) return;
 
-			GameObject go = Instantiate(prefab) as GameObject;
-			go.name = "UpdatePanel";
-			go.layer = LayerMask.NameToLayer("Default");
-			GameObject Parent = GameObject.FindWithTag("GuiCamera");
-			go.transform.SetParent(Parent.transform);
-			go.transform.localScale = Vector3.one;
-			go.transform.localPosition = Vector3.zero;
-//			m_UpdatePanel = go.GetComponent<UpdatePanel>();
-//			go.AddComponent<LuaBehaviour>();
-		});
+//			GameObject go = Instantiate(prefab) as GameObject;
+//			go.name = "UpdatePanel";
+//			go.layer = LayerMask.NameToLayer("Default");
+//			GameObject Parent = GameObject.FindWithTag("GuiCamera");
+//			go.transform.SetParent(Parent.transform);
+//			go.transform.localScale = Vector3.one;
+//			go.transform.localPosition = Vector3.zero;
+////			m_UpdatePanel = go.GetComponent<UpdatePanel>();
+////			go.AddComponent<LuaBehaviour>();
+//		});
 	}
 
     /// <summary>

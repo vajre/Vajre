@@ -22,10 +22,10 @@ namespace ABFW
     public class TestClass_ABToolFramework : MonoBehaviour
     {
         //场景名称
-        private string _ScenesName = "scene_3";
+        private string _ScenesName = "scene_2";
 
         //AB包名称
-        private string _AssetBundleName = "scene_3/prefabs.ab";
+        private string _AssetBundleName = "scene_2/prefabs.ab";
 
         //资源名称
         private string _AssetName = "_Eviroments.prefab";
@@ -37,21 +37,30 @@ namespace ABFW
             msce = System.DateTime.Now.Ticks;
 
             Debug.Log("开始 ABFW 框架测试");
-            //调用AB包(连锁智能调用AB包[集合])
-            StartCoroutine(AssetBundleMgr.GetInstance().LoadAssetBundlePack(_ScenesName, _AssetBundleName, LoadAllABComplete));
+
+            StartCoroutine(AssetBundleMgr.GetInstance().LoadAssetBundlePack("scene_1", "scene_1/scene_1.u3d", (string abName) =>
+            {
+                Debug.LogError(abName);
+                double hm = (System.DateTime.Now.Ticks - msce) / 100000.0;
+                Debug.LogError(hm);
+            }));
 
 
+            StartCoroutine(AssetBundleMgr.GetInstance().LoadAssetBundlePack("scene_2", "scene_2/prefabs.ab", (string abName) =>
+            {
+                Debug.LogError(abName);
+                double hm = (System.DateTime.Now.Ticks - msce) / 100000.0;
+                Debug.LogError(hm);
+                LoadAllABComplete(abName);
+            }));
         }
 
 
         //回调函数:所有的AB包都已经加载完毕了
         private void LoadAllABComplete(string abName)
         {
-
             Debug.Log("所有的AB包都已经加载完毕了");
-
             UnityEngine.Object tmpObj = null;
-
             //提取资源
             tmpObj = AssetBundleMgr.GetInstance().LoadAsset(_ScenesName, _AssetBundleName, _AssetName, false) as UnityEngine.Object;
 

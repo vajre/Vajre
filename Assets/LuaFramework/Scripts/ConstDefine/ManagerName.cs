@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace LuaFramework {
-    public class ManagerName {
+namespace LuaFramework
+{
+    public class ManagerName
+    {
         public const string Lua = "LuaManager";
         public const string Game = "GameManager";
         public const string Timer = "TimeManager";
@@ -12,7 +14,6 @@ namespace LuaFramework {
         public const string Resource = "ResourceManager";
         public const string Thread = "ThreadManager";
         public const string ObjectPool = "ObjectPoolManager";
-		public const string Loading = "LoadingManager";
 		public const string NativePlatformMessage = "NativePlatformMessageManager";
     }
 }

@@ -27,7 +27,6 @@ public class StartUpCommand : ControllerCommand
         AppFacade.Instance.AddManager<ResourceManager>(ManagerName.Resource);
         AppFacade.Instance.AddManager<ThreadManager>(ManagerName.Thread);
         AppFacade.Instance.AddManager<ObjectPoolManager>(ManagerName.ObjectPool);
-		AppFacade.Instance.AddManager<LoadingManager> (ManagerName.Loading);
 		AppFacade.Instance.AddManager<NativePlatformMessageManager> (ManagerName.NativePlatformMessage);
         AppFacade.Instance.AddManager<GameManager>(ManagerName.Game);
     }

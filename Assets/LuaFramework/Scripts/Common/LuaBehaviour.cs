@@ -29,12 +29,12 @@ namespace LuaFramework
                 Debug.LogError("### LuaBehaviour Error, Empty luaName :" + name);
 
 #if UNITY_EDITOR
-            ResourceManager resMgr = AppFacade.Instance.GetManager<ResourceManager>(ManagerName.Resource);
-            string prefabPath = resMgr.GetRealAssetPath(luaName);
-            prefabPath = "Assets/Builds/Prefabs/" + prefabPath.Remove(prefabPath.Length - 8) + ".prefab";
-            WidgetReference w = GetComponent<WidgetReference>();
-            if (w != null)
-                w.SetAssetPath(prefabPath);
+            //ResourceManager resMgr = AppFacade.Instance.GetManager<ResourceManager>(ManagerName.Resource);
+            //string prefabPath = resMgr.GetRealAssetPath(luaName);
+            //prefabPath = "Assets/Builds/Prefabs/" + prefabPath.Remove(prefabPath.Length - 8) + ".prefab";
+            //WidgetReference w = GetComponent<WidgetReference>();
+            //if (w != null)
+            //    w.SetAssetPath(prefabPath);
 #endif
 
 

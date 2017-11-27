@@ -1,0 +1,42 @@
+ManifestFileVersion: 0
+CRC: 3204311199
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 886bfc16dda915571506dc97da639015
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 36c33a819640bead83b84b1645a12e6d
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/AB_Res/Scene_2/Textures/b-resume.png
+- Assets/AB_Res/Scene_2/Textures/b-exit.png
+- Assets/AB_Res/Scene_2/Textures/loadingbar-bg.png
+- Assets/AB_Res/Scene_2/Textures/b-pause.png
+- Assets/AB_Res/Scene_2/Textures/Num3.png
+- Assets/AB_Res/Scene_2/Textures/b-itemshoe.png
+- Assets/AB_Res/Scene_2/Textures/menu.psd
+- Assets/AB_Res/Scene_2/Textures/b-exit-active.png
+- Assets/AB_Res/Scene_2/Textures/b-restart.png
+- Assets/AB_Res/Scene_2/Textures/Num1.png
+- Assets/AB_Res/Scene_2/Textures/title.png
+- Assets/AB_Res/Scene_2/Textures/b-itemx2.png
+- Assets/AB_Res/Scene_2/Textures/b-restart-active.png
+- Assets/AB_Res/Scene_2/Textures/Num2.png
+- Assets/AB_Res/Scene_2/Textures/b-itemmagnet.png
+- Assets/AB_Res/Scene_2/Textures/loadingbar.png
+- Assets/AB_Res/Scene_2/Textures/coin.png
+- Assets/AB_Res/Scene_2/Textures/anykeytoplay.png
+- Assets/AB_Res/Scene_2/Textures/b-pause-active.png
+- Assets/AB_Res/Scene_2/Textures/b-itemstar.png
+- Assets/AB_Res/Scene_2/Textures/b-resume-active.png
+- Assets/AB_Res/Scene_2/Textures/button-next.psd
+- Assets/AB_Res/Scene_2/Textures/Num0.png
+- Assets/AB_Res/Scene_2/Textures/loading-Color.png
+- Assets/AB_Res/Scene_2/Textures/scorebar.png
+Dependencies: []

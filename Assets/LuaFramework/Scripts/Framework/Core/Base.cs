@@ -7,8 +7,6 @@ public class Base : MonoBehaviour {
     private AppFacade m_Facade;
     private LuaManager m_LuaMgr;
     private ResourceManager m_ResMgr;
-	private LoadingManager m_LoadingMgr;
-
     private SoundManager m_SoundMgr;
     private TimerManager m_TimerMgr;
     private ThreadManager m_ThreadMgr;
@@ -62,15 +60,6 @@ public class Base : MonoBehaviour {
             return m_LuaMgr;
         }
     }
-
-	protected LoadingManager LoadingManager {
-		get {
-			if (m_LoadingMgr == null) {
-				m_LoadingMgr = facade.GetManager<LoadingManager>(ManagerName.Loading);
-			}
-			return m_LoadingMgr;
-		}
-	}
 
     protected ResourceManager ResManager {
         get {
