@@ -40,9 +40,8 @@ namespace LuaFramework
         /// <summary>
         /// 释放资源
         /// </summary>
-        public void CheckExtractResource() {
-            
-
+        public void CheckExtractResource()
+        {
 #if UNITY_ANDROID
             AppConst.UpdateMode = true;
 #endif
@@ -268,18 +267,11 @@ namespace LuaFramework
         /// 资源初始化结束
         /// </summary>
         /// 
-
-
         public void OnResourceInited()
         {
-#if ASYNC_MODE
             ResManager.Initialize(!AppConst.UpdateMode, AppConst.AssetDir, delegate() {
-                OnInitialize();
+                //OnInitialize();
             });
-#else
-            ResManager.Initialize();
-            this.OnInitialize();
-#endif
         }
 
         void OnInitialize()
@@ -288,35 +280,6 @@ namespace LuaFramework
             LuaManager.DoFile("Logic/Game");         //加载游戏
             Util.CallMethod("Game", "OnInitOK");     //初始化完成
             initialize = true;
-        }
-
-        IEnumerator ACapsture(string filePath)
-        {
-            yield return new WaitForEndOfFrame();
-            float x = (171.48f / 1280.0f) * (float)Screen.width;
-            float w = (965.73f / 1280.0f) * (float)Screen.width;
-
-            float y = (96.13f / 720.0f) * (float)Screen.height;
-            float h = (554.81f / 720.0f) * (float)Screen.height;
-                                                         
-            Rect rect = new Rect(x, y, w, h);
-            Texture2D tex = new Texture2D((int)rect.width, (int)rect.height);
-
-            tex.ReadPixels(rect, 0, 0);
-            tex.Apply();
-
-            byte[] result = tex.EncodeToPNG();
-            //文件夹
-            if (Directory.Exists(Util.DataPath) == false)
-                Directory.CreateDirectory(Util.DataPath);
-            Debug.Log(filePath);
-            File.WriteAllBytes(filePath, result);
-        }
-
-
-        public void Capsture(string filePath)
-        {
-            StartCoroutine(ACapsture(filePath));
         }
 
 
