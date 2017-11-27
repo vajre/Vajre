@@ -269,8 +269,9 @@ namespace LuaFramework
         /// 
         public void OnResourceInited()
         {
-            ResManager.Initialize(!AppConst.UpdateMode, AppConst.AssetDir, delegate() {
-                //OnInitialize();
+            ResManager.Initialize(delegate()
+            {
+                OnInitialize();
             });
         }
 

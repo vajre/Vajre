@@ -15,6 +15,7 @@
  */
 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,7 +40,7 @@ namespace LuaFramework
         private Dictionary<string, ABRelation> _DicABRelation;
 
         //委托: 所有AB包加载完成
-        private DelLoadComplete _LoadAllABPackageCompleteHandel;
+        private Action<string> _LoadAllABPackageCompleteHandel;
 
         /// <summary>
         /// 构造函数
@@ -47,7 +48,7 @@ namespace LuaFramework
         /// <param name="scenesName">场景名称</param>
         /// <param name="abName">AB包名称</param>
         /// <param name="loadAllABPackCompleteHandle">（委托）是否调用完成</param>
-        public MultiABMgr(string scenesName, string abName, DelLoadComplete loadAllABPackCompleteHandle)
+        public MultiABMgr(string scenesName, string abName, Action<string> loadAllABPackCompleteHandle)
         {
             _CurrentScenesName = scenesName;
             _CurrentABName = abName;

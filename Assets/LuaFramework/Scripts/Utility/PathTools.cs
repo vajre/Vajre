@@ -12,7 +12,6 @@
  *
  */
 
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,33 +42,86 @@ namespace LuaFramework
         /// <returns></returns>
         public static string GetABOutPath()
         {
-            return GetPlatformPath()+ "/" + GetPlatformName();
+            return ReadOnlyPath + "/" + GetPlatformName();
+        }
+
+
+        /// <summary>
+        /// 运行时，AB包的加载目录
+        /// </summary>
+        public static string ABFilePath
+        {
+            get
+            {
+                string path = string.Empty;
+                if (AppConst.UpdateMode)
+                    path = ReadWritePath + "/" + GetPlatformName();
+                else
+                    path = ReadOnlyPath + "/" + GetPlatformName();
+                
+                return path;
+            }
         }
 
         /// <summary>
-        /// 获取平台路径
+        /// 只读路径
         /// </summary>
         /// <returns></returns>
-        private static string GetPlatformPath()
+        public static string ReadOnlyPath
         {
-            string strReturnPlatformPath = string.Empty;
-
-            switch (Application.platform)
+            get
             {
-                case RuntimePlatform.WindowsPlayer:
-                case RuntimePlatform.WindowsEditor:
-                    strReturnPlatformPath = Application.streamingAssetsPath;
-                    break;
-                case RuntimePlatform.IPhonePlayer:
-                case RuntimePlatform.Android:
-                    strReturnPlatformPath = Application.persistentDataPath;
-                    break;
-                default:
-                    break;
+                string path = string.Empty;
+                switch (Application.platform)
+                {
+                    case RuntimePlatform.OSXPlayer:
+                    case RuntimePlatform.WindowsPlayer:
+                    case RuntimePlatform.WindowsEditor:
+                        path = Application.streamingAssetsPath;
+                        break;
+                    case RuntimePlatform.IPhonePlayer:
+                        path = Application.dataPath + "/Raw/";
+                        break;
+                    case RuntimePlatform.Android:
+                        path = Application.dataPath + "!/assets/";
+                        break;
+                    default:
+                        break;
+                }
+
+                return path;
             }
 
-            return strReturnPlatformPath;
         }
+
+        public static string ReadWritePath
+        {
+            get
+            {
+                string path = string.Empty;
+                string game = AppConst.AppName.ToLower();
+
+                switch (Application.platform)
+                {
+                    case RuntimePlatform.OSXPlayer:
+                    case RuntimePlatform.WindowsPlayer:
+                    case RuntimePlatform.WindowsEditor:
+                        int i = Application.dataPath.LastIndexOf('/');
+                        path = Application.dataPath.Substring(0, i + 1) + game + "/";
+                        break;
+                        break;
+                    case RuntimePlatform.IPhonePlayer:
+                    case RuntimePlatform.Android:
+                        path = Application.persistentDataPath + "/" + game + "/";
+                        break;
+                    default:
+                        break;
+                }
+
+                return path;
+            }
+        }
+
 
         /// <summary>
         /// 获取平台的名称
@@ -86,7 +138,7 @@ namespace LuaFramework
                     strReturnPlatformName = "Windows";
                     break;
                 case RuntimePlatform.IPhonePlayer:
-                    strReturnPlatformName = "Iphone";
+                    strReturnPlatformName = "IPhone";
                     break;
                 case RuntimePlatform.Android:
                     strReturnPlatformName = "Android";
@@ -113,14 +165,14 @@ namespace LuaFramework
                 //Windows 主平台
                 case RuntimePlatform.WindowsPlayer:
                 case RuntimePlatform.WindowsEditor:
-                    strReturnWWWPath = "file://" + GetABOutPath();
+                    strReturnWWWPath = "file://" + ABFilePath;
                     break;
                 case RuntimePlatform.IPhonePlayer:
-                    strReturnWWWPath = GetABOutPath() + "/Raw/";
+                    strReturnWWWPath = ABFilePath + "/Raw/";
                     break;
                 //Android 平台
                 case RuntimePlatform.Android:
-                    strReturnWWWPath = "jar:file://" + GetABOutPath();
+                    strReturnWWWPath = "jar:file://" + ABFilePath;
                     break;
                 default:
                     break;

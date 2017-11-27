@@ -15,6 +15,7 @@
  */
 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,7 +58,7 @@ namespace LuaFramework
         /// <param name="abName">AssetBundle 包名称</param>
         /// <param name="loadCompleteHandle">委托: 调用是否完成</param>
         /// <returns></returns>
-        public IEnumerator LoadAssetBundlePack(string scenesName, string abName, DelLoadComplete loadCompleteHandle)
+        public IEnumerator LoadAssetBundlePack(string scenesName, string abName, Action<string> loadCompleteHandle)
         {
             //参数检查
             if (string.IsNullOrEmpty(scenesName) || string.IsNullOrEmpty(abName))

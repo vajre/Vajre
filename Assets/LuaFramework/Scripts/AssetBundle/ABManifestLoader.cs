@@ -45,7 +45,6 @@ namespace LuaFramework
         {
             //确定清单文件www下载路径
             _StrManifestPath = PathTools.GetWWWPath() + "/" + PathTools.GetPlatformName();
-
             _ManifestObj = null;
             _ABReadManifest = null;
             _IsLoadFinish = false;
@@ -61,7 +60,6 @@ namespace LuaFramework
             {
                 _Instance = new ABManifestLoader();
             }
-
             return _Instance;
         }
 

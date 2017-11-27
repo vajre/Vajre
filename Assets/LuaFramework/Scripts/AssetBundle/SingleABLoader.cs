@@ -14,6 +14,7 @@
  */
 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace LuaFramework
         //引用类: 资源加载类
         private AssetLoader _AssetLoader;
         //委托:
-        private DelLoadComplete _LoadCompleteHandle;
+        private Action<string> _LoadCompleteHandle;
 
         //AssetBundle 名称
         private string _ABName;
@@ -35,7 +36,7 @@ namespace LuaFramework
 
 
         //构造函数
-        public SingleABLoader(string abName, DelLoadComplete loadComplete)
+        public SingleABLoader(string abName, Action<string> loadComplete)
         {
             _AssetLoader = null;
             _ABName = abName;

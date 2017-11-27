@@ -422,6 +422,7 @@ namespace LuaFramework {
         /// </summary>
         public static bool CheckEnvironment()
         {
+            return true;
 #if UNITY_EDITOR
             int resultId = Util.CheckRuntimeFile();
             if (resultId == -1)
@@ -452,71 +453,6 @@ namespace LuaFramework {
         public static bool FileExists(string path)
         {
             return File.Exists(path);
-        }
-
-        public static bool SaveLocalFileDate(string fullPath, byte[] data)
-        {
-
-            if (Directory.Exists(Util.DataPath) == false)
-                Directory.CreateDirectory(Util.DataPath);
-            
-            if (File.Exists(fullPath))
-                File.Delete(fullPath);
-
-            FileStream fs = new FileStream(fullPath, FileMode.Create);
-
-            if (fs == null)
-                return false;
-
-            fs.Write(data, 0, data.Length);
-            fs.Close();
-            return false;
-        }
-
-        public static void Capsture(string filePath)
-        {
-            Rect rect = new Rect(171.48f, 96.13f, 965.73f, 554.81f);
-            Texture2D tex = new Texture2D((int)rect.width, (int)rect.height);
-
-            tex.ReadPixels(rect, 0, 0);
-            tex.Apply();
-
-            byte[] result = tex.EncodeToPNG();
-            //文件夹
-            if (Directory.Exists(Util.DataPath) == false)
-                Directory.CreateDirectory(Util.DataPath);
-            Debug.Log(filePath);
-            File.WriteAllBytes(filePath, result);
-        }
-
-        public static int GetAppPlatform()
-        {
-            switch (Application.platform)
-            {
-                case RuntimePlatform.Android:
-                    return 2;
-                case RuntimePlatform.IPhonePlayer:
-                    return 1;
-                case RuntimePlatform.OSXPlayer:
-                    break;
-                default:
-                    return 0;
-            }
-
-            return 0;
-        }
-
-        public static string GetPlatformString()
-        {
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-        return "Windows";
-#elif UNITY_ANDROID
-        return "Android";
-#elif UNITY_IOS
-        return "IOS";
-#elif UNITY_STANDALONE_OSX
-        return "OSX";
-#endif
         }
     }
 }

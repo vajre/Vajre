@@ -29,10 +29,6 @@ public class LuaFramework_UtilWrap
 		L.RegFunction("CallMethod", CallMethod);
 		L.RegFunction("CheckEnvironment", CheckEnvironment);
 		L.RegFunction("FileExists", FileExists);
-		L.RegFunction("SaveLocalFileDate", SaveLocalFileDate);
-		L.RegFunction("Capsture", Capsture);
-		L.RegFunction("GetAppPlatform", GetAppPlatform);
-		L.RegFunction("GetPlatformString", GetPlatformString);
 		L.RegFunction("New", _CreateLuaFramework_Util);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("DataPath", get_DataPath, null);
@@ -458,72 +454,6 @@ public class LuaFramework_UtilWrap
 			string arg0 = ToLua.CheckString(L, 1);
 			bool o = LuaFramework.Util.FileExists(arg0);
 			LuaDLL.lua_pushboolean(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SaveLocalFileDate(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			string arg0 = ToLua.CheckString(L, 1);
-			byte[] arg1 = ToLua.CheckByteBuffer(L, 2);
-			bool o = LuaFramework.Util.SaveLocalFileDate(arg0, arg1);
-			LuaDLL.lua_pushboolean(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Capsture(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			string arg0 = ToLua.CheckString(L, 1);
-			LuaFramework.Util.Capsture(arg0);
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetAppPlatform(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 0);
-			int o = LuaFramework.Util.GetAppPlatform();
-			LuaDLL.lua_pushinteger(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetPlatformString(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 0);
-			string o = LuaFramework.Util.GetPlatformString();
-			LuaDLL.lua_pushstring(L, o);
 			return 1;
 		}
 		catch (Exception e)

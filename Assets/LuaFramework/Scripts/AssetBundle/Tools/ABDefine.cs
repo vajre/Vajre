@@ -25,7 +25,6 @@ using UnityEngine;
 namespace LuaFramework
 {
     /* 委托定义区 */
-    public delegate void DelLoadComplete(string adName);
 
     /* 枚举类型定义 */
 
