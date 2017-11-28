@@ -18,7 +18,9 @@
  */
 
 using System.Collections;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace LuaFramework
@@ -75,8 +77,9 @@ namespace LuaFramework
 
             //正式加载
             T tmpTResource = null;
-            
+
             //如果是DebugMode则 在editor中加载, (用于保存索引) 
+#if UNITY_EDITOR
             if (AppConst.DebugMode == true)
             {
                 string[] abNames = _CurrentAssetBundle.GetAllAssetNames();
@@ -94,6 +97,11 @@ namespace LuaFramework
             {
                 tmpTResource = _CurrentAssetBundle.LoadAsset<T>(assetName);
             }
+
+
+#else
+            tmpTResource = _CurrentAssetBundle.LoadAsset<T>(assetName);
+#endif
 
             //加入缓存集合
             if (tmpTResource != null && isCache)

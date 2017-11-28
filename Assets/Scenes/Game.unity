@@ -930,6 +930,68 @@ Transform:
   m_Father: {fileID: 395440203}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1961571045
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4336381784112652, guid: 8ec3d73bedb219c4e821722085e46c4b, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4336381784112652, guid: 8ec3d73bedb219c4e821722085e46c4b, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4336381784112652, guid: 8ec3d73bedb219c4e821722085e46c4b, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4336381784112652, guid: 8ec3d73bedb219c4e821722085e46c4b, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4336381784112652, guid: 8ec3d73bedb219c4e821722085e46c4b, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4336381784112652, guid: 8ec3d73bedb219c4e821722085e46c4b, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4336381784112652, guid: 8ec3d73bedb219c4e821722085e46c4b, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4336381784112652, guid: 8ec3d73bedb219c4e821722085e46c4b, type: 2}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 8ec3d73bedb219c4e821722085e46c4b, type: 2}
+  m_IsPrefabParent: 0
+--- !u!1 &1961571046 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1126709465136920, guid: 8ec3d73bedb219c4e821722085e46c4b,
+    type: 2}
+  m_PrefabInternal: {fileID: 1961571045}
+--- !u!114 &1961571047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1961571046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d135b8e3e62a45519d1ead9cbc236e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cache:
+  - path: 
+    comp: {fileID: 0}
+  AssetPath: 
 --- !u!1 &2136988472
 GameObject:
   m_ObjectHideFlags: 0

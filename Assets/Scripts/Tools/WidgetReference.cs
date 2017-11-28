@@ -9,8 +9,11 @@ using UnityEditor;
 #endif
 
 public class WidgetReference : MonoBehaviour {
+    
+    
 
-	[NoToLuaAttribute, SerializeField]
+
+    [NoToLuaAttribute, SerializeField]
 	List<Path2Component> cache = new List<Path2Component>();
 
     [NoToLuaAttribute]

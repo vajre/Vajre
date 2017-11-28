@@ -7,10 +7,7 @@ public class LuaFramework_LuaBehaviourWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(LuaFramework.LuaBehaviour), typeof(UnityEngine.MonoBehaviour));
-		L.RegFunction("AddSliderListener", AddSliderListener);
-		L.RegFunction("AddClick", AddClick);
-		L.RegFunction("RemoveClick", RemoveClick);
-		L.RegFunction("ClearClick", ClearClick);
+		L.RegFunction("Find", Find);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("luaPath", get_luaPath, set_luaPath);
@@ -20,67 +17,17 @@ public class LuaFramework_LuaBehaviourWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int AddSliderListener(IntPtr L)
+	static int Find(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
 			LuaFramework.LuaBehaviour obj = (LuaFramework.LuaBehaviour)ToLua.CheckObject<LuaFramework.LuaBehaviour>(L, 1);
-			UnityEngine.UI.Slider arg0 = (UnityEngine.UI.Slider)ToLua.CheckObject<UnityEngine.UI.Slider>(L, 2);
-			LuaFunction arg1 = ToLua.CheckLuaFunction(L, 3);
-			obj.AddSliderListener(arg0, arg1);
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int AddClick(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 3);
-			LuaFramework.LuaBehaviour obj = (LuaFramework.LuaBehaviour)ToLua.CheckObject<LuaFramework.LuaBehaviour>(L, 1);
-			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckObject(L, 2, typeof(UnityEngine.GameObject));
-			LuaFunction arg1 = ToLua.CheckLuaFunction(L, 3);
-			obj.AddClick(arg0, arg1);
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int RemoveClick(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			LuaFramework.LuaBehaviour obj = (LuaFramework.LuaBehaviour)ToLua.CheckObject<LuaFramework.LuaBehaviour>(L, 1);
-			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckObject(L, 2, typeof(UnityEngine.GameObject));
-			obj.RemoveClick(arg0);
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int ClearClick(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			LuaFramework.LuaBehaviour obj = (LuaFramework.LuaBehaviour)ToLua.CheckObject<LuaFramework.LuaBehaviour>(L, 1);
-			obj.ClearClick();
-			return 0;
+			string arg0 = ToLua.CheckString(L, 2);
+			string arg1 = ToLua.CheckString(L, 3);
+			UnityEngine.Component o = obj.Find(arg0, arg1);
+			ToLua.Push(L, o);
+			return 1;
 		}
 		catch (Exception e)
 		{

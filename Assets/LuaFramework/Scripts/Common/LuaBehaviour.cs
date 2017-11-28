@@ -2,7 +2,12 @@
 using LuaInterface;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Text;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
+
 using UObect = UnityEngine.Object;
 
 namespace LuaFramework
@@ -17,8 +22,8 @@ namespace LuaFramework
         string assetPath;
 
         public List<Object> cache = new List<Object>();
-
-        private Dictionary<GameObject, LuaFunction> buttons = new Dictionary<GameObject, LuaFunction>();
+        Dictionary<string, Component> components = new Dictionary<string, Component>();
+        
         LuaFunction awake = null;
         LuaFunction start = null;
         LuaFunction on_enable = null;
@@ -41,21 +46,16 @@ namespace LuaFramework
             //if (w != null)
             //    w.SetAssetPath(prefabPath);
 
-            Debug.Log(PrefabUtility.GetPrefabType(gameObject));
+            //Debug.Log(PrefabUtility.GetPrefabType(gameObject));
 
             //GameObject prefabObj = PrefabUtility.FindPrefabRoot(gameObject);
             //Debug.LogError(prefabObj);
             //UObect prefabParent = PrefabUtility.GetPrefabParent(prefabObj);
 #endif
 
-
-
-
             LuaManager luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
             object luaRet = luaMgr.DoFile<object>(luaPath);
             mSelfTable = luaRet as LuaTable;
-
-
 
             if (mSelfTable == null)
             {
@@ -86,55 +86,32 @@ namespace LuaFramework
             Util.CallLuaFunction(update, mSelfTable);
         }
 
-        //-----------------------------------------------------------------
         protected void OnDestroy()
         {
-            ClearClick();
             Util.CallLuaFunction(on_destroy, mSelfTable);
             Util.ClearMemory();
         }
 
-		public void AddSliderListener(Slider slider, LuaFunction luafunc)
+        //-------------------------------------------------------------Find
+        public Component Find(string path, string compName)
         {
-			if (slider == null || luafunc == null) return;
-			slider.onValueChanged.AddListener ((float value) => 
-            {
-				luafunc.Call(slider, value);
-			});
-		}
+            StringBuilder sb = new StringBuilder();
+            sb.Append(path);
+            sb.Append("_");
+            sb.Append(compName);
 
-		public void AddClick(GameObject go, LuaFunction luafunc)
-        {
-            if (go == null || luafunc == null) return;
-			buttons.Add(go, luafunc);
-            go.GetComponent<Button>().onClick.AddListener(
-                delegate()
-                {
-                    luafunc.Call(mSelfTable, go);
-                }
-            );
-        }
+            string key = sb.ToString();
 
-        public void RemoveClick(GameObject go)
-        {
-            if (go == null) return;
-            LuaFunction luafunc = null;
-            if (buttons.TryGetValue(go, out luafunc))
+
+
+            if (components[key] != null)
             {
-				luafunc.Dispose();
-                luafunc = null;
-                buttons.Remove(go);
+                return components[key];
             }
+
+            
+            return null;
         }
 
-        public void ClearClick()
-        {
-            foreach (var de in buttons)
-            {
-                if (de.Value != null)
-                    de.Value.Dispose();
-            }
-            buttons.Clear();
-        }
     }
 }
