@@ -11,32 +11,40 @@ Game = {}
 local this = Game
 
 function Game.OnInitOK()
-
     Event.Init()
     UserData.Init()
     Sound.Init()
     Network.Init()
     CtrlManager.Init()
 
-    CS.ResManager:LoadABPack("scene_3", "scene_3/prefabs.ab", function()
-        logError("load ok1")
-        local obj1 = CS.ResManager:LoadAsset("scene_3", "scene_3/prefabs.ab", "_Eviroments.prefab", false)
-        local gameObj = CS.GameObject.Instantiate(obj1)
-        gameObj.name = "OK1"
-    end)
+    -- CS.Tick.Start()
+    -- this.LoadABPack("scene_3", "scene_3/prefabs.ab", function()
+    --     local msec = CS.Tick.Stop()
+    --     logError("load ok1", msec)
 
-    this.LoadAsset("scene_3", "scene_3/prefabs2.ab", "_Eviroments.prefab", false, function(prefab)
-        logError("load ok2")
+    --     CS.Tick.Start()
+    --     this.LoadAsset("scene_3", "scene_3/prefabs2.ab", "_Eviroments.prefab", false, function(prefab)
+    --         msec = CS.Tick.Stop()
+    --         logError("load ok2", msec)
+    --         CS.Tick.Start()
+    --         local gameObj = CS.GameObject.Instantiate(prefab)
+    --         msec = CS.Tick.Stop()
+    --         logError("load ok3", msec)
+    --         gameObj.name = "OK2"
+    --     end)
+    -- end)
+
+    -- CS.Tick.Start()
+    this.LoadAsset("scene_3", "scene_3/prefabs.ab", "_Eviroments.prefab", true, function(prefab)
+        local msec = CS.Tick.Stop()
         local gameObj = CS.GameObject.Instantiate(prefab)
+        msec = CS.Tick.Stop()
         gameObj.name = "OK2"
     end)
+end
 
-    -- CS.ResManager:LoadABPack("scene_3", "scene_3/prefabs2.ab", function()
-    --     logError("load ok2")
-    --     local obj2 = CS.ResManager:LoadAsset("scene_3", "scene_3/prefabs2.ab", "_Eviroments.prefab", false)
-    --     local gameObj = CS.GameObject.Instantiate(obj2)
-    --     gameObj.name = "OK2"
-    -- end)
+function Game.LoadABPack(scenesName, abName, func)
+    CS.ResManager:LoadABPack(scenesName, abName, func)
 end
 
 function Game.LoadAsset(scenesName, abName, assetName, isCache, func)

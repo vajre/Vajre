@@ -2,6 +2,8 @@
 using LuaInterface;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEditor;
+using UObect = UnityEngine.Object;
 
 namespace LuaFramework
 {
@@ -10,7 +12,10 @@ namespace LuaFramework
         public string luaPath;
         public string luaName;
         LuaTable mSelfTable;
-        
+
+        [SerializeField]
+        string assetPath;
+
         public List<Object> cache = new List<Object>();
 
         private Dictionary<GameObject, LuaFunction> buttons = new Dictionary<GameObject, LuaFunction>();
@@ -35,7 +40,15 @@ namespace LuaFramework
             //WidgetReference w = GetComponent<WidgetReference>();
             //if (w != null)
             //    w.SetAssetPath(prefabPath);
+
+            Debug.Log(PrefabUtility.GetPrefabType(gameObject));
+
+            //GameObject prefabObj = PrefabUtility.FindPrefabRoot(gameObject);
+            //Debug.LogError(prefabObj);
+            //UObect prefabParent = PrefabUtility.GetPrefabParent(prefabObj);
 #endif
+
+
 
 
             LuaManager luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);

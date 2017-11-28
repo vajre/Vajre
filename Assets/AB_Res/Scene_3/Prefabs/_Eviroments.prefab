@@ -85,6 +85,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4336381784112652}
+  - component: {fileID: 114756412675109088}
   m_Layer: 0
   m_Name: _Eviroments
   m_TagString: Untagged
@@ -390,7 +391,6 @@ GameObject:
   - component: {fileID: 20672266577420066}
   - component: {fileID: 92516220908377632}
   - component: {fileID: 124850498243140996}
-  - component: {fileID: 81695910289455610}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2565,13 +2565,6 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 0eb2c6e68954f4d65959a619a9750d29, type: 3}
---- !u!81 &81695910289455610
-AudioListener:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1481573298476624}
-  m_Enabled: 1
 --- !u!92 &92516220908377632
 Behaviour:
   m_ObjectHideFlags: 1
@@ -2648,6 +2641,21 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114756412675109088
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1126709465136920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e86ebbc782f0f64d809698999d8dcf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  luaPath: View/Login/LoginPanel
+  luaName: LoginPanel
+  assetPath: Assets/AB_Res/Scene_3/Prefabs/_Eviroments.prefab
+  cache: []
 --- !u!114 &114927013228572668
 MonoBehaviour:
   m_ObjectHideFlags: 1

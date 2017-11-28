@@ -870,7 +870,6 @@ GameObject:
   - component: {fileID: 20379998085597364}
   - component: {fileID: 92099648609282126}
   - component: {fileID: 124417386033041284}
-  - component: {fileID: 81017351819778066}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2565,13 +2564,6 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 0eb2c6e68954f4d65959a619a9750d29, type: 3}
---- !u!81 &81017351819778066
-AudioListener:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1969639983449214}
-  m_Enabled: 1
 --- !u!92 &92099648609282126
 Behaviour:
   m_ObjectHideFlags: 1

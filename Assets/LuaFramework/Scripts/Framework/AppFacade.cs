@@ -9,12 +9,15 @@ public class AppFacade : Facade
 
     public AppFacade() : base()
     {
+    
     }
 
     public static AppFacade Instance
     {
-        get{
-            if (_instance == null) {
+        get
+        {
+            if (_instance == null)
+            {
                 _instance = new AppFacade();
             }
             return _instance;
@@ -30,9 +33,9 @@ public class AppFacade : Facade
     /// <summary>
     /// 启动框架
     /// </summary>
-    public void StartUp() {
+    public void StartUp()
+    {
         SendMessageCommand(NotiConst.START_UP);
         RemoveMultiCommand(NotiConst.START_UP);
     }
 }
-

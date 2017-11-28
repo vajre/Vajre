@@ -17,9 +17,8 @@
  *
  */
 
-
 using System.Collections;
-using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace LuaFramework
@@ -75,7 +74,27 @@ namespace LuaFramework
             }
 
             //正式加载
-            T tmpTResource = _CurrentAssetBundle.LoadAsset<T>(assetName);
+            T tmpTResource = null;
+            
+            //如果是DebugMode则 在editor中加载, (用于保存索引) 
+            if (AppConst.DebugMode == true)
+            {
+                string[] abNames = _CurrentAssetBundle.GetAllAssetNames();
+                foreach (string item_fullpath in abNames)
+                {
+                    string[] array = item_fullpath.Split('/');
+                    if (array[array.Length - 1].Equals(assetName.ToLower()))
+                    {
+                        tmpTResource = AssetDatabase.LoadAssetAtPath(item_fullpath, typeof(T)) as T;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                tmpTResource = _CurrentAssetBundle.LoadAsset<T>(assetName);
+            }
+
             //加入缓存集合
             if (tmpTResource != null && isCache)
             {
@@ -85,7 +104,6 @@ namespace LuaFramework
             {
                 Debug.LogError(GetType() + "/LoadResource<T>()/参数 tmpTResource == null, 请检查");
             }
-
             return tmpTResource;
         }
 
@@ -103,7 +121,6 @@ namespace LuaFramework
             }
 
             Debug.LogError(GetType() + "/UnLoadAsset()/参数 asset==null，请检查!");
-
             return false;
         }
 

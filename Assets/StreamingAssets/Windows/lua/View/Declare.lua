@@ -1,1 +1,0 @@
-require "View/Common/LoadingPanel"

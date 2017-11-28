@@ -32,9 +32,7 @@ public class CurveEditor : Editor
         }
 
         if (GUILayout.Button("Save"))
-        {
             Save();
-        }
 
         serializedObject.ApplyModifiedProperties();
     }
