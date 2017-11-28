@@ -25,30 +25,24 @@ namespace LuaFramework
 	{
         //引用类: 资源加载类
         private AssetLoader _AssetLoader;
-        //委托:
-        private Action<string> _LoadCompleteHandle;
 
         //AssetBundle 名称
         private string _ABName;
 
         //AssetBundle 下载路径
         private string _ABDownLoadPath;
-
-
+        
         //构造函数
-        public SingleABLoader(string abName, Action<string> loadComplete)
+        public SingleABLoader(string abName)
         {
             _AssetLoader = null;
             _ABName = abName;
-            //委托初始化
-            _LoadCompleteHandle = loadComplete;
-
             //AB包下载路径(初始化)
             _ABDownLoadPath = PathTools.GetWWWPath() + "/" + _ABName;
         }
 
         //加载AssetBundle 资源包
-        public IEnumerator LoadAssetBundle()
+        public IEnumerator LoadAssetBundle(Action loadCompleteHandle = null)
         {
             using (WWW www = new WWW(_ABDownLoadPath))
             {
@@ -63,9 +57,9 @@ namespace LuaFramework
                         //实例化引用类
                         _AssetLoader = new AssetLoader(abObj);
                         //AssetBundle 下载完毕，调用委托
-                        if (_LoadCompleteHandle != null)
+                        if (loadCompleteHandle != null)
                         {
-                            _LoadCompleteHandle(_ABName);
+                            loadCompleteHandle();
                         }
                     }
                     else
@@ -77,7 +71,7 @@ namespace LuaFramework
         }
 
         /// <summary>
-        /// 加载（ABb包内）资源
+        /// 加载（AB包内）资源
         /// </summary>
         /// <param name="assetName"></param>
         /// <param name="isCache"></param>

@@ -60,7 +60,7 @@ namespace LuaFramework
 
         private void Start()
         {
-            SingleABLoader _LoadDependObj = new SingleABLoader(_ABDependName1, LoadDependComplete1);
+            SingleABLoader _LoadDependObj = new SingleABLoader(_ABDependName1);
             //加载AB依赖包
             StartCoroutine(_LoadDependObj.LoadAssetBundle());
         }
@@ -70,7 +70,7 @@ namespace LuaFramework
         {
             Debug.Log("依赖包1(贴图宝)加载完毕，加载依赖包2(材质包)");
 
-            SingleABLoader _LoadDependObj2 = new SingleABLoader(_ABDependName2, LoadDependComplete2);
+            SingleABLoader _LoadDependObj2 = new SingleABLoader(_ABDependName2);
             //加载AB依赖包
             StartCoroutine(_LoadDependObj2.LoadAssetBundle());
         }
@@ -79,7 +79,7 @@ namespace LuaFramework
         private void LoadDependComplete2(string abName)
         {
             Debug.Log("依赖包2(材质包)加载完毕，开始正式加载预设包");
-            _LoadObj = new SingleABLoader(_ABName1, LoadComplete);
+            _LoadObj = new SingleABLoader(_ABName1);
             StartCoroutine(_LoadObj.LoadAssetBundle());
         }
 

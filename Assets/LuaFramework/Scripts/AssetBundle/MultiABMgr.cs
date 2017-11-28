@@ -48,16 +48,12 @@ namespace LuaFramework
         /// <param name="scenesName">场景名称</param>
         /// <param name="abName">AB包名称</param>
         /// <param name="loadAllABPackCompleteHandle">（委托）是否调用完成</param>
-        public MultiABMgr(string scenesName, string abName, Action<string> loadAllABPackCompleteHandle)
+        public MultiABMgr(string scenesName, string abName)
         {
             _CurrentScenesName = scenesName;
             _CurrentABName = abName;
             _DicSingleABLoaderCache = new Dictionary<string, SingleABLoader>();
             _DicABRelation = new Dictionary<string, ABRelation>();
-
-
-            //委托
-            _LoadAllABPackageCompleteHandel = loadAllABPackCompleteHandle;
         }
 
         /// <summary>
@@ -75,12 +71,18 @@ namespace LuaFramework
             }
         }
 
+
+        public bool ISAssetBundlerLoaded(string abName)
+        {
+            return _DicSingleABLoaderCache.ContainsKey(abName);
+        }
+
         /// <summary>
         /// 加载AB包
         /// </summary>
         /// <param name="abName">AssetBundle 名称</param>
         /// <returns></returns>
-        public IEnumerator LoadAssetBundler(string abName)
+        public IEnumerator LoadAssetBundler(string abName, Action loadCompleteHandle = null)
         {
             //AB包关系的建立
             if (!_DicABRelation.ContainsKey(abName))
@@ -104,20 +106,20 @@ namespace LuaFramework
                 yield return LoadReference(item_Depence, abName);
             }
 
-
-
             //真正加载AB包
             if (_DicSingleABLoaderCache.ContainsKey(abName))
             {
-                yield return _DicSingleABLoaderCache[abName].LoadAssetBundle();
+                Debug.LogError("这个包已经被加载过了: " + abName);
+                //yield return _DicSingleABLoaderCache[abName].LoadAssetBundle(loadCompleteHandle);
             }
             else
             {
-                _CurrentSingleABLoader = new SingleABLoader(abName, CompleteLoadAB);
+                _CurrentSingleABLoader = new SingleABLoader(abName);
                 _DicSingleABLoaderCache.Add(abName, _CurrentSingleABLoader);
-                yield return _CurrentSingleABLoader.LoadAssetBundle();
+                yield return _CurrentSingleABLoader.LoadAssetBundle(loadCompleteHandle);
             }
         }//Method_end
+
 
         /// <summary>
         /// 加载引用AB包

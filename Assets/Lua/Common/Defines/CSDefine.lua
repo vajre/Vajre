@@ -26,6 +26,8 @@ CS.MonoBehaviour = UnityEngine.MonoBehaviour
 CS.HttpUtility = System.Web.HttpUtility
 CS.Time = UnityEngine.Time
 
+CS.Tick = Tick
+
 AppConst = LuaFramework.AppConst
 LuaHelper = LuaFramework.LuaHelper
 ByteBuffer = LuaFramework.ByteBuffer

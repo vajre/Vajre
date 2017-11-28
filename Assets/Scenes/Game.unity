@@ -177,7 +177,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 6677}
+  - {fileID: 395440203}
   m_Father: {fileID: 7304}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -546,11 +546,25 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!224 &6677 stripped
+--- !u!224 &6677
 RectTransform:
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 224721094365662302, guid: b7ed51e444fe745eeb10de294b283fb4,
     type: 2}
   m_PrefabInternal: {fileID: 974626364}
+  m_GameObject: {fileID: 2136988472}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 395440203}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &7304
 RectTransform:
   m_ObjectHideFlags: 0
@@ -679,12 +693,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_UpdatePanel: {fileID: 8168}
---- !u!114 &8168 stripped
+--- !u!114 &8168
 MonoBehaviour:
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 114517918780747274, guid: b7ed51e444fe745eeb10de294b283fb4,
     type: 2}
   m_PrefabInternal: {fileID: 974626364}
+  m_GameObject: {fileID: 1460648648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 043adbf2019834c9b8d6c2b9b7452545, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text_desc: {fileID: 0}
+  text_progress: {fileID: 0}
+  text_mid: {fileID: 0}
+  progressbar: {fileID: 0}
 --- !u!114 &8204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,6 +757,36 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!1 &395440202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 974626364}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 395440203}
+  m_Layer: 0
+  m_Name: Missing Prefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &395440203
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 974626364}
+  m_GameObject: {fileID: 395440202}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 6677}
+  - {fileID: 1460648649}
+  m_Father: {fileID: 2331}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &974626364
 Prefab:
   m_ObjectHideFlags: 0
@@ -847,3 +901,47 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b7ed51e444fe745eeb10de294b283fb4, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1460648648
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 974626364}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1460648649}
+  - component: {fileID: 8168}
+  m_Layer: 0
+  m_Name: Missing Prefab (Dummy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1460648649
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 974626364}
+  m_GameObject: {fileID: 1460648648}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 395440203}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2136988472
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 974626364}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 6677}
+  m_Layer: 0
+  m_Name: Missing Prefab (Dummy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1

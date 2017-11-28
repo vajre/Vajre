@@ -45,12 +45,7 @@ namespace LuaFramework
             return _Instance;
         }
 
-        void Awake()
-        {
-            //加载Manifest清单文件
-            StartCoroutine(ABManifestLoader.GetInstance().LoadManifestFile());
-        }
-
+        
         /// <summary>
         /// 下载AssetBundle 指定包
         /// </summary>
@@ -58,7 +53,7 @@ namespace LuaFramework
         /// <param name="abName">AssetBundle 包名称</param>
         /// <param name="loadCompleteHandle">委托: 调用是否完成</param>
         /// <returns></returns>
-        public IEnumerator LoadAssetBundlePack(string scenesName, string abName, Action<string> loadCompleteHandle)
+        public IEnumerator LoadAssetBundlePack(string scenesName, string abName, Action loadCompleteHandle)
         {
             //参数检查
             if (string.IsNullOrEmpty(scenesName) || string.IsNullOrEmpty(abName))
@@ -83,7 +78,7 @@ namespace LuaFramework
             //把当前场景加入集合中
             if (!_DicAllScenes.ContainsKey(scenesName))
             {
-                MultiABMgr multiMgrObj = new MultiABMgr(scenesName, abName, loadCompleteHandle);
+                MultiABMgr multiMgrObj = new MultiABMgr(scenesName, abName);
                 _DicAllScenes.Add(scenesName, multiMgrObj);
 
             }
@@ -96,7 +91,7 @@ namespace LuaFramework
             }
 
             //调用 "多包管理类" 的加载指定AB包。
-            yield return tmpMultiMgrObj.LoadAssetBundler(abName);
+            yield return tmpMultiMgrObj.LoadAssetBundler(abName, loadCompleteHandle);
 
         }//Method_end
 

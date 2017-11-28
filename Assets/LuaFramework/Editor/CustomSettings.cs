@@ -201,6 +201,7 @@ public static class CustomSettings
         _GT(typeof(SocketClient)),
         _GT(typeof(OnButtonPressed)),
         _GT(typeof(HttpUtility)),
+        _GT(typeof(Tick)),
 	};
 
     public static List<Type> dynamicList = new List<Type>()

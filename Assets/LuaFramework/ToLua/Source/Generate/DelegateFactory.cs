@@ -60,7 +60,6 @@ public class DelegateFactory
 		dict.Add(typeof(UnityEngine.RectTransform.ReapplyDrivenProperties), factory.UnityEngine_RectTransform_ReapplyDrivenProperties);
 		dict.Add(typeof(UnityEngine.UI.InputField.OnValidateInput), factory.UnityEngine_UI_InputField_OnValidateInput);
 		dict.Add(typeof(System.Action<NotiData>), factory.System_Action_NotiData);
-		dict.Add(typeof(System.Action<string>), factory.System_Action_string);
 		dict.Add(typeof(HedgehogTeam.EasyTouch.EasyTouch.TouchCancelHandler), factory.HedgehogTeam_EasyTouch_EasyTouch_TouchCancelHandler);
 		dict.Add(typeof(HedgehogTeam.EasyTouch.EasyTouch.Cancel2FingersHandler), factory.HedgehogTeam_EasyTouch_EasyTouch_Cancel2FingersHandler);
 		dict.Add(typeof(HedgehogTeam.EasyTouch.EasyTouch.TouchStartHandler), factory.HedgehogTeam_EasyTouch_EasyTouch_TouchStartHandler);
@@ -146,7 +145,6 @@ public class DelegateFactory
 		DelegateTraits<UnityEngine.RectTransform.ReapplyDrivenProperties>.Init(factory.UnityEngine_RectTransform_ReapplyDrivenProperties);
 		DelegateTraits<UnityEngine.UI.InputField.OnValidateInput>.Init(factory.UnityEngine_UI_InputField_OnValidateInput);
 		DelegateTraits<System.Action<NotiData>>.Init(factory.System_Action_NotiData);
-		DelegateTraits<System.Action<string>>.Init(factory.System_Action_string);
 		DelegateTraits<HedgehogTeam.EasyTouch.EasyTouch.TouchCancelHandler>.Init(factory.HedgehogTeam_EasyTouch_EasyTouch_TouchCancelHandler);
 		DelegateTraits<HedgehogTeam.EasyTouch.EasyTouch.Cancel2FingersHandler>.Init(factory.HedgehogTeam_EasyTouch_EasyTouch_Cancel2FingersHandler);
 		DelegateTraits<HedgehogTeam.EasyTouch.EasyTouch.TouchStartHandler>.Init(factory.HedgehogTeam_EasyTouch_EasyTouch_TouchStartHandler);
@@ -232,7 +230,6 @@ public class DelegateFactory
 		TypeTraits<UnityEngine.RectTransform.ReapplyDrivenProperties>.Init(factory.Check_UnityEngine_RectTransform_ReapplyDrivenProperties);
 		TypeTraits<UnityEngine.UI.InputField.OnValidateInput>.Init(factory.Check_UnityEngine_UI_InputField_OnValidateInput);
 		TypeTraits<System.Action<NotiData>>.Init(factory.Check_System_Action_NotiData);
-		TypeTraits<System.Action<string>>.Init(factory.Check_System_Action_string);
 		TypeTraits<HedgehogTeam.EasyTouch.EasyTouch.TouchCancelHandler>.Init(factory.Check_HedgehogTeam_EasyTouch_EasyTouch_TouchCancelHandler);
 		TypeTraits<HedgehogTeam.EasyTouch.EasyTouch.Cancel2FingersHandler>.Init(factory.Check_HedgehogTeam_EasyTouch_EasyTouch_Cancel2FingersHandler);
 		TypeTraits<HedgehogTeam.EasyTouch.EasyTouch.TouchStartHandler>.Init(factory.Check_HedgehogTeam_EasyTouch_EasyTouch_TouchStartHandler);
@@ -318,7 +315,6 @@ public class DelegateFactory
 		StackTraits<UnityEngine.RectTransform.ReapplyDrivenProperties>.Push = factory.Push_UnityEngine_RectTransform_ReapplyDrivenProperties;
 		StackTraits<UnityEngine.UI.InputField.OnValidateInput>.Push = factory.Push_UnityEngine_UI_InputField_OnValidateInput;
 		StackTraits<System.Action<NotiData>>.Push = factory.Push_System_Action_NotiData;
-		StackTraits<System.Action<string>>.Push = factory.Push_System_Action_string;
 		StackTraits<HedgehogTeam.EasyTouch.EasyTouch.TouchCancelHandler>.Push = factory.Push_HedgehogTeam_EasyTouch_EasyTouch_TouchCancelHandler;
 		StackTraits<HedgehogTeam.EasyTouch.EasyTouch.Cancel2FingersHandler>.Push = factory.Push_HedgehogTeam_EasyTouch_EasyTouch_Cancel2FingersHandler;
 		StackTraits<HedgehogTeam.EasyTouch.EasyTouch.TouchStartHandler>.Push = factory.Push_HedgehogTeam_EasyTouch_EasyTouch_TouchStartHandler;
@@ -2964,63 +2960,6 @@ public class DelegateFactory
 	}
 
 	void Push_System_Action_NotiData(IntPtr L, System.Action<NotiData> o)
-	{
-		ToLua.Push(L, o);
-	}
-
-	class System_Action_string_Event : LuaDelegate
-	{
-		public System_Action_string_Event(LuaFunction func) : base(func) { }
-		public System_Action_string_Event(LuaFunction func, LuaTable self) : base(func, self) { }
-
-		public void Call(string param0)
-		{
-			func.BeginPCall();
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-
-		public void CallWithSelf(string param0)
-		{
-			func.BeginPCall();
-			func.Push(self);
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-	}
-
-	public System.Action<string> System_Action_string(LuaFunction func, LuaTable self, bool flag)
-	{
-		if (func == null)
-		{
-			System.Action<string> fn = delegate(string param0) { };
-			return fn;
-		}
-
-		if(!flag)
-		{
-			System_Action_string_Event target = new System_Action_string_Event(func);
-			System.Action<string> d = target.Call;
-			target.method = d.Method;
-			return d;
-		}
-		else
-		{
-			System_Action_string_Event target = new System_Action_string_Event(func, self);
-			System.Action<string> d = target.CallWithSelf;
-			target.method = d.Method;
-			return d;
-		}
-	}
-
-	bool Check_System_Action_string(IntPtr L, int pos)
-	{
-		return TypeChecker.CheckDelegateType(typeof(System.Action<string>), L, pos);
-	}
-
-	void Push_System_Action_string(IntPtr L, System.Action<string> o)
 	{
 		ToLua.Push(L, o);
 	}

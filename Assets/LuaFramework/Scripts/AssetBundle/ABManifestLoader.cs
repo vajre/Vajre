@@ -64,7 +64,7 @@ namespace LuaFramework
         }
 
         //加载Manifest 清单文件
-        public IEnumerator LoadManifestFile(Action loadOK = null)
+        public IEnumerator LoadManifestFile(Action<AssetBundleManifest> loadOK = null)
         {
             using (WWW www = new WWW(_StrManifestPath))
             {
@@ -82,7 +82,7 @@ namespace LuaFramework
                         _IsLoadFinish = true;
                         if (loadOK != null)
                         {
-                            loadOK();
+                            loadOK(_ManifestObj);
                         }
                     }
                     else

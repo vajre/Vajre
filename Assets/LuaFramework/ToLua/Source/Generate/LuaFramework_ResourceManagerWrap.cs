@@ -9,6 +9,7 @@ public class LuaFramework_ResourceManagerWrap
 		L.BeginClass(typeof(LuaFramework.ResourceManager), typeof(Manager));
 		L.RegFunction("Initialize", Initialize);
 		L.RegFunction("LoadABPack", LoadABPack);
+		L.RegFunction("IsABPackLoaded", IsABPackLoaded);
 		L.RegFunction("LoadAsset", LoadAsset);
 		L.RegFunction("DisposeAllAsset", DisposeAllAsset);
 		L.RegFunction("__eq", op_Equality);
@@ -42,9 +43,28 @@ public class LuaFramework_ResourceManagerWrap
 			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
 			string arg1 = ToLua.CheckString(L, 3);
-			System.Action<string> arg2 = (System.Action<string>)ToLua.CheckDelegate<System.Action<string>>(L, 4);
+			LuaFunction arg2 = ToLua.CheckLuaFunction(L, 4);
 			obj.LoadABPack(arg0, arg1, arg2);
 			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int IsABPackLoaded(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			string arg1 = ToLua.CheckString(L, 3);
+			bool o = obj.IsABPackLoaded(arg0, arg1);
+			LuaDLL.lua_pushboolean(L, o);
+			return 1;
 		}
 		catch (Exception e)
 		{

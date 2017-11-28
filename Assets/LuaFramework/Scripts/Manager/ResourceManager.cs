@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using LuaInterface;
 using UObject = UnityEngine.Object;
+using System.Threading;
 //using LuaFramework;
 
 #if UNITY_EDITOR
@@ -12,7 +13,7 @@ using UnityEditor;
 #endif
 
 namespace LuaFramework
-{        
+{
 
     public class ResourceManager : Manager
     {
@@ -21,79 +22,61 @@ namespace LuaFramework
 
         //AssetBundle (清单文件) 系统类
         private AssetBundleManifest _ManifestObj = null;
-        
-        /// <summary>
-        /// AB初始化 加载manifest
-        /// </summary>
-        /// <param name="initOK"></param>
-        public void Initialize(Action initOK)
-		{
-            StartCoroutine(ABManifestLoader.GetInstance().LoadManifestFile(initOK));
-        }
 
-        public void LoadABPack(string scenesName, string abName, Action<string> loadCompleteHandle)
+        public void Initialize(Action initOK)
+        {
+            StartCoroutine(ABManifestLoader.GetInstance().LoadManifestFile(delegate (AssetBundleManifest ManifestObj) {
+                _ManifestObj = ManifestObj;
+                initOK();
+            }));
+        }
+        
+        [NoToLua]
+        public void LoadABPack(string scenesName, string abName, Action loadCompleteHandle)
         {
             StartCoroutine(LoadAssetBundlePack(scenesName, abName, loadCompleteHandle));
         }
 
-        /// <summary>
-        /// 下载AssetBundle 指定包
-        /// </summary>
-        /// <param name="scenesName">场景名称</param>
-        /// <param name="abName">AssetBundle 包名称</param>
-        /// <param name="loadCompleteHandle">委托: 调用是否完成</param>
-        /// <returns></returns>
-        IEnumerator LoadAssetBundlePack(string scenesName, string abName, Action<string> loadCompleteHandle)
+        public void LoadABPack(string scenesName, string abName, LuaFunction loadCompleteHandle)
         {
-            //参数检查
-            if (string.IsNullOrEmpty(scenesName) || string.IsNullOrEmpty(abName))
+            LoadABPack(scenesName, abName, delegate ()
             {
-                Debug.LogError(GetType() + "/LoadAssetBundlePack()/ScenesName Or abName is null !， 请检查");
-                yield return null;
-            }
+                if (loadCompleteHandle != null)
+                {
+                    loadCompleteHandle.Call();
+                    loadCompleteHandle.Dispose();
+                }
+            });
+        }
 
-            //等待Manifest清单文件加载完成
-            while (!ABManifestLoader.GetInstance().IsLoadFinish)
+        public bool IsABPackLoaded(string scenesName, string abName)
+        {
+            if (_DicAllScenes.ContainsKey(scenesName))
             {
-                yield return null;
+                MultiABMgr tmpMultiMgrObj = _DicAllScenes[scenesName];
+                return tmpMultiMgrObj.ISAssetBundlerLoaded(abName);
             }
-            _ManifestObj = ABManifestLoader.GetInstance().GetABManifest();
+            return false;
+        }
 
-            if (_ManifestObj == null)
-            {
-                Debug.LogError(GetType() + "/LoadAssetBundlePack()/_ManifestObj is null !， 请检查");
-                yield return null;
-            }
-
+        IEnumerator LoadAssetBundlePack(string scenesName, string abName, Action loadCompleteHandle)
+        {
             //把当前场景加入集合中
             if (!_DicAllScenes.ContainsKey(scenesName))
             {
-                MultiABMgr multiMgrObj = new MultiABMgr(scenesName, abName, loadCompleteHandle);
+                MultiABMgr multiMgrObj = new MultiABMgr(scenesName, abName);
                 _DicAllScenes.Add(scenesName, multiMgrObj);
-
             }
 
             //调用下一层("多包管理类")
             MultiABMgr tmpMultiMgrObj = _DicAllScenes[scenesName];
-            if (tmpMultiMgrObj == null)
-            {
-                Debug.LogError(GetType() + "/LoadAssetBundlePack()/tmpMultiMgrObj is null !， 请检查");
-            }
 
             //调用 "多包管理类" 的加载指定AB包。
-            yield return tmpMultiMgrObj.LoadAssetBundler(abName);
+            yield return tmpMultiMgrObj.LoadAssetBundler(abName, loadCompleteHandle);
 
         }//Method_end
 
-        /// <summary>
-        /// 加载（AB包中）资源
-        /// </summary>
-        /// <param name="scenesName">场景名称</param>
-        /// <param name="abName">AssetBundle包名称</param>
-        /// <param name="assetName">资源名称</param>
-        /// <param name="isCache">是否使用（资源）缓存</param>
-        /// <returns></returns>
-        public UnityEngine.Object LoadAsset(string scenesName, string abName, string assetName, bool isCache)
+        public UObject LoadAsset(string scenesName, string abName, string assetName, bool isCache)
         {
             if (_DicAllScenes.ContainsKey(scenesName))
             {
@@ -106,11 +89,6 @@ namespace LuaFramework
             return null;
         }
 
-
-        /// <summary>
-        /// 释放资源。
-        /// </summary>
-        /// <param name="scenesName">场景名称</param>
         public void DisposeAllAsset(string scenesName)
         {
             if (_DicAllScenes.ContainsKey(scenesName))
@@ -123,6 +101,7 @@ namespace LuaFramework
                 Debug.LogError(GetType() + "/DisposeAllAsset()/找不到场景名称，无法释放资源,请检查! scenesName = " + scenesName);
             }
         }
+
 
     }//Class_end
 }

@@ -454,5 +454,14 @@ namespace LuaFramework {
         {
             return File.Exists(path);
         }
+
+        /// <summary>
+        /// 获得当前线程ID
+        /// </summary>
+        /// <returns></returns>
+        public static int GetManagedThreadId()
+        {
+            return System.Threading.Thread.CurrentThread.ManagedThreadId;
+        }
     }
 }
