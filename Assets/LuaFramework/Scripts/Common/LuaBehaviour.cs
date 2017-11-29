@@ -8,7 +8,7 @@ using System.Text;
 using UnityEditor;
 #endif
 
-using UObect = UnityEngine.Object;
+using UObject = UnityEngine.Object;
 
 namespace LuaFramework
 {
@@ -18,11 +18,7 @@ namespace LuaFramework
         public string luaName;
         LuaTable mSelfTable;
 
-        [SerializeField]
-        string assetPath;
-
         public List<Object> cache = new List<Object>();
-        Dictionary<string, Component> components = new Dictionary<string, Component>();
         
         LuaFunction awake = null;
         LuaFunction start = null;
@@ -37,21 +33,6 @@ namespace LuaFramework
 
             if (luaName == "")
                 Debug.LogError("### LuaBehaviour Error, Empty luaName :" + name);
-
-#if UNITY_EDITOR
-            //ResourceManager resMgr = AppFacade.Instance.GetManager<ResourceManager>(ManagerName.Resource);
-            //string prefabPath = resMgr.GetRealAssetPath(luaName);
-            //prefabPath = "Assets/Builds/Prefabs/" + prefabPath.Remove(prefabPath.Length - 8) + ".prefab";
-            //WidgetReference w = GetComponent<WidgetReference>();
-            //if (w != null)
-            //    w.SetAssetPath(prefabPath);
-
-            //Debug.Log(PrefabUtility.GetPrefabType(gameObject));
-
-            //GameObject prefabObj = PrefabUtility.FindPrefabRoot(gameObject);
-            //Debug.LogError(prefabObj);
-            //UObect prefabParent = PrefabUtility.GetPrefabParent(prefabObj);
-#endif
 
             LuaManager luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
             object luaRet = luaMgr.DoFile<object>(luaPath);
@@ -91,27 +72,7 @@ namespace LuaFramework
             Util.CallLuaFunction(on_destroy, mSelfTable);
             Util.ClearMemory();
         }
-
-        //-------------------------------------------------------------Find
-        public Component Find(string path, string compName)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(path);
-            sb.Append("_");
-            sb.Append(compName);
-
-            string key = sb.ToString();
-
-
-
-            if (components[key] != null)
-            {
-                return components[key];
-            }
-
-            
-            return null;
-        }
-
-    }
+   }
 }
+
+

@@ -7,7 +7,6 @@ function LuaBaseView:Awake(obj)
     self.m.gameObject = obj
     self.m.transform = obj.transform
     self.m.luaBehaviour = obj:GetComponent("LuaBehaviour")
-    self.m.WidgetReference = obj:GetComponent("WidgetReference")
     self.m.calls = {}
 end
 
@@ -21,14 +20,6 @@ end
 
 function LuaBaseView:RemoveClick(...)
     self.m.luaBehaviour:RemoveClick(...)
-end
-
-function LuaBaseView:Find(path, compName)
-    if compName == nil then
-        return self.m.WidgetReference:Find(path)
-    else
-        return self.m.WidgetReference:Find(path, compName)
-    end
 end
 
 function LuaBaseView:OnDestroy()

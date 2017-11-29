@@ -7,28 +7,10 @@ public class WidgetReferenceWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(WidgetReference), typeof(UnityEngine.MonoBehaviour));
-		L.RegFunction("SetAssetPath", SetAssetPath);
 		L.RegFunction("Find", Find);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.EndClass();
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SetAssetPath(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			WidgetReference obj = (WidgetReference)ToLua.CheckObject<WidgetReference>(L, 1);
-			string arg0 = ToLua.CheckString(L, 2);
-			obj.SetAssetPath(arg0);
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -42,35 +24,16 @@ public class WidgetReferenceWrap
 			{
 				WidgetReference obj = (WidgetReference)ToLua.CheckObject<WidgetReference>(L, 1);
 				string arg0 = ToLua.CheckString(L, 2);
-				UnityEngine.GameObject o = obj.Find(arg0);
-				ToLua.PushSealed(L, o);
-				return 1;
-			}
-			else if (count == 3 && TypeChecker.CheckTypes<int>(L, 3))
-			{
-				WidgetReference obj = (WidgetReference)ToLua.CheckObject<WidgetReference>(L, 1);
-				string arg0 = ToLua.CheckString(L, 2);
-				int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
-				UnityEngine.GameObject o = obj.Find(arg0, arg1);
-				ToLua.PushSealed(L, o);
-				return 1;
-			}
-			else if (count == 3 && TypeChecker.CheckTypes<string>(L, 3))
-			{
-				WidgetReference obj = (WidgetReference)ToLua.CheckObject<WidgetReference>(L, 1);
-				string arg0 = ToLua.CheckString(L, 2);
-				string arg1 = ToLua.ToString(L, 3);
-				UnityEngine.Component o = obj.Find(arg0, arg1);
+				UnityEngine.Object o = obj.Find(arg0);
 				ToLua.Push(L, o);
 				return 1;
 			}
-			else if (count == 4)
+			else if (count == 3)
 			{
 				WidgetReference obj = (WidgetReference)ToLua.CheckObject<WidgetReference>(L, 1);
 				string arg0 = ToLua.CheckString(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
-				string arg2 = ToLua.CheckString(L, 4);
-				UnityEngine.Component o = obj.Find(arg0, arg1, arg2);
+				string arg1 = ToLua.CheckString(L, 3);
+				UnityEngine.Object o = obj.Find(arg0, arg1);
 				ToLua.Push(L, o);
 				return 1;
 			}
