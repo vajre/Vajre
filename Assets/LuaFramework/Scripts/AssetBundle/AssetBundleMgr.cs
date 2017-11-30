@@ -108,7 +108,7 @@ namespace LuaFramework
             if (_DicAllScenes.ContainsKey(scenesName))
             {
                 MultiABMgr multObj = _DicAllScenes[scenesName];
-                return multObj.LoadAsset(abName, assetName, isCache);
+                return multObj.LoadAsset(abName, assetName);
             }
 
             Debug.LogError(GetType() + "/LoadAsset()/找不到场景名称,无法加载(AB包中)资源,请检查! scenesName = " + scenesName);

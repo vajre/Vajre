@@ -27,6 +27,7 @@ CS.HttpUtility = System.Web.HttpUtility
 CS.Time = UnityEngine.Time
 CS.CharacterController = UnityEngine.CharacterController
 CS.SceneManager = UnityEngine.SceneManagement.SceneManager
+CS.ScenePack = ScenePack
 
 CS.Tick = Tick
 

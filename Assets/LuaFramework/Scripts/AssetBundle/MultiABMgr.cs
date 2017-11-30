@@ -1,37 +1,32 @@
-﻿/***
- *
- *     Title: "AssetBundle" 框架项目
- *     		   主流程（3层）:(一个场景中)多个AssetBundle 多包管理 
- *     Description:
- *             功能:
- *                1: 获取AB包之间的依赖与引用关系。
- *                2: 管理AssetBundle包之间的自动连锁（递归）加载机制
- *
- *     Data: 2017
- *     Version: 0.1版本
- *     Modify Recoder:
- *
- *
- */
-
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UObject = UnityEngine.Object;
 
 namespace LuaFramework
 {
+    public class AssetBundleInfo
+    {
+        public AssetBundle m_AssetBundle;
+        public int m_ReferenceCount;
+
+        public AssetBundleInfo(AssetBundle assetBundle)
+        {
+            m_AssetBundle = assetBundle;
+            m_ReferenceCount = 1;
+        }
+    }
+    
 	public class MultiABMgr 
 	{
+        Dictionary<string, AssetBundleInfo> m_LoadedAssetBundles;
+        string m_BaseDownloadingURL = string.Empty;
+        List<string> m_LoadingList = new List<string>();
+        
+
         //（下层）引用类: "单个AB包加载实现类"
         private SingleABLoader _CurrentSingleABLoader;
-
-        //"AB包实现类" 缓存集合 (作用: 缓存AB包, 防止重复加载, 即: "AB包缓存集合")
-        private Dictionary<string, SingleABLoader> _DicSingleABLoaderCache;
-
-        //当前场景(调试使用)
-        private string _CurrentScenesName;
 
         //当前AssetBundle 名称
         private string _CurrentABName;
@@ -41,20 +36,63 @@ namespace LuaFramework
 
         //委托: 所有AB包加载完成
         private Action<string> _LoadAllABPackageCompleteHandel;
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="scenesName">场景名称</param>
-        /// <param name="abName">AB包名称</param>
-        /// <param name="loadAllABPackCompleteHandle">（委托）是否调用完成</param>
+        
         public MultiABMgr(string scenesName, string abName)
         {
-            _CurrentScenesName = scenesName;
+            m_BaseDownloadingURL = PathTools.GetWWWPath() + "/";
             _CurrentABName = abName;
-            _DicSingleABLoaderCache = new Dictionary<string, SingleABLoader>();
+            m_LoadedAssetBundles = new Dictionary<string, AssetBundleInfo>();
             _DicABRelation = new Dictionary<string, ABRelation>();
         }
+
+        public void UnLoadAssetBundle(string abName, bool unloadAllLoadedObjects = false)
+        {
+            m_LoadedAssetBundles[abName].m_ReferenceCount--;
+            if (m_LoadedAssetBundles[abName].m_ReferenceCount <= 0)
+            {
+                m_LoadedAssetBundles[abName].m_AssetBundle.Unload(unloadAllLoadedObjects);
+                m_LoadedAssetBundles.Remove(abName);
+            }
+        }
+
+        public IEnumerator LoadAssetBundle(string abName)
+        {
+            if (IsAssetBundlerLoaded(abName))
+            {
+                m_LoadedAssetBundles[abName].m_ReferenceCount++;
+            }
+            else
+            {
+                if (m_LoadingList.Contains(abName))
+                {
+                    while(m_LoadingList.Contains(abName))
+                        yield return new WaitForEndOfFrame();
+                }
+                else
+                {
+                    m_LoadingList.Add(abName);
+                    using (WWW www = new WWW(m_BaseDownloadingURL + abName))
+                    {
+                        yield return www;
+                        if (www.progress >= 1)
+                        {
+                            AssetBundle abObj = null;
+                            abObj = www.assetBundle;
+                            if (abObj != null)
+                                m_LoadedAssetBundles.Add(abName, new AssetBundleInfo(abObj));
+                        }
+                    }
+                    m_LoadingList.Remove(abName);
+                }
+            }
+        }
+
+
+        public UObject LoadAsset(string abName, string assetName)
+        {
+            return m_LoadedAssetBundles[abName].m_AssetBundle.LoadAsset<UObject>(assetName);
+        }
+
 
         /// <summary>
         /// 完成指定AB包调用
@@ -71,10 +109,9 @@ namespace LuaFramework
             }
         }
 
-
-        public bool ISAssetBundlerLoaded(string abName)
+        public bool IsAssetBundlerLoaded(string abName)
         {
-            return _DicSingleABLoaderCache.ContainsKey(abName);
+            return m_LoadedAssetBundles.ContainsKey(abName);
         }
 
         /// <summary>
@@ -107,15 +144,15 @@ namespace LuaFramework
             }
 
             //真正加载AB包
-            if (_DicSingleABLoaderCache.ContainsKey(abName))
+            if (m_LoadedAssetBundles.ContainsKey(abName))
             {
                 Debug.LogError("这个包已经被加载过了: " + abName);
-                //yield return _DicSingleABLoaderCache[abName].LoadAssetBundle(loadCompleteHandle);
+                //yield return m_LoadedAssetBundles[abName].LoadAssetBundle(loadCompleteHandle);
             }
             else
             {
                 _CurrentSingleABLoader = new SingleABLoader(abName);
-                _DicSingleABLoaderCache.Add(abName, _CurrentSingleABLoader);
+                //m_LoadedAssetBundles.Add(abName, _CurrentSingleABLoader);
                 yield return _CurrentSingleABLoader.LoadAssetBundle(loadCompleteHandle);
             }
         }//Method_end
@@ -148,49 +185,26 @@ namespace LuaFramework
             }
         }
 
-        /// <summary>
-        /// 加载(AB包中)资源
-        /// </summary>
-        /// <param name="abName">AssetBundle 名称</param>
-        /// <param name="assetName">资源名称</param>
-        /// <param name="isCache">是否使用（资源）缓存</param>
-        /// <returns></returns>
-        public UnityEngine.Object LoadAsset(string abName, string assetName, bool isCache)
-        {
-            foreach (string item_abName in _DicSingleABLoaderCache.Keys)
-            {
-                if (abName == item_abName)
-                {
-                    return _DicSingleABLoaderCache[item_abName].LoadAsset(assetName, isCache);
-                }
-            }
-            
-            Debug.LogError(GetType() + "/LoadAsset()/找不到AssetBundle包，无法加载资源，请检查! abName = " + abName + "assetName = " + assetName);
-            return null;
-        }
-
         //释放本场景所有的资源
         public void DisposeAllAsset()
         {
             try
             {
-                //逐一释放所有加载过的AssetBundle 包中的资源
-                foreach (SingleABLoader item_sABLoader in _DicSingleABLoaderCache.Values)
-                {
-                    item_sABLoader.DisposeAll();
-                }
+                //foreach (singleabloader item_sabloader in m_loadedassetbundles.values)
+                //{
+                //    item_sabloader.disposeall();
+                //}
             }
             finally
             {
-                _DicSingleABLoaderCache.Clear();
-                _DicSingleABLoaderCache = null;
+                m_LoadedAssetBundles.Clear();
+                m_LoadedAssetBundles = null;
 
                 //释放其他对象占用资源
                 _DicABRelation.Clear();
                 _DicABRelation = null;
 
                 _CurrentABName = null;
-                _CurrentScenesName = null;
                 _LoadAllABPackageCompleteHandel = null;
 
                 //卸载没有使用到的资源

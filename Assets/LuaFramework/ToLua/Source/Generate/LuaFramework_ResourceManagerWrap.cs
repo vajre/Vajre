@@ -8,6 +8,8 @@ public class LuaFramework_ResourceManagerWrap
 	{
 		L.BeginClass(typeof(LuaFramework.ResourceManager), typeof(Manager));
 		L.RegFunction("Initialize", Initialize);
+		L.RegFunction("LoadScenePack", LoadScenePack);
+		L.RegFunction("UnLoadABPack", UnLoadABPack);
 		L.RegFunction("LoadABPack", LoadABPack);
 		L.RegFunction("IsABPackLoaded", IsABPackLoaded);
 		L.RegFunction("LoadAsset", LoadAsset);
@@ -35,16 +37,67 @@ public class LuaFramework_ResourceManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int LoadABPack(IntPtr L)
+	static int LoadScenePack(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 4);
 			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
-			string arg0 = ToLua.CheckString(L, 2);
-			string arg1 = ToLua.CheckString(L, 3);
+			ScenePack[] arg0 = ToLua.CheckObjectArray<ScenePack>(L, 2);
+			LuaFunction arg1 = ToLua.CheckLuaFunction(L, 3);
 			LuaFunction arg2 = ToLua.CheckLuaFunction(L, 4);
-			obj.LoadABPack(arg0, arg1, arg2);
+			obj.LoadScenePack(arg0, arg1, arg2);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int UnLoadABPack(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 2)
+			{
+				LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				obj.UnLoadABPack(arg0);
+				return 0;
+			}
+			else if (count == 3)
+			{
+				LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
+				obj.UnLoadABPack(arg0, arg1);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: LuaFramework.ResourceManager.UnLoadABPack");
+			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int LoadABPack(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			LuaFunction arg1 = ToLua.CheckLuaFunction(L, 3);
+			obj.LoadABPack(arg0, arg1);
 			return 0;
 		}
 		catch (Exception e)
@@ -58,11 +111,10 @@ public class LuaFramework_ResourceManagerWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 3);
+			ToLua.CheckArgsCount(L, 2);
 			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
-			string arg1 = ToLua.CheckString(L, 3);
-			bool o = obj.IsABPackLoaded(arg0, arg1);
+			bool o = obj.IsABPackLoaded(arg0);
 			LuaDLL.lua_pushboolean(L, o);
 			return 1;
 		}
@@ -77,13 +129,11 @@ public class LuaFramework_ResourceManagerWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 5);
+			ToLua.CheckArgsCount(L, 3);
 			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
 			string arg1 = ToLua.CheckString(L, 3);
-			string arg2 = ToLua.CheckString(L, 4);
-			bool arg3 = LuaDLL.luaL_checkboolean(L, 5);
-			UnityEngine.Object o = obj.LoadAsset(arg0, arg1, arg2, arg3);
+			UnityEngine.Object o = obj.LoadAsset(arg0, arg1);
 			ToLua.Push(L, o);
 			return 1;
 		}

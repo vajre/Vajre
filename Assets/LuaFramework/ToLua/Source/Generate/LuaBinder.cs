@@ -21,6 +21,7 @@ public static class LuaBinder
 		SocketClientWrap.Register(L);
 		OnButtonPressedWrap.Register(L);
 		TickWrap.Register(L);
+		ScenePackWrap.Register(L);
 		ManagerWrap.Register(L);
 		BaseWrap.Register(L);
 		L.BeginModule("DG");
