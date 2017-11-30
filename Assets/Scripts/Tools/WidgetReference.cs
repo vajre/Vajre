@@ -56,7 +56,9 @@ public class WidgetReference : MonoBehaviour
     private void Save(string key, UObject value)
     {
         components.Add(new Path2Comp(key, value));
+#if UNITY_EDITOR
         PrefabUtility.CreatePrefab(assetPath, gameObject, ReplacePrefabOptions.ConnectToPrefab);
+#endif
     }
 
     private UObject GetComp(string key)

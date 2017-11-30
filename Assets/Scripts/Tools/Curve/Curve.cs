@@ -20,7 +20,7 @@ public class Curve : MonoBehaviour
 
     private void Awake()
     {
-        Debug.LogError(points.Count);
+
     }
 
     public List<Vector3> GetPoints()

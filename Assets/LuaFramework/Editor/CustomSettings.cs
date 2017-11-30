@@ -202,6 +202,7 @@ public static class CustomSettings
         _GT(typeof(OnButtonPressed)),
         _GT(typeof(HttpUtility)),
         _GT(typeof(Tick)),
+        _GT(typeof(UnityEngine.SceneManagement.SceneManager)),
 	};
 
     public static List<Type> dynamicList = new List<Type>()

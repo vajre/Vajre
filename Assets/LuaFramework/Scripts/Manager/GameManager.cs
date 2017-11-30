@@ -280,8 +280,8 @@ namespace LuaFramework
         void OnInitialize()
         {
             LuaManager.InitStart();
-            LuaManager.DoFile("Logic/Game");         //加载游戏
-            Util.CallMethod("Game", "OnInitOK");     //初始化完成
+            LuaManager.DoFile("Manager/GameManager");         //加载游戏
+            Util.CallMethod("GameManager", "Init");     //初始化完成
             initialize = true;
         }
 

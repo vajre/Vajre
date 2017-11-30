@@ -1,0 +1,3 @@
+local PlayerProxy = {}
+
+return PlayerProxy

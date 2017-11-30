@@ -1,14 +1,6 @@
 ﻿using UnityEngine;
 using LuaInterface;
 using System.Collections.Generic;
-using UnityEngine.UI;
-using System.Text;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
-using UObject = UnityEngine.Object;
 
 namespace LuaFramework
 {
@@ -35,7 +27,7 @@ namespace LuaFramework
                 Debug.LogError("### LuaBehaviour Error, Empty luaName :" + name);
 
             LuaManager luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
-            object luaRet = luaMgr.DoFile<object>(luaPath);
+            object luaRet = luaMgr.Require<object>(luaPath);
             mSelfTable = luaRet as LuaTable;
 
             if (mSelfTable == null)
@@ -47,29 +39,27 @@ namespace LuaFramework
             on_enable = mSelfTable.GetLuaFunction("OnEnable");
             update = mSelfTable.GetLuaFunction("Update");
             on_destroy = mSelfTable.GetLuaFunction("OnDestroy");
-
             Util.CallLuaFunction(awake, mSelfTable, gameObject);
-
         }
 
         protected void Start()
         {
-            Util.CallLuaFunction(start, mSelfTable);
+            Util.CallLuaFunction(start, name);
         }
 
 		protected void OnEnable()
         {
-            Util.CallLuaFunction(on_enable, mSelfTable);
+            Util.CallLuaFunction(on_enable, name);
 		}
 			
         protected void Update()
         {
-            Util.CallLuaFunction(update, mSelfTable);
+            Util.CallLuaFunction(update, name);
         }
 
         protected void OnDestroy()
         {
-            Util.CallLuaFunction(on_destroy, mSelfTable);
+            Util.CallLuaFunction(on_destroy, name);
             Util.ClearMemory();
         }
    }

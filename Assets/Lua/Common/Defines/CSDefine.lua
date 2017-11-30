@@ -26,6 +26,7 @@ CS.MonoBehaviour = UnityEngine.MonoBehaviour
 CS.HttpUtility = System.Web.HttpUtility
 CS.Time = UnityEngine.Time
 CS.CharacterController = UnityEngine.CharacterController
+CS.SceneManager = UnityEngine.SceneManagement.SceneManager
 
 CS.Tick = Tick
 
