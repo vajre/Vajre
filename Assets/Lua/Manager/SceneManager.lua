@@ -8,9 +8,9 @@ function SceneManager.Init()
 end
 
 function SceneManager.LoadScene(sceneName)
-    SceneManager["LoginScene"].BeginLoad()
+    SceneManager[sceneName].LoadScene()
 end
 
 function SceneManager.LoadSceneAsync(sceneName) 
-    SceneManager["LoginScene"].BeginLoadAsync()
+    SceneManager[sceneName].LoadSceneAsync()
 end

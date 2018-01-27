@@ -25,17 +25,12 @@ namespace LuaFramework
 
         public void LoadScenePack(ScenePack[] pack, LuaFunction onLoading, LuaFunction onCompleted)
         {
-            //for (int i = 0; i < pack.Length; i++)
-            //{
-            //}
-
-            Debug.LogError(pack[0].abNames[0]);
             string[] strDepedenceArray = m_Manifest.GetAllDependencies(pack[0].abNames[0]);
             for (int i = 0; i < strDepedenceArray.Length; i++)
             {
                 Debug.LogError(strDepedenceArray[i] + " ");
             }
-            
+
             onLoading.Call(0.5f);
             onCompleted.Call();
 
@@ -84,8 +79,10 @@ namespace LuaFramework
             if (IsABPackLoaded(abName))
                 yield break;
 
-            List<string> dep = new List<string>();
-            dep.Add(abName);
+            List<string> dep = new List<string>
+            {
+                abName
+            };
             RetrivalDependencies(abName, dep);
 
             for (int i = 0; i < dep.Count; i++)

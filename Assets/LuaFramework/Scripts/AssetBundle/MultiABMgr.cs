@@ -73,14 +73,22 @@ namespace LuaFramework
                     m_LoadingList.Add(abName);
                     using (WWW www = new WWW(m_BaseDownloadingURL + abName))
                     {
-                        yield return www;
-                        if (www.progress >= 1)
+                        //yield return www;
+                        while (!www.isDone)
                         {
-                            AssetBundle abObj = null;
-                            abObj = www.assetBundle;
-                            if (abObj != null)
-                                m_LoadedAssetBundles.Add(abName, new AssetBundleInfo(abObj));
+                            Debug.LogError(abName + ":" + www.progress);
+                            yield return new WaitForEndOfFrame();
                         }
+
+                        AssetBundle abObj = null;
+                        abObj = www.assetBundle;
+                        if (abObj != null)
+                            m_LoadedAssetBundles.Add(abName, new AssetBundleInfo(abObj));
+
+                        //if (www.progress >= 1)
+                        //{
+
+                        //}
                     }
                     m_LoadingList.Remove(abName);
                 }
@@ -131,8 +139,7 @@ namespace LuaFramework
 
             ABRelation tmpABRelationObj = _DicABRelation[abName];
             string[] strDepedenceArray = ABManifestLoader.GetInstance().RetrivalDependce(abName);
-
-
+            
             //得到指定AB包所有的依赖关系(查询Manifest清单文件)
             foreach (string item_Depence in strDepedenceArray)
             {
