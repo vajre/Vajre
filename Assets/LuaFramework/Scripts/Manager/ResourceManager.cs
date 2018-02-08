@@ -85,6 +85,8 @@ namespace LuaFramework
             };
             RetrivalDependencies(abName, dep);
 
+            float progress = 0.0f;
+
             for (int i = 0; i < dep.Count; i++)
                 yield return LoadAssetBundlePack(dep[i]);
 

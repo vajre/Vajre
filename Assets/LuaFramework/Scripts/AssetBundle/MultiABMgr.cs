@@ -73,10 +73,9 @@ namespace LuaFramework
                     m_LoadingList.Add(abName);
                     using (WWW www = new WWW(m_BaseDownloadingURL + abName))
                     {
-                        //yield return www;
                         while (!www.isDone)
                         {
-                            Debug.LogError(abName + ":" + www.progress);
+                            //Debug.LogError(abName + ":" + www.progress);
                             yield return new WaitForEndOfFrame();
                         }
 
@@ -85,10 +84,6 @@ namespace LuaFramework
                         if (abObj != null)
                             m_LoadedAssetBundles.Add(abName, new AssetBundleInfo(abObj));
 
-                        //if (www.progress >= 1)
-                        //{
-
-                        //}
                     }
                     m_LoadingList.Remove(abName);
                 }
